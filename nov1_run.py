@@ -64,6 +64,7 @@ print('train set shape:',  train_data.shape)
 
 
 
+@njit
 def normalize_IQN(values, expected_input_range):
     expected_range=expected_input_range
     expected_min, expected_max = expected_range
@@ -138,7 +139,7 @@ def train(model, optimizer, niterations):
 
 n_layers=1
 n_hidden=64
-niterations=int(1e5)
+niterations=int(1e2)
 
 
 model =  utils.RegularizedRegressionModel(

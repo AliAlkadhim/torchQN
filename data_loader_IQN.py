@@ -100,6 +100,8 @@ def get_data_set(target):
                         #    nrows=1000
                            )
 
+    # test_data = test_data[features]
+    # train_data=train_data[features]
     print('train set shape:',  train_data.shape)
     print('validation set shape:', valid_data.shape)
     print('test set shape:  ', test_data.shape)    
@@ -187,7 +189,7 @@ def get_data_set(target):
 
 
 if __name__ == '__main__':
-    training_set_features, training_set_targets, evaluation_set_features, evaluation_set_targets=get_data_set()
+    training_set_features, training_set_targets, evaluation_set_features, evaluation_set_targets=get_data_set(target='RecoDatam')
     sample_x=next(training_set_features)
     print('sample_x', training_set_features)
     print('sample_x shape', training_set_features.shape)
