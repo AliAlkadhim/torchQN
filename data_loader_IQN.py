@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import os
+from numba import njit
 # import framework.utils as utils
 
 def get_batch(x, batch_size):
@@ -20,6 +21,35 @@ def split_t_x(df, target, source):
     x = np.array(df[source])
     # t = t.reshape(-1,)
     return t, x
+
+
+def normalize_IQN(values, expected_input_range):
+    expected_range=expected_input_range
+    expected_min, expected_max = expected_range
+    scale_factor = expected_max - expected_min
+    offset = expected_min
+    scaled_values = (values - offset)/scale_factor 
+    return scaled_values
+    
+
+def normalize_IQN_DF(DF):
+
+    for i in range(DF.shape[1]):
+        col = DF.iloc[:,i]
+        expectd_col_min = np.min(col)
+        expected_col_max = np.max(col)
+        normed_col = normalize_IQN(col, expected_input_range=(expectd_col_min, expected_col_max) )
+        DF.iloc[:,i] = normed_col
+    return DF
+
+def denormalize_IQN(normalized_values, expected_input_range):
+    expected_range=expected_input_range
+    expected_min, expected_max = expected_range
+    scale_factor = expected_max - expected_min
+    offset = expected_min
+    return normalized_values  * scale_factor + offset
+
+
 
 X       = ['genDatapT', 'genDataeta', 'genDataphi', 'genDatam', 'tau']
 
@@ -46,7 +76,7 @@ FIELDS  = {'RecoDatam' : {'inputs': X,
 
 
 
-def get_data_set():
+def get_data_set(target):
     # os.environ["DATA_DIR"]="/home/ali/Desktop/Pulled_Github_Repositorie/IQN_HEP/Davidson/data"
     # DATA_DIR=os.environ["DATA_DIR"]
     # DATA_DIR = 'data'
@@ -58,12 +88,17 @@ def get_data_set():
     ########
     print('USING NEW DATASET')
     train_data=pd.read_csv(DATA_DIR + '/train_data_10M_2.csv',
-                                     nrows=1000,
-                       usecols=FIELDS[target]['inputs'])
+                                    #  nrows=1000,
+                    #    usecols=FIELDS[target]['inputs']
+                       )
     print('TRAINING FEATURES\n', train_data[features].head() )
 
-    test_data=pd.read_csv(DATA_DIR+'/test_data_10M_2.csv')
-    valid_data=pd.read_csv(DATA_DIR+'/validation_data_10M_2.csv')
+    test_data=pd.read_csv(DATA_DIR+'/test_data_10M_2.csv', 
+                        #   nrows=1000
+                        )
+    valid_data=pd.read_csv(DATA_DIR+'/validation_data_10M_2.csv',
+                        #    nrows=1000
+                           )
 
     print('train set shape:',  train_data.shape)
     print('validation set shape:', valid_data.shape)
@@ -72,11 +107,15 @@ def get_data_set():
 
 
 
+    ###NORMALIZE DATA FRAMES
+    train_data = normalize_IQN_DF(train_data)
+    test_data = normalize_IQN_DF(test_data)
+
 
     n_examples= int(8e6)
-    batchsize=10
-    N_batches = 10
-    #N_batches=n_examples/batch_size
+    batchsize=100
+    # N_batches = 100
+    N_batches=n_examples/batchsize
     train_t, train_x = split_t_x(train_data, target, features)
     
     test_t,  test_x  = split_t_x(test_data,  target, features)
