@@ -52,12 +52,16 @@ source  = FIELDS[target]
 features= source['inputs']
 ########
 print('USING NEW DATASET')
-train_data=pd.read_csv(DATA_DIR + '/train_data_10M_2.csv'  )
+train_data=pd.read_csv(DATA_DIR + '/train_data_10M_2.csv' ,
+                                 nrows=1000,
+                       usecols=FIELDS[target]['inputs']
+                       )
 print('TRAINING FEATURES\n', train_data[features].head())
 print('train set shape:',  train_data.shape)
 
 EXPECTED_VALUES_RANGE =(np.min(np.min( train_data[features])), np.max(np.max( train_data[features])) )
 print('EXPECTED_VALUES_RANGE \n' , EXPECTED_VALUES_RANGE)
+
 
 @njit
 def normalize_IQN(values, expected_input_range):

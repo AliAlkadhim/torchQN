@@ -57,7 +57,9 @@ def get_data_set():
     features= source['inputs']
     ########
     print('USING NEW DATASET')
-    train_data=pd.read_csv(DATA_DIR + '/train_data_10M_2.csv' )
+    train_data=pd.read_csv(DATA_DIR + '/train_data_10M_2.csv',
+                                     nrows=1000,
+                       usecols=FIELDS[target]['inputs'])
     print('TRAINING FEATURES\n', train_data[features].head() )
 
     test_data=pd.read_csv(DATA_DIR+'/test_data_10M_2.csv')
