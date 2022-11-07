@@ -94,10 +94,10 @@ train_data=pd.read_csv(DATA_DIR+'/train_data_10M_2.csv')
 print('TRAINING FEATURES\n', train_data[features].head())
 
 test_data=pd.read_csv(DATA_DIR+'/test_data_10M_2.csv')
-valid_data=pd.read_csv(DATA_DIR+'/validation_data_10M_2.csv')
+# valid_data=pd.read_csv(DATA_DIR+'/validation_data_10M_2.csv')
 
 print('train set shape:',  train_data.shape)
-print('validation set shape:', valid_data.shape)
+# print('validation set shape:', valid_data.shape)
 print('test set shape:  ', test_data.shape)
 
 
@@ -264,34 +264,34 @@ def run(model, scalers, target,
                   step=traces_step, 
                   window=traces_window)
     
-    learning_rate=learning_rate/10
-    optimizer = torch.optim.NAdam(model.parameters(), lr=learning_rate) 
-    #10^-4
-    traces = train(model, optimizer, 
-                      average_quantile_loss,
-                      get_batch,
-                      train_x, train_t, 
-                      valid_x, valid_t,
-                      n_batch, 
-                  n_iterations,
-                  traces,
-                  step=traces_step, 
-                  window=traces_window)
+    # learning_rate=learning_rate/10
+    # optimizer = torch.optim.NAdam(model.parameters(), lr=learning_rate) 
+    # #10^-4
+    # traces = train(model, optimizer, 
+    #                   average_quantile_loss,
+    #                   get_batch,
+    #                   train_x, train_t, 
+    #                   valid_x, valid_t,
+    #                   n_batch, 
+    #               n_iterations,
+    #               traces,
+    #               step=traces_step, 
+    #               window=traces_window)
 
 
-    learning_rate=learning_rate/100
-    optimizer = torch.optim.NAdam(model.parameters(), lr=learning_rate) 
-    #10^-6
-    traces = train(model, optimizer, 
-                      average_quantile_loss,
-                      get_batch,
-                      train_x, train_t, 
-                      valid_x, valid_t,
-                      n_batch, 
-                  n_iterations,
-                  traces,
-                  step=traces_step, 
-                  window=traces_window)
+    # learning_rate=learning_rate/100
+    # optimizer = torch.optim.NAdam(model.parameters(), lr=learning_rate) 
+    # #10^-6
+    # traces = train(model, optimizer, 
+    #                   average_quantile_loss,
+    #                   get_batch,
+    #                   train_x, train_t, 
+    #                   valid_x, valid_t,
+    #                   n_batch, 
+    #               n_iterations,
+    #               traces,
+    #               step=traces_step, 
+    #               window=traces_window)
 
     plot_average_loss(traces)
 
@@ -319,7 +319,8 @@ elif target == 'RecoDatam':
 
 def plot_model(dnn, target, src,
                fgsize=(6, 6), 
-               ftsize=20,save_image=False, save_pred=False):
+               ftsize=20,save_image=False, save_pred=False,
+               show_plot=True):
     eval_data=pd.read_csv(DATA_DIR+'/test_data_10M_2.csv')
     ev_features=X
     #['genDatapT', 'genDataeta', 'genDataphi', 'genDatam','tau']
@@ -329,27 +330,7 @@ def plot_model(dnn, target, src,
     print('EVALUATION DATA OLD INDEX\n', eval_data.head())
 
     
-    gfile ='fig_model_%s.png' % target
-    xbins = 100
-    xmin  = src['xmin']
-    xmax  = src['xmax']
-    xlabel= src['xlabel']
-    xstep = (xmax - xmin)/xbins
 
-    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=fgsize)
-    
-    ax.set_xlim(xmin, xmax)
-    ax.set_xlabel(xlabel, fontsize=ftsize)
-    ax.set_xlabel('reco jet '+label, fontsize=ftsize)
-    ax.set_ylabel(y_label_dict[target], fontsize=ftsize)
-
-    # ax.hist(train_data['RecoDatam'], 
-    #         bins=xbins, 
-    #         range=(xmin, xmax), 
-    #         alpha=0.3, 
-    #         color='blue', 
-    #         density=True, 
-    #         label='simulation')
    
     y = dnn(eval_data)
     eval_data['RecoDatam']=y
@@ -363,21 +344,46 @@ def plot_model(dnn, target, src,
     if save_pred:
         pred_df = pd.DataFrame({T+'_predicted':y})
         pred_df.to_csv('predicted_data/dataset2/'+T+'_predicted_MLP_iter_5000000.csv')
-    # ax.hist(y, 
-    #         bins=xbins, 
-    #         range=(xmin, xmax), 
-    #         alpha=0.3, 
-    #         color='red', 
-    #         density=True, 
-    #         label='$y^\prime$')
-    # ax.grid()
-    # ax.legend()
-    
-    # plt.tight_layout()
-    # if save_image:
-    #     plt.savefig('images/'+T+'IQN_Consecutive_'+N+'.png')
-    #     print('images/'+T+'IQN_Consecutive_'+N+'.png')
-    # plt.show()
+        
+    if save_image or show_plot:
+        gfile ='fig_model_%s.png' % target
+        xbins = 100
+        xmin  = src['xmin']
+        xmax  = src['xmax']
+        xlabel= src['xlabel']
+        xstep = (xmax - xmin)/xbins
+
+        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=fgsize)
+        
+        ax.set_xlim(xmin, xmax)
+        ax.set_xlabel(xlabel, fontsize=ftsize)
+        ax.set_xlabel('reco jet '+label, fontsize=ftsize)
+        ax.set_ylabel(y_label_dict[target], fontsize=ftsize)
+
+        ax.hist(train_data['RecoDatam'], 
+                bins=xbins, 
+                range=(xmin, xmax), 
+                alpha=0.3, 
+                color='blue', 
+                density=True, 
+                label='simulation')
+        ax.hist(y, 
+                bins=xbins, 
+                range=(xmin, xmax), 
+                alpha=0.3, 
+                color='red', 
+                density=True, 
+                label='$y^\prime$')
+        ax.grid()
+        ax.legend()
+        
+        
+        if save_image:
+            plt.savefig('images/'+T+'IQN_Consecutive_'+N+'.png')
+            print('images/'+T+'IQN_Consecutive_'+N+'.png')
+        if show_plot:
+            plt.tight_layout()
+            plt.show()
 ##########
 ################################################CNN
 

@@ -53,7 +53,7 @@ features= source['inputs']
 ########
 print('USING NEW DATASET')
 train_data=pd.read_csv(DATA_DIR + '/train_data_10M_2.csv' ,
-                                #  nrows=1000,
+                                #  nrows=10000,
                        usecols=FIELDS[target]['inputs']
                        )
 print('TRAINING FEATURES\n', train_data[features].head())
@@ -64,7 +64,6 @@ print('train set shape:',  train_data.shape)
 
 
 
-@njit
 def normalize_IQN(values, expected_input_range):
     expected_range=expected_input_range
     expected_min, expected_max = expected_range
@@ -83,7 +82,7 @@ def denormalize_IQN(normalized_values, expected_input_range):
 
 def normalize_IQN_DF(DF):
     
-    for i in range(DF.shape[1]):
+    for i in range(DF.shape[1]-1):
         col = DF.iloc[:,i]
         expectd_col_min = np.min(col)
         expected_col_max = np.max(col)
@@ -132,14 +131,14 @@ def train(model, optimizer, niterations):
         optimizer.zero_grad()
         cost.backward()
         
-        print(cost, end='\n')
+        # print(cost, end='\n')
             
             
 
 
 n_layers=1
-n_hidden=64
-niterations=int(1e2)
+n_hidden=32
+niterations=int(1e5)
 
 
 model =  utils.RegularizedRegressionModel(
@@ -187,7 +186,7 @@ def plot_model(dnn, target, src,
         
     y = dnn(eval_data_normalized).view(-1, ).detach().numpy()
     
-    y_denormalized = denormalize_IQN(y, EXPECTED_VALUES_RANGE)
+    y_denormalized = denormalize_IQN(y, EXPECTED_VALUES_RANGE).ravel()
     
     eval_data_df['RecoDatam']=y_denormalized
     new_cols= ['RecoDatam'] + X

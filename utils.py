@@ -68,15 +68,6 @@ class CustomDataset(Dataset):
                }#this already makes the targets made of one tensor (of one value) each
 
 
-def split_t_x(df, target, source, scalers):
-    # change from pandas dataframe format to a numpy array
-    scaler_t, scaler_x = scalers
-    t = np.array(scaler_t.transform(df[target].to_numpy().reshape(-1, 1)))
-    #where scaler_t is a StandardScaler() object, which has the .transorm method
-    x = np.array(scaler_x.transform(df[source]))
-    t = t.reshape(-1,)
-    return t, x
-
 class RegressionModel(nn.Module):
     #inherit from the super class
     def __init__(self, nfeatures, ntargets, nlayers, hidden_size):
