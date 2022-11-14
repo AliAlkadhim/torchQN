@@ -32,7 +32,7 @@ T = args.T
 
 
 YLIM=(0.8,1.2)
-RUNFROM='Davidson'
+RUNFROM='ubuntu'
 #can take 'ubuntu', 'WSL' or 'Davidson'
 
 
@@ -40,42 +40,6 @@ RUNFROM='Davidson'
 
 
 
-# ###############Original plotting (works but not like Braden's)
-
-
-
-#     ######pT
-
-#     ax[0].hist(JETS_DICT['Predicted_RecoDatapT']['dist'], label=JETS_DICT['Predicted_RecoDatapT']['label'],
-#                bins=bins, alpha=0.3,density=True,color="#d7301f",range=pt_range)
-#     ax[0].hist(JETS_DICT['Real_RecoDatapT']['dist'], label=JETS_DICT['Real_RecoDatapT']['label'],bins=bins, alpha=0.3, density=True,color="k",range=pt_range)
-#     ax[0].set_xlabel(JETS_DICT['Predicted_RecoDatapT']['xlabel'])
-#     ########eta
-#     ax[1].hist(JETS_DICT['Predicted_RecoDataeta']['dist'], label=JETS_DICT['Predicted_RecoDataeta']['label'],bins=bins, alpha=0.3,density=True,color="#d7301f")
-#     ax[1].hist(JETS_DICT['Real_RecoDataeta']['dist'], label=JETS_DICT['Real_RecoDataeta']['label'],bins=bins, alpha=0.3, density=True,color="k")
-#     ax[1].set_xlabel(JETS_DICT['Predicted_RecoDataeta']['xlabel'])    
-
-#     #######phi
-#     ax[2].hist(JETS_DICT['Predicted_RecoDataphi']['dist'], label=JETS_DICT['Predicted_RecoDataphi']['label'],bins=bins, alpha=0.3,density=True,color="#d7301f")
-#     ax[2].hist(JETS_DICT['Real_RecoDataphi']['dist'], label=JETS_DICT['Real_RecoDataphi']['label'],bins=bins, alpha=0.3, density=True,color="k")
-#     ax[2].set_xlabel(JETS_DICT['Predicted_RecoDataphi']['xlabel'])    
-
-#     #############m
-#     ax[3].hist(JETS_DICT['Predicted_RecoDatam']['dist'], label=JETS_DICT['Predicted_RecoDatam']['label'],bins=bins, alpha=0.3,density=True,color="#d7301f",range=m_range)
-#     ax[3].hist(JETS_DICT['Real_RecoDatam']['dist'], label=JETS_DICT['Real_RecoDatam']['label'],bins=bins, alpha=0.3, density=True,color="k",range=m_range)
-#     ax[3].set_xlabel(JETS_DICT['Predicted_RecoDatam']['xlabel'])    
-
-
-#     for i in range(4):
-#         ax[i].legend()
-
-#     plt.tight_layout()
-    
-#     # plt.savefig('IQN_All_CNN.svg')
-
-# plot_all()
-
-############Start here for Braden-like plots
 
 #data = pd.read_csv('Data.csv')
 # pred_data_path=
@@ -107,7 +71,7 @@ predicted_data_path='predicted_data/dataset2/'
 # print('predicted data shape' ,pd.read_csv(predicted_data_path+'RecoDatapT_predicted_MLP_iter_5000000.csv')['RecoDatapT_predicted'].shape)
 # DIR='AUTOREGRESSIVE_TUNED/'
 DIR=''
-AUTOREGRESSIVE_DIST=pd.read_csv(DIR+'AUTOREGRESSIVE_m_Prime.csv')
+AUTOREGRESSIVE_DIST=pd.read_csv(DIR+'AUTOREGRESSIVE_m_Prime_1.0k_iter.csv')
 
 norm_data=data.shape[0]
 # norm_IQN=pd.read_csv(predicted_data_path+'RecoDatapT_predicted_MLP_iter_5000000.csv')['RecoDatapT_predicted'].shape[0]

@@ -364,8 +364,13 @@ def run_train(params, save_model=False):
                 dropout=params["dropout"]
                 )
     learning_rate= params["learning_rate"]
+    optimizer_name = params["optimizer_name"]
+    
+    # optimizer = torch.optim.Adam(model.parameters(), lr=params["learning_rate"]) 
+    
+    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate)
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=params["learning_rate"]) 
+    #optimizer = torch.optim.Adam(model.parameters(), lr=params["learning_rate"]) 
     eng=Engine(model, optimizer, batch_size=params["batch_size"])
     best_loss = np.inf
     early_stopping_iter=10
@@ -389,11 +394,12 @@ def run_train(params, save_model=False):
 
 def objective(trial):
   params = {
-      "nlayers": trial.suggest_int("nlayers",1,24),      
-      "hidden_size": trial.suggest_int("hidden_size", 2, 3000),
+      "nlayers": trial.suggest_int("nlayers",1,100),      
+      "hidden_size": trial.suggest_int("hidden_size", 2, 300),
       "dropout": trial.suggest_float("dropout", 0.1,0.5),
       "learning_rate": trial.suggest_float("learning_rate", 1e-5, 1e-2),
-      "batch_size": trial.suggest_int("batch_size", 32, 4000)
+      "batch_size": trial.suggest_int("batch_size", 128, 10000),
+      "optimizer_name" : trial.suggest_categorical("optimizer_name", ["Adam", "RMSprop","SGD"]),
       
   }
   # all_losses=[]
@@ -440,7 +446,7 @@ def run_train_best_model(best_params, save_model=False, EPOCHS=2):
     learning_rate= best_params["learning_rate"]
 
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate) 
-    eng=Engine(model, optimizer, batch_size=64)
+    eng=Engine(model, optimizer, batch_size=best_params["batch_size"])
     best_loss = np.inf
     early_stopping_iter=10
     early_stopping_coutner=0
@@ -485,18 +491,19 @@ def evaluate_model(dnn):
 def main():
     print('Getting best hyperparameters for m\n')
     study=optuna.create_study(direction="minimize")
-    study.optimize(objective, n_trials=3000)
+    study.optimize(objective, n_trials=2000)
     best_trial = study.best_trial
     print('best model parameters', best_trial.params)
 
     best_params=best_trial.params#this is a dictionary
-    filename='best_params/m_best_params_3kTrials.csv'
+    filename='best_params/m_best_params_2.csv'
     param_df=pd.DataFrame({
         'n_layers':best_params["nlayers"], 
                             'hidden_size':best_params["hidden_size"], 
                             'dropout':best_params["dropout"],
                             'learning_rate': best_params["learning_rate"], 
-                            'batch_size':best_params["batch_size"] },
+                            'batch_size':best_params["batch_size"],
+			     'optimizer_name':best_params["optimizer_name"] },
                                     index=[0]
     )
 

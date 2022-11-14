@@ -1,0 +1,6 @@
+environment: line 10: __conda_exe: command not found
+# conda environments:
+#
+torch_env             *  /home/DAVIDSON/alalkadhim.visitor/.conda/envs/torch_env
+base                     /home/DAVIDSON/alalkadhim.visitor/software/miniconda3
+

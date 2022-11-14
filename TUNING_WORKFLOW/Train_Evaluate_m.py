@@ -317,8 +317,8 @@ def run(model, scalers, target,
         n_batch, 
         learning_rate,
         n_iterations=n_iterations, 
-        traces_step=800, 
-        traces_window=800,
+        traces_step=8000, 
+        traces_window=8000,
         save_model=save_model):
     
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate) 
@@ -468,7 +468,7 @@ def plot_model(dnn, target, src,
 def main():
     start=time.time()
     print('estimating mass\n')
-    BEST_PARAMS = pd.read_csv('best_params/m_best_params.csv')
+    BEST_PARAMS = pd.read_csv('best_params/m_best_params_2.csv')
     print(BEST_PARAMS)
     
     n_layers = int(BEST_PARAMS["n_layers"]) 
