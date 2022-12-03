@@ -101,7 +101,7 @@ predicted_data_path='predicted_data/dataset2/'
 # print('predicted data shape' ,pd.read_csv(predicted_data_path+'RecoDatapT_predicted_MLP_iter_5000000.csv')['RecoDatapT_predicted'].shape)
 # DIR='AUTOREGRESSIVE_TUNED/'
 DIR=''
-AUTOREGRESSIVE_DIST=pd.read_csv(DIR+'AUTOREGRESSIVE_m_Prime_pT_Prime.csv')
+AUTOREGRESSIVE_DIST=pd.read_csv(DIR+'AUTOREGRESSIVE_m_Prime.csv')
 
 norm_data=data.shape[0]
 # norm_IQN=pd.read_csv(predicted_data_path+'RecoDatapT_predicted_MLP_iter_5000000.csv')['RecoDatapT_predicted'].shape[0]
@@ -240,7 +240,7 @@ def plot_one_pT():
   plt.tight_layout()
   fig.subplots_adjust(wspace=0.5, hspace=0.2)
   fig.subplots_adjust(wspace=0.0, hspace=0.1)
-  plt.savefig(DIR+'AUTOREGRESSIVE_pT_TUNEND_MLP_OCT_7.pdf')
+  plt.savefig(DIR+'AUTOREGRESSIVE_pT_TUNEND_MLP_OCT_18.pdf')
   plt.show(); fig.show()
   
   plt.axis('off')
@@ -270,7 +270,7 @@ def plot_one_eta():
   plt.tight_layout()
   fig.subplots_adjust(wspace=0.5, hspace=0.2)
   fig.subplots_adjust(wspace=0.0, hspace=0.1)
-  plt.savefig(DIR+'AUTOREGRESSIVE_eta_TUNEND_MLP_OCT_7.pdf')
+  plt.savefig(DIR+'AUTOREGRESSIVE_eta_TUNEND_MLP_OCT_18.pdf')
 #   plt.savefig('images/all_eta_g2r_2.pdf')
   # plt.show(); fig.show()
   
@@ -303,7 +303,7 @@ def plot_one_phi():
   plt.tight_layout()
   fig.subplots_adjust(wspace=0.5, hspace=0.2)
   fig.subplots_adjust(wspace=0.0, hspace=0.1)
-  plt.savefig(DIR+'AUTOREGRESSIVE_phi_TUNEND_MLP_OCT_7.pdf')
+  plt.savefig(DIR+'AUTOREGRESSIVE_phi_TUNEND_MLP_OCT_18.pdf')
   # plt.show(); fig.show()
   plt.axis('off')
   plt.gca().set_position([0, 0, 1, 1])
@@ -332,9 +332,9 @@ def plot_one_m():
   plt.tight_layout()
   fig.subplots_adjust(wspace=0.5, hspace=0.2)
   fig.subplots_adjust(wspace=0.0, hspace=0.1)
-  plt.savefig(DIR+'AUTOREGRESSIVE_m_TUNEND_MLP_OCT_7.pdf')
+  plt.savefig(DIR+'AUTOREGRESSIVE_m_TUNEND_MLP_OCT_18.pdf')
 #   plt.savefig('images/all_m_g2r.pdf')
-  # plt.show(); fig.show()
+  plt.show(); fig.show()
   
   plt.axis('off')
   plt.gca().set_position([0, 0, 1, 1])
