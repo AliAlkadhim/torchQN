@@ -31,7 +31,7 @@ args = parser.parse_args()
 T = args.T
 
 
-YLIM=(0.7,1.6)
+YLIM=(0.8,1.2)
 
 
 
@@ -101,7 +101,7 @@ predicted_data_path='predicted_data/dataset2/'
 # print('predicted data shape' ,pd.read_csv(predicted_data_path+'RecoDatapT_predicted_MLP_iter_5000000.csv')['RecoDatapT_predicted'].shape)
 # DIR='AUTOREGRESSIVE_TUNED/'
 DIR=''
-AUTOREGRESSIVE_DIST=pd.read_csv(DIR+'AUTOREGRESSIVE_m_Prime.csv')
+AUTOREGRESSIVE_DIST=pd.read_csv(DIR+'AUTOREGRESSIVE_m_Prime_pT_Prime.csv')
 
 norm_data=data.shape[0]
 # norm_IQN=pd.read_csv(predicted_data_path+'RecoDatapT_predicted_MLP_iter_5000000.csv')['RecoDatapT_predicted'].shape[0]
