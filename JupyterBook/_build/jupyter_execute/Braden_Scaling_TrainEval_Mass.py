@@ -609,7 +609,7 @@ plt.legend();plt.show()
 # $$ L_{\text{IQN}}(f, y)=\left\{\begin{array}{ll}
 # \tau(y-f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})) & y \geq f(\boldsymbol{x}, \tau ; \boldsymbol{\theta}) \\
 # (1-\tau)(f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})-y) & y<f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})
-# \end{array},\right. \tag{2}$$
+# \end{array},\right.$$
 # 
 # Means that what was done previously is that the risk functional, which is generally a functional of many models $f$, was a only a functional of a single model: $R[f_1,..., f_n] = f[f_1]$. Here we have 4 models 
 # 
@@ -625,7 +625,7 @@ plt.legend();plt.show()
 #     & \times p(\eta'| \mathbf{x}, m', p_T' )\nonumber\\
 #       & \times p(\phi' |  \mathbf{x}, m', p_T', \eta' ) ,
 # \end{align}
-# \tag{3}
+# 
 # $$
 # 
 # 
@@ -634,7 +634,7 @@ plt.legend();plt.show()
 # R_{\text{IQN}x4} &= \int L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathbf{y_m} \right) p(\mathbf{x_m, y_m})  d \mathbf{x_m} d \mathbf{y_m} \\
 # &\times \  ... \times \\ 
 # &\times \int L_\text{IQN} \left( f_\phi (\mathbf{x_\phi},\tau), \mathbf{y_\phi} \right) p(\mathbf{x_\phi, y_\phi})  d \mathbf{x_\phi} d \mathbf{y_\phi}
-# \end{align},\tag{4}$$
+# \end{align},$$
 # 
 # where, again, each model $f_i$ is also dependent on a set of parameters $\theta_i$ (dropped for simplicity)
 

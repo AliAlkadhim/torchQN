@@ -1551,7 +1551,7 @@ $<span class="math notranslate nohighlight">\(R[f] = \int \cdots \int \, p(t, \m
 \[\begin{split} L_{\text{IQN}}(f, y)=\left\{\begin{array}{ll}
 \tau(y-f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})) &amp; y \geq f(\boldsymbol{x}, \tau ; \boldsymbol{\theta}) \\
 (1-\tau)(f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})-y) &amp; y&lt;f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})
-\end{array},\right. \tag{2}\end{split}\]</div>
+\end{array},\right.\end{split}\]</div>
 <p>Means that what was done previously is that the risk functional, which is generally a functional of many models <span class="math notranslate nohighlight">\(f\)</span>, was a only a functional of a single model: <span class="math notranslate nohighlight">\(R[f_1,..., f_n] = f[f_1]\)</span>. Here we have 4 models</p>
 <div class="math notranslate nohighlight">
 \[R_{\text{IQN}x4} =R_{\text{IQN}}[f_m, f_{p_T}, f_\eta, f_\phi], \]</div>
@@ -1564,15 +1564,13 @@ $<span class="math notranslate nohighlight">\(R[f] = \int \cdots \int \, p(t, \m
     &amp; \times p(p_T'|\mathbf{x}, m' )\nonumber\\
     &amp; \times p(\eta'| \mathbf{x}, m', p_T' )\nonumber\\
       &amp; \times p(\phi' |  \mathbf{x}, m', p_T', \eta' ) ,
-\end{align}
-\tag{3}
-\end{split}\]</div>
+\end{align}\end{split}\]</div>
 <div class="math notranslate nohighlight">
 \[\begin{split} \begin{align}
 R_{\text{IQN}x4} &amp;= \int L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathbf{y_m} \right) p(\mathbf{x_m, y_m})  d \mathbf{x_m} d \mathbf{y_m} \\
 &amp;\times \  ... \times \\ 
 &amp;\times \int L_\text{IQN} \left( f_\phi (\mathbf{x_\phi},\tau), \mathbf{y_\phi} \right) p(\mathbf{x_\phi, y_\phi})  d \mathbf{x_\phi} d \mathbf{y_\phi}
-\end{align},\tag{4}\end{split}\]</div>
+\end{align},\end{split}\]</div>
 <p>where, again, each model <span class="math notranslate nohighlight">\(f_i\)</span> is also dependent on a set of parameters <span class="math notranslate nohighlight">\(\theta_i\)</span> (dropped for simplicity)</p>
 <p>Our risk functional is minimized for</p>
 <div class="math notranslate nohighlight">
