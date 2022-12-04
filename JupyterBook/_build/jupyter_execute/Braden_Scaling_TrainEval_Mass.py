@@ -669,10 +669,10 @@ plt.legend();plt.show()
 # for mass, $\mathbf{y_m}=m_{\text{reco}}$ and $\mathbf{x_m}=\{p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}$.
 # 
 
-# In[11]:
+# In[12]:
 
 
-show_jupyter_image('images/IQN_training_flowchart.png')
+show_jupyter_image('images/IQN_training_flowchart.png',width=2600,height=600)
 
 
 # In[151]:
