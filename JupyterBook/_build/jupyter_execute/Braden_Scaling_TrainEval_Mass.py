@@ -264,7 +264,7 @@ def set_axes(ax, xlabel, ylabel=None, xmin=None, xmax=None, ymin=None, ymax=None
 
 
 use_svg_display()
-show_jupyter_image('data_diagram_IQN.png')
+show_jupyter_image('data_diagram_IQN.png', width=2000,height=500)
 
 
 # <!-- For Davidson team, please read try to all the code/comments before asking me questions! -->
@@ -669,10 +669,10 @@ plt.legend();plt.show()
 # for mass, $\mathbf{y_m}=m_{\text{reco}}$ and $\mathbf{x_m}=\{p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}$.
 # 
 
-# In[12]:
+# In[13]:
 
 
-show_jupyter_image('images/IQN_training_flowchart.png',width=2600,height=600)
+show_jupyter_image('images/IQN_training_flowchart.png',width=2000,height=600)
 
 
 # In[151]:
