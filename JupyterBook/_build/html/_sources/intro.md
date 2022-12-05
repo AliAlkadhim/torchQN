@@ -9,5 +9,5 @@ December, 2022<br>
 Under construction!
 
 <p align="center">
-<img src="/home/ali/Desktop/Pulled_Github_Repositories/torchQN/IQN_training_flowchart.png" width="600" height="600" border="10"/>
+<img src="images/IQN_training_flowchart.png" width="900" height="700" border="10"/>
 </p>
