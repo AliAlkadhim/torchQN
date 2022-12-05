@@ -31,7 +31,7 @@ except Exception:
 
 # ### A user is competent enought to do `source setup.sh` on a `setup.sh` script that comes in the repo, such as the next cell uncommented
 
-# In[2]:
+# In[10]:
 
 
 # %%writefile setup.sh
@@ -56,7 +56,7 @@ except Exception:
 # 
 # There is also a `requirements.txt` here so that it can be run on an interactive website, eg binder or people can `pip install` it.
 
-# In[3]:
+# In[11]:
 
 
 import numpy as np; import pandas as pd
@@ -90,7 +90,7 @@ import time
 import ipywidgets as wid; 
 
 
-# In[4]:
+# In[12]:
 
 
 # import ruamel.yaml
@@ -112,7 +112,7 @@ import ipywidgets as wid;
 #        print(requirement, file=fp)
 
 
-# In[5]:
+# In[13]:
 
 
 # update fonts
@@ -136,7 +136,7 @@ wid.HTMLMath('$\LaTeX$')
 
 # ## Set arguments and configurations
 
-# In[6]:
+# In[14]:
 
 
 ################################### ARGUMENTS ###################################
@@ -201,7 +201,7 @@ def get_model_params():
 
 # Plotting
 
-# In[7]:
+# In[15]:
 
 
 def show_jupyter_image(image_filename, width = 1300, height = 300):
@@ -260,11 +260,11 @@ def set_axes(ax, xlabel, ylabel=None, xmin=None, xmax=None, ymin=None, ymax=None
     plt.show()
 
 
-# In[15]:
+# In[16]:
 
 
 use_svg_display()
-show_jupyter_image('data_diagram_IQN.png', width=2000,height=500)
+show_jupyter_image('images/pythia_ppt_diagram.png', width=2000,height=500)
 
 
 # <!-- For Davidson team, please read try to all the code/comments before asking me questions! -->
@@ -670,7 +670,7 @@ plt.legend();plt.show()
 # for mass, $\mathbf{y_m}=m_{\text{reco}}$ and $\mathbf{x_m}=\{p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}$.
 # 
 
-# In[13]:
+# In[17]:
 
 
 show_jupyter_image('images/IQN_training_flowchart.png',width=2000,height=600)
