@@ -1221,7 +1221,7 @@ $<span class="math notranslate nohighlight">\(
     <span class="k">if</span> <span class="n">label</span><span class="o">==</span><span class="s1">&#39;tau&#39;</span><span class="p">:</span>
         <span class="n">L_observable</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="n">orig_observable</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span>
         
-    <span class="k">return</span> <span class="n">L_observable</span>
+    <span class="k">return</span> <span class="n">L_observable</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1240,6 +1240,8 @@ $<span class="math notranslate nohighlight">\(
     <span class="k">if</span> <span class="n">label</span><span class="o">==</span><span class="s1">&#39;tau&#39;</span><span class="p">:</span>
         <span class="n">L_inverse_observable</span> <span class="o">=</span> <span class="p">(</span><span class="n">L_observable</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="mi">6</span>
         
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">L_inverse_observable</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">L_inverse_observable</span> <span class="o">=</span> <span class="n">L_inverse_observable</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">L_inverse_observable</span>
 </pre></div>
 </div>
@@ -1971,6 +1973,19 @@ no need to train_test_split since we already have the split dataframes
 <h2>Define basic NN model<a class="headerlink" href="#define-basic-nn-model" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">RegularizedRegressionModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="c1">#inherit from the super class</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nfeatures</span><span class="p">,</span> <span class="n">ntargets</span><span class="p">,</span> <span class="n">nlayers</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">dropout</span><span class="p">):</span>
@@ -2060,16 +2075,16 @@ no need to train_test_split since we already have the split dataframes
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training for 10000 iterations
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training for 20000 iterations
 estimating RecoDatam
 
 Iteration vs average loss
  iteration	 train-set	 valid-set
-         0	-544213.500000	-542040.187500
-      9950	-1267106.250000	-1261866.250000	-1150359.250000
+         0	  0.558299	  0.558299
+      9950	  0.245781	  0.245781	  0.247308
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_58_2.svg" src="_images/Braden_Scaling_TrainEval_Mass_58_2.svg" /><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>evaluating m took  11.27345895767212 seconds
+<img alt="_images/Braden_Scaling_TrainEval_Mass_59_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_59_1.svg" /><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>evaluating m took  8.094625473022461 seconds
 </pre></div>
 </div>
 </div>
@@ -2085,9 +2100,34 @@ Iteration vs average loss
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_59_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_59_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_60_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_60_0.svg" /></div>
 </div>
-<p>Apparently not</p>
+<p>Apparently not, but let’s continue</p>
+<div class="math notranslate nohighlight">
+\[
+    m^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 \right]
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m_reco</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="s1">&#39;RecoDatam&#39;</span><span class="p">]</span>
+<span class="n">m_gen</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="s1">&#39;genDatam&#39;</span><span class="p">]</span>
+<span class="n">z_inv_f</span> <span class="o">=</span> <span class="n">z_inverse</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">m_reco</span><span class="p">)</span>
+<span class="n">factor</span> <span class="o">=</span> <span class="n">z_inv_f</span> <span class="o">*</span> <span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">orig_observable</span><span class="o">=</span><span class="n">m_gen</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-</span><span class="mi">10</span>
+<span class="n">m_pred</span> <span class="o">=</span> <span class="n">L_inverse</span><span class="p">(</span><span class="n">L_observable</span><span class="o">=</span><span class="n">factor</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/Braden_Scaling_TrainEval_Mass_62_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_62_0.svg" /></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">m_pred</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;spliting data for </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -2142,7 +2182,7 @@ no need to train_test_split since we already have the split dataframes
 1.9649797331536134 0.3264556967084843
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_62_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_62_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_66_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_66_1.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2182,7 +2222,7 @@ Iteration vs average loss
      19950	-784456.312500	-773300.125000	-690390.937500
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_63_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_63_1.svg" /><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>evaluating m took  21.789092540740967 seconds
+<img alt="_images/Braden_Scaling_TrainEval_Mass_67_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_67_1.svg" /><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>evaluating m took  21.789092540740967 seconds
 </pre></div>
 </div>
 </div>
@@ -2201,7 +2241,7 @@ Iteration vs average loss
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_64_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_64_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_68_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_68_0.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2235,7 +2275,7 @@ valid_t shape =  (10000,) valid_x shape =  (10000, 5)
 no need to train_test_split since we already have the split dataframes
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_65_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_65_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_69_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_69_1.svg" /></div>
 </div>
 <section id="evalute-model-and-save-evaluated-data">
 <h3>Evalute model and save evaluated data<a class="headerlink" href="#evalute-model-and-save-evaluated-data" title="Permalink to this headline">#</a></h3>

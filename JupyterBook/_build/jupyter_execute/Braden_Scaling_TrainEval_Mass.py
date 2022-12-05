@@ -438,7 +438,7 @@ def z_inverse(xprime, x):
     return xprime * np.std(x) + np.mean(x)
 
 
-# In[61]:
+# In[167]:
 
 
 def L(orig_observable, label):
@@ -457,10 +457,10 @@ def L(orig_observable, label):
     if label=='tau':
         L_observable = (6*orig_observable) - 3
         
-    return L_observable
+    return L_observable.to_numpy()
 
 
-# In[62]:
+# In[180]:
 
 
 def L_inverse(L_observable, label):
@@ -475,6 +475,8 @@ def L_inverse(L_observable, label):
     if label=='tau':
         L_inverse_observable = (L_observable+3)/6
         
+    if not isinstance(L_inverse_observable, np.ndarray):
+        L_inverse_observable = L_inverse_observable.to_numpy()
     return L_inverse_observable
 
 
@@ -1023,7 +1025,14 @@ def run(model, target,
 
 # ### Define basic NN model
 
-# In[145]:
+# In[175]:
+
+
+x = np.array([1])
+isinstance(x,np.ndarray)
+
+
+# In[157]:
 
 
 class RegularizedRegressionModel(nn.Module):
@@ -1065,7 +1074,7 @@ class RegularizedRegressionModel(nn.Module):
 
 # ### Run training
 
-# In[146]:
+# In[158]:
 
 
 n_iterations, n_layers, n_hidden, starting_learning_rate, dropout = get_model_params()
@@ -1079,7 +1088,7 @@ print(model)
 
 # ## See if trainig works on T ratio
 
-# In[111]:
+# In[159]:
 
 
 print(f'Training for {n_iterations} iterations')
@@ -1098,7 +1107,7 @@ difference=end-start
 print('evaluating m took ',difference, 'seconds')
 
 
-# In[129]:
+# In[160]:
 
 
 IQN.eval()
@@ -1108,7 +1117,30 @@ p = pred.detach().numpy()
 plt.hist(p, label='using $T$ ratio');plt.legend();plt.show()
 
 
-# Apparently not
+# Apparently not, but let's continue
+# 
+# $$
+#     m^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 \right]
+# $$
+# 
+
+# In[181]:
+
+
+m_reco = train_data['RecoDatam']
+m_gen = train_data['genDatam']
+z_inv_f = z_inverse(p, x=m_reco)
+factor = z_inv_f * (L(orig_observable=m_gen, label='m') + 10) -10
+m_pred = L_inverse(L_observable=factor, label='m')
+
+
+# In[ ]:
+
+
+plt.hist(m_pred.flatten(),bins=100);plt.show()
+
+
+# ----
 
 # In[152]:
 
