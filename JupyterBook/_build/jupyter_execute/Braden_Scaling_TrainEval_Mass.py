@@ -804,7 +804,7 @@ print('\ntest set shape:  ', test_data_m.shape)
 
 # ### Get training and testing features and targets
 
-# In[98]:
+# In[120]:
 
 
 target = 'RecoDatam'
@@ -812,9 +812,8 @@ source  = FIELDS[target]
 features= source['inputs']
 ################################################
 def split_t_x(df, target, input_features):
-    # change from pandas dataframe format to a numpy 
-    # array of the specified types
-    # t = np.array(df[target])
+    """ Get teh target as the ratio, according to the T equation"""
+    
     if target=='RecoDatam':
         t = T('m', scaled_df=train_data_m)
     if target=='RecoDatapT':
@@ -826,20 +825,48 @@ def split_t_x(df, target, input_features):
     x = np.array(df[input_features])
     return np.array(t), x
 
+def normal_split_t_x(df, target, input_features):
+    # change from pandas dataframe format to a numpy 
+    # array of the specified types
+    # t = np.array(df[target])
+    t = np.array(df[target])
+    x = np.array(df[input_features])
+    return t, x
+
+
+# In[123]:
+
+
 print(f'spliting data for {target}')
-train_t, train_x = split_t_x(df= train_data_m, target = target, input_features=features)
+train_t_ratio, train_x = split_t_x(df= train_data_m, target = target, input_features=features)
 print('train_t shape = ',train_t.shape , 'train_x shape = ', train_x.shape)
 print('\n Training features:\n')
 print(train_x)
-valid_t, valid_x = split_t_x(df= test_data_m, target = target, input_features=features)
+valid_t_ratio, valid_x = split_t_x(df= test_data_m, target = target, input_features=features)
 print('valid_t shape = ',valid_t.shape , 'valid_x shape = ', valid_x.shape)
 
 print('no need to train_test_split since we already have the split dataframes')
 
 
+# In[124]:
+
+
+print(valid_x.mean(axis=0), valid_x.std(axis=0))
+print(train_x.mean(axis=0), train_x.std(axis=0))
+
+
+# we expect the targets to have mean 0 and variance=1, since theyre the only things standarized
+
+# In[125]:
+
+
+print(valid_t_ratio.mean(), valid_t_ratio.std())
+print(train_t_ratio.mean(), train_t_ratio.std())
+
+
 # ### Training and running-of-training functions
 
-# In[91]:
+# In[126]:
 
 
 def train(model, optimizer, avloss, getbatch,
@@ -996,7 +1023,7 @@ def run(model, target,
 
 # ### Define basic NN model
 
-# In[92]:
+# In[145]:
 
 
 class RegularizedRegressionModel(nn.Module):
@@ -1011,15 +1038,15 @@ class RegularizedRegressionModel(nn.Module):
                 #here we choose its output layer as the hidden size (fully connected)
                 layers.append(nn.Linear(nfeatures, hidden_size))
                 #batch normalization
-                layers.append(nn.BatchNorm1d(hidden_size))
+                # layers.append(nn.BatchNorm1d(hidden_size))
                 #Dropout seems to worsen model performance
-                layers.append(nn.Dropout(dropout))
+                # layers.append(nn.Dropout(dropout))
                 #ReLU activation 
                 layers.append(nn.ReLU())
             else:
                 #if this is not the first layer (we dont have layers)
                 layers.append(nn.Linear(hidden_size, hidden_size))
-                layers.append(nn.BatchNorm1d(hidden_size))
+                # layers.append(nn.BatchNorm1d(hidden_size))
                 #Dropout seems to worsen model performance
                 # layers.append(nn.Dropout(dropout))
                 layers.append(nn.ReLU())
@@ -1036,7 +1063,9 @@ class RegularizedRegressionModel(nn.Module):
         return self.model(x)
 
 
-# In[93]:
+# ### Run training
+
+# In[146]:
 
 
 n_iterations, n_layers, n_hidden, starting_learning_rate, dropout = get_model_params()
@@ -1048,25 +1077,9 @@ model=RegularizedRegressionModel(nfeatures=NFEATURES, ntargets=1,
 print(model)
 
 
-# ### Run training
+# ## See if trainig works on T ratio
 
-# In[109]:
-
-
-print(valid_x.mean(axis=0), valid_x.std(axis=0))
-print(train_x.mean(axis=0), train_x.std(axis=0))
-
-
-# we expect the targets to have mean 0 and variance=1, since theyre the only things standarized
-
-# In[104]:
-
-
-print(valid_t.mean(), valid_t.std())
-print(train_t.mean(), train_t.std())
-
-
-# In[110]:
+# In[111]:
 
 
 print(f'Training for {n_iterations} iterations')
@@ -1074,8 +1087,9 @@ start=time.time()
 print('estimating %s\n' % target)
 IQN_trace=([], [], [], [])
 traces_step = 50
-IQN = run(model=model, target=target,train_x=train_x, train_t=train_t, 
-        valid_x=valid_x, valid_t=valid_t, traces=IQN_trace, n_batch=256, 
+n_iterations=10000
+IQN = run(model=model, target=target,train_x=train_x, train_t=train_t_ratio, 
+        valid_x=valid_x, valid_t=valid_t_ratio, traces=IQN_trace, n_batch=256, 
         n_iterations=n_iterations, traces_step=50, traces_window=50,
         save_model=False)
 
@@ -1084,9 +1098,102 @@ difference=end-start
 print('evaluating m took ',difference, 'seconds')
 
 
+# In[129]:
+
+
+IQN.eval()
+valid_x_tensor=torch.from_numpy(valid_x).float()
+pred = IQN(valid_x_tensor)
+p = pred.detach().numpy()
+plt.hist(p, label='using $T$ ratio');plt.legend();plt.show()
+
+
+# Apparently not
+
+# In[152]:
+
+
+print(f'spliting data for {target}')
+train_t, train_x = normal_split_t_x(df= train_data_m, target = target, input_features=features)
+print('train_t shape = ',train_t.shape , 'train_x shape = ', train_x.shape)
+print('\n Training features:\n')
+print(train_x)
+valid_t, valid_x = normal_split_t_x(df= test_data_m, target = target, input_features=features)
+print('valid_t shape = ',valid_t.shape , 'valid_x shape = ', valid_x.shape)
+
+print('no need to train_test_split since we already have the split dataframes')
+
+
+# In[148]:
+
+
+print(valid_x.mean(axis=0), valid_x.std(axis=0))
+print(train_x.mean(axis=0), train_x.std(axis=0))
+print('\n\n')
+print(valid_t.mean(), valid_t.std())
+print(train_t.mean(), train_t.std())
+plt.hist(train_t, bins=50);plt.hist(valid_t,bins=50);plt.show()
+
+
+# In[149]:
+
+
+n_iterations, n_layers, n_hidden, starting_learning_rate, dropout = get_model_params()
+def load_untrained_model():
+    NFEATURES=train_x.shape[1]
+    model=RegularizedRegressionModel(nfeatures=NFEATURES, ntargets=1,
+                               nlayers=n_layers, hidden_size=n_hidden, dropout=dropout)
+    return model
+
+model=load_untrained_model()
+
+print(f'Training for {n_iterations} iterations')
+start=time.time()
+print('estimating %s\n' % target)
+IQN_trace=([], [], [], [])
+traces_step = 50
+n_iterations=20000
+IQN = run(model=model, target=target,train_x=train_x, train_t=train_t, 
+        valid_x=valid_x, valid_t=valid_t, traces=IQN_trace, n_batch=2560, 
+        n_iterations=n_iterations, traces_step=50, traces_window=50,
+        save_model=False)
+
+end=time.time()
+difference=end-start
+print('evaluating m took ',difference, 'seconds')
+
+
+# In[150]:
+
+
+def simple_eval(model):
+    model.eval()
+    valid_x_tensor=torch.from_numpy(valid_x).float()
+    pred = IQN(valid_x_tensor)
+    p = pred.detach().numpy()
+    plt.hist(p, label='just L-scaled');plt.legend();plt.show()
+    
+simple_eval(IQN)
+
+
+# In[156]:
+
+
+print(f'spliting data for {target}')
+train_t, train_x = normal_split_t_x(df= train_data, target = target, input_features=features)
+print('train_t shape = ',train_t.shape , 'train_x shape = ', train_x.shape)
+print('\n Training features:\n')
+print(train_x)
+valid_t, valid_x = normal_split_t_x(df= train_data, target = target, input_features=features)
+print('valid_t shape = ',valid_t.shape , 'valid_x shape = ', valid_x.shape)
+
+print('no need to train_test_split since we already have the split dataframes')
+simple_eval(IQN)
+
+
 # ### Evalute model and save evaluated data
 
-# In[ ]:
+# In[137]:
 
 
 if target== 'RecoDatapT':
