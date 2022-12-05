@@ -296,6 +296,11 @@ title="Print to PDF"
   </a>
   <ul class="visible nav section-nav flex-column">
    <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#external-imports">
+     External Imports
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
     <a class="reference internal nav-link" href="#import-utils-and-set-environemnt-variables">
      Import utils, and set environemnt variables
     </a>
@@ -321,11 +326,6 @@ title="Print to PDF"
       </a>
      </li>
     </ul>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#external-imports">
-     External Imports
-    </a>
    </li>
    <li class="toc-h2 nav-item toc-entry">
     <a class="reference internal nav-link" href="#set-arguments-and-configurations">
@@ -355,13 +355,6 @@ title="Print to PDF"
     <a class="reference internal nav-link" href="#scale-the-data-accoding-to-the-braden-kronheim-scaling">
      Scale the data accoding to the “Braden Kronheim scaling” :
     </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#standarize-is-better-than-standarize-2">
-       standarize is better than standarize_2
-      </a>
-     </li>
-    </ul>
    </li>
   </ul>
  </li>
@@ -460,6 +453,11 @@ title="Print to PDF"
   </a>
   <ul class="visible nav section-nav flex-column">
    <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#external-imports">
+     External Imports
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
     <a class="reference internal nav-link" href="#import-utils-and-set-environemnt-variables">
      Import utils, and set environemnt variables
     </a>
@@ -485,11 +483,6 @@ title="Print to PDF"
       </a>
      </li>
     </ul>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#external-imports">
-     External Imports
-    </a>
    </li>
    <li class="toc-h2 nav-item toc-entry">
     <a class="reference internal nav-link" href="#set-arguments-and-configurations">
@@ -519,13 +512,6 @@ title="Print to PDF"
     <a class="reference internal nav-link" href="#scale-the-data-accoding-to-the-braden-kronheim-scaling">
      Scale the data accoding to the “Braden Kronheim scaling” :
     </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#standarize-is-better-than-standarize-2">
-       standarize is better than standarize_2
-      </a>
-     </li>
-    </ul>
    </li>
   </ul>
  </li>
@@ -600,6 +586,52 @@ title="Print to PDF"
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="do-source-setup-sh-before-trying-to-run-this-notebook">
 <h1>Do <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">setup.sh</span></code> before trying to run this notebook!<a class="headerlink" href="#do-source-setup-sh-before-trying-to-run-this-notebook" title="Permalink to this headline">#</a></h1>
+<section id="external-imports">
+<h2>External Imports<a class="headerlink" href="#external-imports" title="Permalink to this headline">#</a></h2>
+<p>If you don’t have some of these packages installed, you can also use the conda environment that has all of the packages by doing <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">env</span> <span class="pre">create</span> <span class="pre">-f</span> <span class="pre">IQN_env.yml</span> <span class="pre">&amp;&amp;</span> <span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">IQN_env</span></code></p>
+<p>There is also a <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> here so that it can be run on an interactive website, eg binder or people can <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span></code> it.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">scipy</span> <span class="k">as</span> <span class="nn">sp</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">st</span>
+<span class="kn">import</span> <span class="nn">torch</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span><span class="p">;</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;using torch version </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1">#use numba&#39;s just-in-time compiler to speed things up</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">;</span> <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mp</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span><span class="p">;</span> 
+<span class="c1">#reset matplotlib stle/parameters</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="c1">#reset matplotlib parameters to their defaults</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParamsDefault</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;seaborn-deep&#39;</span><span class="p">)</span>
+<span class="n">mp</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;agg.path.chunksize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">font_legend</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span> <span class="n">font_axes</span><span class="o">=</span><span class="mi">15</span>
+<span class="c1"># %matplotlib inline</span>
+<span class="kn">import</span> <span class="nn">copy</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">sys</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">display</span>
+<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">optuna</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;using (optional) optuna version </span><span class="si">{</span><span class="n">optuna</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;optuna is only used for hyperparameter tuning, not critical!&#39;</span><span class="p">)</span>
+    <span class="k">pass</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="c1"># import sympy as sy</span>
+<span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="nn">wid</span><span class="p">;</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>using torch version 1.9.0
+using (optional) optuna version 2.8.0
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 <section id="import-utils-and-set-environemnt-variables">
 <h2>Import utils, and set environemnt variables<a class="headerlink" href="#import-utils-and-set-environemnt-variables" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
@@ -651,76 +683,6 @@ DATA directory also properly set, in /home/ali/Desktop/Pulled_Github_Repositorie
 </div>
 </div>
 </div>
-</section>
-</section>
-<section id="external-imports">
-<h2>External Imports<a class="headerlink" href="#external-imports" title="Permalink to this headline">#</a></h2>
-<p>If you don’t have some of these packages installed, you can also use the conda environment that has all of the packages by doing <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">env</span> <span class="pre">create</span> <span class="pre">-f</span> <span class="pre">IQN_env.yml</span> <span class="pre">&amp;&amp;</span> <span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">IQN_env</span></code></p>
-<p>There is also a <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> here so that it can be run on an interactive website, eg binder or people can <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span></code> it.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">scipy</span> <span class="k">as</span> <span class="nn">sp</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">st</span>
-<span class="kn">import</span> <span class="nn">torch</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span><span class="p">;</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;using torch version </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="c1">#use numba&#39;s just-in-time compiler to speed things up</span>
-<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">;</span> <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mp</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span><span class="p">;</span> 
-<span class="c1">#reset matplotlib stle/parameters</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-<span class="c1">#reset matplotlib parameters to their defaults</span>
-<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParamsDefault</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;seaborn-deep&#39;</span><span class="p">)</span>
-<span class="n">mp</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;agg.path.chunksize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10000</span>
-<span class="n">font_legend</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span> <span class="n">font_axes</span><span class="o">=</span><span class="mi">15</span>
-<span class="c1"># %matplotlib inline</span>
-<span class="kn">import</span> <span class="nn">copy</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">sys</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">display</span>
-<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">optuna</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;using (optional) optuna version </span><span class="si">{</span><span class="n">optuna</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;optuna is only used for hyperparameter tuning, not critical!&#39;</span><span class="p">)</span>
-    <span class="k">pass</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="c1"># import sympy as sy</span>
-<span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="nn">wid</span><span class="p">;</span> 
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>using torch version 1.9.0
-using (optional) optuna version 2.8.0
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import ruamel.yaml</span>
-<span class="c1"># yaml = ruamel.yaml.YAML()</span>
-<span class="c1"># data = yaml.load(open(&#39;IQN_env.yml&#39;))</span>
-<span class="c1"># requirements = []</span>
-<span class="c1"># for dep in data[&#39;dependencies&#39;]:</span>
-<span class="c1">#     if isinstance(dep, str):</span>
-<span class="c1">#         package, package_version, python_version = dep.split(&#39;=&#39;)</span>
-<span class="c1">#         if python_version == &#39;0&#39;:</span>
-<span class="c1">#             continue</span>
-<span class="c1">#         requirements.append(package + &#39;==&#39; + package_version)</span>
-<span class="c1">#     elif isinstance(dep, dict):</span>
-<span class="c1">#         for preq in dep.get(&#39;pip&#39;, []):</span>
-<span class="c1">#             requirements.append(preq)</span>
-
-<span class="c1"># with open(&#39;requirements.txt&#39;, &#39;w&#39;) as fp:</span>
-<span class="c1">#     for requirement in requirements:</span>
-<span class="c1">#        print(requirement, file=fp)</span>
-</pre></div>
-</div>
-</div>
-</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># update fonts</span>
@@ -745,9 +707,10 @@ using (optional) optuna version 2.8.0
 </div>
 <div class="cell_output docutils container">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "e011e7f4085347fabeca6d23574309ee", "version_major": 2, "version_minor": 0}
+{"model_id": "b7acbb1c684641159e817ccbb6311ae3", "version_major": 2, "version_minor": 0}
 </script></div>
 </div>
+</section>
 </section>
 <section id="set-arguments-and-configurations">
 <h2>Set arguments and configurations<a class="headerlink" href="#set-arguments-and-configurations" title="Permalink to this headline">#</a></h2>
@@ -835,7 +798,7 @@ using (optional) optuna version 2.8.0
     <span class="n">use_svg_display</span><span class="p">()</span>
     <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParamsDefault</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">show_plot</span><span class="p">(</span><span class="n">legend</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">show_plot</span><span class="p">(</span><span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">use_svg_display</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -886,7 +849,7 @@ using (optional) optuna version 2.8.0
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_17_0.png" src="_images/Braden_Scaling_TrainEval_Mass_17_0.png" />
+<img alt="_images/Braden_Scaling_TrainEval_Mass_16_0.png" src="_images/Braden_Scaling_TrainEval_Mass_16_0.png" />
 </div>
 </div>
 <!-- For Davidson team, please read try to all the code/comments before asking me questions! --><div class="cell docutils container">
@@ -1000,7 +963,7 @@ Reco_var:  RecoDataphi , 	 gen_var:  genDataphi
 Reco_var:  RecoDatam , 	 gen_var:  genDatam
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_22_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_22_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_21_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_21_1.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1143,29 +1106,22 @@ Reco_var:  RecoDatam , 	 gen_var:  genDatam
 </table>
 </div></div></div>
 </div>
-<p>standarize: $<span class="math notranslate nohighlight">\( X' = \frac{X-X_{min}}{X_{max}-X_{min}} \qquad \rightarrow \qquad X= X' (X_{max}-X_{min}) + X_{min}\)</span>$</p>
+<p>standarization is someimes done in the following way:
+$<span class="math notranslate nohighlight">\( X' = \frac{X-X_{min}}{X_{max}-X_{min}} \qquad \rightarrow \qquad X= X' (X_{max}-X_{min}) + X_{min}\)</span>$</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">standarize</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
-    <span class="n">expected_min</span><span class="p">,</span> <span class="n">expected_max</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">values</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-    <span class="n">scale_factor</span> <span class="o">=</span> <span class="n">expected_max</span> <span class="o">-</span> <span class="n">expected_min</span>
-    <span class="n">offset</span> <span class="o">=</span> <span class="n">expected_min</span>
-    <span class="n">standarized_values</span> <span class="o">=</span> <span class="p">(</span><span class="n">values</span> <span class="o">-</span> <span class="n">offset</span><span class="p">)</span><span class="o">/</span><span class="n">scale_factor</span> 
-    <span class="k">return</span> <span class="n">standarized_values</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># def standarize(values):</span>
+<span class="c1">#     expected_min, expected_max = values.min(), values.max()</span>
+<span class="c1">#     scale_factor = expected_max - expected_min</span>
+<span class="c1">#     offset = expected_min</span>
+<span class="c1">#     standarized_values = (values - offset)/scale_factor </span>
+<span class="c1">#     return standarized_values</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>standarize_2:
+<p>Or by taking z-score:
 $<span class="math notranslate nohighlight">\( X'=\frac{X-E[X]}{\sigma_{X}}  \qquad \rightarrow \qquad X = X' \sigma_{X} + E[X]\)</span>$</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">standarize_2</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">values</span> <span class="o">-</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-</div>
 <section id="results-prior-to-braden-scaling">
 <h2>Results prior to Braden-scaling<a class="headerlink" href="#results-prior-to-braden-scaling" title="Permalink to this headline">#</a></h2>
 <p>Recall that the best IQNx4 autoregressive results that I attained prior to trying the Braden scaling was the following (which was implemented in the Davidson cluster here: <code class="docutils literal notranslate"><span class="pre">/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/OCT_7/*.py</span></code> and copied to my repo <a class="reference external" href="https://github.com/AliAlkadhim/torchQN/tree/master/OCT_7">here</a>):</p>
@@ -1176,103 +1132,133 @@ $<span class="math notranslate nohighlight">\( X'=\frac{X-E[X]}{\sigma_{X}}  \qq
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_29_0.png" src="_images/Braden_Scaling_TrainEval_Mass_29_0.png" />
+<img alt="_images/Braden_Scaling_TrainEval_Mass_27_0.png" src="_images/Braden_Scaling_TrainEval_Mass_27_0.png" />
 </div>
 </div>
 </section>
 <section id="scale-the-data-accoding-to-the-braden-kronheim-scaling">
 <h2>Scale the data accoding to the “Braden Kronheim scaling” :<a class="headerlink" href="#scale-the-data-accoding-to-the-braden-kronheim-scaling" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight">
-\[\mathbb{T}(p_T) = z(\log p_T), \qquad \mathbb{T}(\eta) = z(\eta), \qquad \mathbb{T}(\phi) = z(\phi), \qquad \mathbb{T}(m) = z(\log (m + 2)), \qquad  \mathbb{T}(\tau) = 6\tau - 3 \]</div>
+\[\mathbb{T}(p_T) = z(\log p_T), \qquad \mathbb{T}(\eta) = z(\eta), \qquad \mathbb{T}(\phi) = z(\phi), \qquad \mathbb{T}(m) = z(\log (m + 2))\]</div>
+<div class="math notranslate nohighlight">
+\[ \mathbb{T}(\tau) = 6\tau - 3 \]</div>
+<p>For a jet observable <span class="math notranslate nohighlight">\(\mathcal{O}\)</span> (or <span class="math notranslate nohighlight">\(\tau\)</span>), the data is first scaled according to:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+    \mathbb{L} (\mathcal{O}) &amp;=
+    \begin{cases}
+        \log{\mathcal{O}}, \qquad &amp; \text{if } \mathcal{O}= p_T \\
+        \mathcal{O}, \qquad &amp; \text{if } \mathcal{O}=\eta \\
+        \log (\mathcal{O} + 2), \qquad &amp; \text{if } \mathcal{O}=m \\
+        \mathcal{O}, \qquad &amp; \text{if } \mathcal{O}=\phi \\
+        6 \mathcal{O} -3, \qquad &amp; \text{if } \mathcal{O}=\tau
+    \end{cases}
+\end{align}
+\end{split}\]</div>
+<p>Then the predicted target for a desired reco observable <span class="math notranslate nohighlight">\(\mathcal{O}\)</span> is chosen to be the following function</p>
+<div class="math notranslate nohighlight">
+\[
+    \mathbb{T}(O) = z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
+\]</div>
+<p>where for a random variable <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(z\)</span> is the standardization function (z-score):</p>
+<div class="math notranslate nohighlight">
+\[
+   x'= z (x) \equiv \frac{x-\bar{x}}{\sigma_{x}}.
+\]</div>
+<p>Such that its inverse is
+$<span class="math notranslate nohighlight">\( z^{-1}(x') = x' \ \sigma_x + \bar{x} \)</span><span class="math notranslate nohighlight">\(
+If we do this on the data, after training, the NN \)</span>f_{\text{IQN}}<span class="math notranslate nohighlight">\( will not estimate the observable, \)</span>\mathcal{O}^{\text{predicted}} \ne \mathcal{O}^{\text{reco}}$, but will instead estimate</p>
+<div class="math notranslate nohighlight">
+\[
+        f_{\text{IQN}} (\mathcal{O}) =  z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
+\]</div>
+<p>which needs to be de-scaled (when evaluated on the data that which has been scaled according to <span class="math notranslate nohighlight">\(\mathbb{T}(\text{evaluation data}) = z \left( \frac{\mathbb{L} (\text{data}^{\text{reco}}) +10 }{\mathbb{L}(\text{data}^{\text{gen}}) +10} \right) \)</span>
+)
+in order to copare with <span class="math notranslate nohighlight">\(\mathcal{O}\)</span> directly. The descaling for <span class="math notranslate nohighlight">\(\mathcal{O}=p_T\)</span> (as an example) would be:
+$<span class="math notranslate nohighlight">\(
+    p_T^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (p_T^\text{gen})+10 \right] -10 \right]
+\)</span>$</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span> <span class="n">set_figsize</span><span class="p">(</span><span class="n">get_axes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">train_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;log $p_T$&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.35</span><span class="p">);</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">standarize_2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">train_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$z(log\ p_T$)&#39;</span><span class="p">);</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">standarize_2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">train_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span><span class="mi">10</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$z(log\ p_T + 10$)&#39;</span><span class="p">);</span>
-<span class="n">ratio_of_cons_inside_log</span><span class="o">=</span><span class="n">standarize_2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">train_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span><span class="mi">10</span><span class="p">)</span><span class="o">/</span><span class="n">standarize_2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">train_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span><span class="mi">10</span><span class="p">)</span>
-
-<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">standarize_2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">train_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]))</span><span class="o">+</span><span class="mi">10</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$z(log\ p_T)+10$&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.35</span><span class="p">)</span>
-<span class="n">set_axes</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$p_T$ [GeV]&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">z</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">z_inverse</span><span class="p">(</span><span class="n">xprime</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">xprime</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_31_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_31_1.svg" /></div>
 </div>
-<p>standarize_IQN:
-$<span class="math notranslate nohighlight">\( X' = \frac{X-X_{min}}{X_{max}-X_{min}} \qquad \rightarrow \qquad X= X' (X_{max}-X_{min}) + X_{min}\)</span>$</p>
-<p>Standarize_IQN_2:
-$<span class="math notranslate nohighlight">\( p_T^{\text{scaled}} = \frac{\log p_T - E[\log p_T] }{\sigma_{\log (p_T)}} + 10 \qquad \rightarrow \qquad p_T^{\text{unscaled}} = \text{exp} \left((p_T^{\text{scaled}} - 10) \sigma_{\log (p_T)} + E[\log (p_T) ] \right) \tag{8}\)</span>$</p>
-<p>Standarize_IQN_3:
-$<span class="math notranslate nohighlight">\(p_T^{\text{scaled}} = \frac \)</span>$</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">standarize_IQN</span><span class="p">(</span><span class="n">orig_values</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">L</span><span class="p">(</span><span class="n">orig_observable</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">label</span><span class="o">==</span><span class="s1">&#39;pT&#39;</span><span class="p">:</span>
-        <span class="n">const</span><span class="o">=</span><span class="mi">10</span>
-        <span class="n">log_pT_pls_const</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">orig_values</span><span class="o">+</span><span class="n">const</span><span class="p">)</span> 
-        <span class="n">pT_scaled</span> <span class="o">=</span> <span class="p">((</span><span class="n">log_pT_pls_const</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">log_pT_pls_const</span><span class="p">)</span> <span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">log_pT_pls_const</span><span class="p">)</span> <span class="p">)</span> 
-        <span class="n">standarized_values</span> <span class="o">=</span><span class="n">pT_scaled</span> 
-    <span class="k">return</span> <span class="n">standarized_values</span>
+        <span class="n">const</span><span class="o">=</span><span class="mi">0</span>
+        <span class="n">log_pT_</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">orig_observable</span><span class="p">)</span> 
+        <span class="n">L_observable</span> <span class="o">=</span> <span class="n">log_pT_</span>
+    <span class="k">if</span> <span class="n">label</span><span class="o">==</span><span class="s1">&#39;eta&#39;</span><span class="p">:</span>
+        <span class="n">const</span><span class="o">=</span><span class="mi">0</span>
+        <span class="n">L_observable</span><span class="o">=</span><span class="n">orig_observable</span>
+    <span class="k">if</span> <span class="n">label</span><span class="o">==</span><span class="s1">&#39;m&#39;</span><span class="p">:</span>
+        <span class="n">const</span><span class="o">=</span><span class="mi">2</span>
+        <span class="n">L_observable</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">orig_observable</span> <span class="o">+</span> <span class="n">const</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">label</span><span class="o">==</span><span class="s1">&#39;phi&#39;</span><span class="p">:</span>
+        <span class="n">L_observable</span><span class="o">=</span><span class="n">orig_observable</span>
+    <span class="k">if</span> <span class="n">label</span><span class="o">==</span><span class="s1">&#39;tau&#39;</span><span class="p">:</span>
+        <span class="n">L_observable</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="n">orig_observable</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span>
+        
+    <span class="k">return</span> <span class="n">L_observable</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plt.hist(ratio_of_cons_inside_log, label=r&#39;$z(log\ p_T + 10$)/z(log p_T + 10$)$&#39;,bins=100,range=(1,1.1) );plt.legend();plt.show()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_35_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_35_0.svg" /></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">de_standarize_IQN</span><span class="p">(</span><span class="n">standarized_values</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">L_inverse</span><span class="p">(</span><span class="n">L_observable</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">label</span><span class="o">==</span><span class="s1">&#39;pT&#39;</span><span class="p">:</span>
-        <span class="n">const</span><span class="o">=</span><span class="mi">10</span>
-        <span class="n">orig_unscaled_pT</span><span class="o">=</span><span class="n">train_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">log_orig_unscaled_pT_pls_const</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">orig_unscaled_pT</span><span class="o">+</span><span class="n">const</span><span class="p">)</span>
-        <span class="c1"># pT_unscaled = np.exp( ((standarized_values-const) * np.std(orig__unscaled_pT)) + np.mean(log_orig__unscaled_pT) )</span>
-        <span class="n">pT_unscaled</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">standarized_values</span> <span class="o">*</span> <span class="n">log_orig_unscaled_pT_pls_const</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">log_orig_unscaled_pT_pls_const</span><span class="p">))</span> <span class="o">-</span> <span class="n">const</span>
-    <span class="k">return</span> <span class="n">pT_unscaled</span>
+        <span class="n">const</span><span class="o">=</span><span class="mi">0</span>
+        <span class="n">L_inverse_observable</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">L_observable</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">label</span><span class="o">==</span><span class="s1">&#39;eta&#39;</span><span class="p">:</span>
+        <span class="n">L_inverse_observable</span> <span class="o">=</span> <span class="n">L_observable</span>
+    <span class="k">if</span> <span class="n">label</span><span class="o">==</span><span class="s1">&#39;m&#39;</span><span class="p">:</span>
+        <span class="n">const</span><span class="o">=</span><span class="mi">2</span>
+        <span class="n">L_inverse_observable</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">L_observable</span><span class="p">)</span> <span class="o">-</span> <span class="n">const</span>
+    <span class="k">if</span> <span class="n">label</span><span class="o">==</span><span class="s1">&#39;tau&#39;</span><span class="p">:</span>
+        <span class="n">L_inverse_observable</span> <span class="o">=</span> <span class="p">(</span><span class="n">L_observable</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="mi">6</span>
+        
+    <span class="k">return</span> <span class="n">L_inverse_observable</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pT_scaled</span> <span class="o">=</span> <span class="n">standarize_IQN</span><span class="p">(</span><span class="n">orig_values</span><span class="o">=</span><span class="n">train_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;pT&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">pT_scaled</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;pT scaled&#39;</span><span class="p">);</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">T</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span> <span class="n">scaled_df</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">variable</span><span class="o">==</span><span class="s1">&#39;pT&#39;</span><span class="p">:</span>
+        <span class="n">L_pT_gen</span><span class="o">=</span><span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;genDatapT&#39;</span><span class="p">]</span>
+        <span class="n">L_pT_reco</span> <span class="o">=</span> <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;RecoDatapT&#39;</span><span class="p">]</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span> <span class="p">(</span><span class="n">L_pT_reco</span><span class="o">+</span><span class="mi">10</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">L_pT_gen</span><span class="o">+</span><span class="mi">10</span><span class="p">)</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="n">variable</span><span class="o">==</span><span class="s1">&#39;eta&#39;</span><span class="p">:</span>
+        <span class="n">L_eta_gen</span><span class="o">=</span><span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;genDataeta&#39;</span><span class="p">]</span>
+        <span class="n">L_eta_reco</span> <span class="o">=</span> <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;RecoDataeta&#39;</span><span class="p">]</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span> <span class="p">(</span><span class="n">L_eta_reco</span><span class="o">+</span><span class="mi">10</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">L_eta_gen</span><span class="o">+</span><span class="mi">10</span><span class="p">)</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="n">variable</span><span class="o">==</span><span class="s1">&#39;phi&#39;</span><span class="p">:</span>
+        <span class="n">L_phi_gen</span><span class="o">=</span><span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;genDataphi&#39;</span><span class="p">]</span>
+        <span class="n">L_phi_reco</span> <span class="o">=</span> <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;RecoDataphi&#39;</span><span class="p">]</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span> <span class="p">(</span><span class="n">L_phi_reco</span><span class="o">+</span><span class="mi">10</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">L_phi_gen</span><span class="o">+</span><span class="mi">10</span><span class="p">)</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="n">variable</span><span class="o">==</span><span class="s1">&#39;m&#39;</span><span class="p">:</span>
+        <span class="n">L_m_gen</span><span class="o">=</span><span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;genDatam&#39;</span><span class="p">]</span>
+        <span class="n">L_m_reco</span> <span class="o">=</span> <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;RecoDatam&#39;</span><span class="p">]</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span> <span class="p">(</span><span class="n">L_m_reco</span><span class="o">+</span><span class="mi">10</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">L_m_gen</span><span class="o">+</span><span class="mi">10</span><span class="p">)</span> <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">target</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_37_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_37_0.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pT_unscaled</span> <span class="o">=</span> <span class="n">de_standarize_IQN</span><span class="p">(</span><span class="n">standarized_values</span><span class="o">=</span><span class="n">pT_scaled</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;pT&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">pT_unscaled</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;pT unscaled&#39;</span><span class="p">,</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span> <span class="p">,</span> 
-         <span class="c1"># range=(20,100),</span>
-         <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">);</span>
-<span class="c1"># plt.hist(train_data.iloc[:,0],label=&#39;original pT&#39;, bins=100,</span>
-<span class="c1">#          # range=(20,100),</span>
-<span class="c1">#          alpha=0.3)</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_38_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_38_0.svg" /></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">scale_df</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">scale_func</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">L_scale_df</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="c1">#scale</span>
     <span class="n">SUBSAMPLE</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e4</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">all_cols</span><span class="p">]</span><span class="c1">#[:SUBSAMPLE]</span>
@@ -1281,21 +1267,21 @@ $<span class="math notranslate nohighlight">\(p_T^{\text{scaled}} = \frac \)</sp
     <span class="c1">#select the columns by index: </span>
     <span class="c1"># 0:genDatapT, 1:genDataeta, 2:genDataphi, 3:genDatam, </span>
     <span class="c1"># 4:RecoDatapT, 5:RecoDataeta, 6:RecoDataphi, 7: Recodatam</span>
-    <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;genDatapT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scale_func</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span> <span class="p">)</span>
-    <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;RecoDatapT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scale_func</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">4</span><span class="p">])</span> <span class="p">)</span>
+    <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;genDatapT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;pT&#39;</span><span class="p">)</span>
+    <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;RecoDatapT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">4</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;pT&#39;</span><span class="p">)</span>
     
-    <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;genDataeta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scale_func</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;RecoDataeta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scale_func</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">5</span><span class="p">])</span>
+    <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;genDataeta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;eta&#39;</span><span class="p">)</span>
+    <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;RecoDataeta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">5</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;eta&#39;</span><span class="p">)</span>
     
     
-    <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;genDataphi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scale_func</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span>
-    <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;RecoDataphi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scale_func</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">6</span><span class="p">])</span>
+    <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;genDataphi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;phi&#39;</span><span class="p">)</span>
+    <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;RecoDataphi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">6</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;phi&#39;</span><span class="p">)</span>
 
-    <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;genDatam&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scale_func</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="p">)</span>
-    <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;RecoDatam&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scale_func</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">7</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;genDatam&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">3</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
+    <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;RecoDatam&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">7</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
     <span class="c1">#why scale tau?</span>
     <span class="c1"># scaled_df[&#39;tau&#39;] = 6 * df.iloc[:,8] - 3</span>
-    <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;tau&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">8</span><span class="p">]</span>
+    <span class="n">scaled_df</span><span class="p">[</span><span class="s1">&#39;tau&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">8</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;tau&#39;</span><span class="p">)</span>
     
     <span class="nb">print</span><span class="p">(</span><span class="n">scaled_df</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
     
@@ -1308,230 +1294,152 @@ $<span class="math notranslate nohighlight">\(p_T^{\text{scaled}} = \frac \)</sp
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaled_train_data</span> <span class="o">=</span> <span class="n">scale_df</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;scaled_train_data_10M_2.csv&#39;</span><span class="p">,</span>
-                             <span class="n">scale_func</span><span class="o">=</span><span class="n">standarize</span><span class="p">,</span>
-                             <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">scaled_test_data</span> <span class="o">=</span> <span class="n">scale_df</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span>  <span class="n">title</span><span class="o">=</span><span class="s1">&#39;scaled_test_data_10M_2.csv&#39;</span><span class="p">,</span>
-                            <span class="n">scale_func</span><span class="o">=</span><span class="n">standarize</span><span class="p">,</span>
-                            <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="n">explore_data</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">scaled_train_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Braden Kronheim-scaled Dataframe: standarize_IQN&#39;</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>          genDatapT    RecoDatapT    genDataeta   RecoDataeta    genDataphi  \
-count  10000.000000  10000.000000  10000.000000  10000.000000  10000.000000   
-mean       0.193019      0.349439      0.499998      0.496183      0.500691   
-std        0.151402      0.137091      0.218950      0.221660      0.288015   
-min        0.000000      0.000000      0.000000      0.000000      0.000000   
-25%        0.076371      0.256223      0.338524      0.332046      0.252303   
-50%        0.158137      0.332218      0.499438      0.495075      0.496276   
-75%        0.271209      0.428161      0.662592      0.660927      0.747239   
-max        1.000000      1.000000      1.000000      1.000000      1.000000   
-
-        RecoDataphi      genDatam     RecoDatam           tau  
-count  10000.000000  10000.000000  10000.000000  10000.000000  
-mean       0.498494      0.488433      0.440818      0.501375  
-std        0.268781      0.100227      0.113154      0.288104  
-min        0.000000      0.000000      0.000000      0.000014  
-25%        0.266707      0.421777      0.367851      0.252924  
-50%        0.494279      0.485817      0.438496      0.501390  
-75%        0.729062      0.553336      0.512428      0.751112  
-max        1.000000      1.000000      1.000000      0.999968  
-
-
-
-          genDatapT    RecoDatapT    genDataeta   RecoDataeta    genDataphi  \
-count  10000.000000  10000.000000  10000.000000  10000.000000  10000.000000   
-mean       0.143909      0.275600      0.507399      0.505858      0.504341   
-std        0.112547      0.110219      0.217335      0.222251      0.289598   
-min        0.000000      0.000000      0.000000      0.000000      0.000000   
-25%        0.059885      0.203154      0.344565      0.339593      0.254367   
-50%        0.119371      0.263623      0.511950      0.510924      0.506544   
-75%        0.201243      0.337655      0.667306      0.669468      0.757987   
-max        1.000000      1.000000      1.000000      1.000000      1.000000   
-
-        RecoDataphi      genDatam     RecoDatam           tau  
-count  10000.000000  10000.000000  10000.000000  10000.000000  
-mean       0.502875      0.330795      0.354760      0.507559  
-std        0.277433      0.089873      0.091590      0.290743  
-min        0.000000      0.000000      0.000000      0.000013  
-25%        0.263911      0.272740      0.295975      0.259261  
-50%        0.504849      0.329915      0.354809      0.511120  
-75%        0.745752      0.387605      0.412537      0.762087  
-max        1.000000      1.000000      1.000000      0.999989  
-[&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;]
-Reco_var:  RecoDatapT , 	 gen_var:  genDatapT
-Reco_var:  RecoDataeta , 	 gen_var:  genDataeta
-Reco_var:  RecoDataphi , 	 gen_var:  genDataphi
-Reco_var:  RecoDatam , 	 gen_var:  genDatam
-</pre></div>
-</div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_40_1.png" src="_images/Braden_Scaling_TrainEval_Mass_40_1.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaled_train_data</span> <span class="o">=</span> <span class="n">scale_df</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;scaled_train_data_10M_2.csv&#39;</span><span class="p">,</span>
-                             <span class="n">scale_func</span><span class="o">=</span><span class="n">standarize_2</span><span class="p">,</span>
-                             <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">scaled_test_data</span> <span class="o">=</span> <span class="n">scale_df</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span>  <span class="n">title</span><span class="o">=</span><span class="s1">&#39;scaled_test_data_10M_2.csv&#39;</span><span class="p">,</span>
-                            <span class="n">scale_func</span><span class="o">=</span><span class="n">standarize_2</span><span class="p">,</span>
-                            <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="n">explore_data</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">scaled_train_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Braden Kronheim-scaled Dataframe: standarize_IQN_2&#39;</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>          genDatapT    RecoDatapT    genDataeta   RecoDataeta    genDataphi  \
-count  10000.000000  10000.000000  10000.000000  10000.000000  10000.000000   
-mean      -6.781494     -5.555223     -0.003925     -0.003929      0.001885   
-std        0.335502      0.380772      2.209883      2.202264      1.809176   
-min       -7.209217     -6.525794     -5.050446     -4.933662     -3.143220   
-25%       -7.039981     -5.814132     -1.633696     -1.634677     -1.558373   
-50%       -6.858790     -5.603054     -0.009582     -0.014936     -0.025849   
-75%       -6.608227     -5.336572      1.637147      1.632858      1.550582   
-max       -4.993248     -3.748282      5.042634      5.001658      3.138310   
-
-        RecoDataphi      genDatam     RecoDatam           tau  
-count  10000.000000  10000.000000  10000.000000  10000.000000  
-mean       0.002195     -5.374291     -4.054152      0.501375  
-std        1.809657      0.286049      0.326472      0.288104  
-min       -3.354076     -6.768290     -5.325995      0.000014  
-25%       -1.558383     -5.564528     -4.264673      0.252924  
-50%       -0.026182     -5.381757     -4.060851      0.501390  
-75%        1.554569     -5.189056     -3.847541      0.751112  
-max        3.378745     -3.914268     -2.440804      0.999968  
-
-
-
-          genDatapT    RecoDatapT    genDataeta   RecoDataeta    genDataphi  \
-count  10000.000000  10000.000000  10000.000000  10000.000000  10000.000000   
-mean      -6.629865     -5.331596      0.018054      0.017897      0.012041   
-std        0.341107      0.390866      2.211242      2.206106      1.819197   
-min       -7.066024     -6.308946     -5.144407     -5.003340     -3.156130   
-25%       -6.884524     -5.588510     -1.638677     -1.632480     -1.558245   
-50%       -6.704234     -5.374067      0.064356      0.068187      0.025877   
-75%       -6.456097     -5.111531      1.645003      1.641920      1.605392   
-max       -4.035226     -2.762678      5.029953      4.922840      3.125670   
-
-        RecoDataphi      genDatam     RecoDatam           tau  
-count  10000.000000  10000.000000  10000.000000  10000.000000  
-mean       0.012016     -5.314733     -4.012887      0.507559  
-std        1.818557      0.288388      0.329008      0.290743  
-min       -3.284307     -6.376207     -5.287256      0.000013  
-25%       -1.554381     -5.501024     -4.224053      0.259261  
-50%        0.024950     -5.317557     -4.012707      0.511120  
-75%        1.604059     -5.132437     -3.805338      0.762087  
-max        3.270644     -3.167348     -1.695051      0.999989  
-[&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;]
-Reco_var:  RecoDatapT , 	 gen_var:  genDatapT
-Reco_var:  RecoDataeta , 	 gen_var:  genDataeta
-Reco_var:  RecoDataphi , 	 gen_var:  genDataphi
-Reco_var:  RecoDatam , 	 gen_var:  genDatam
-</pre></div>
-</div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_41_1.png" src="_images/Braden_Scaling_TrainEval_Mass_41_1.png" />
-</div>
-</div>
-<section id="standarize-is-better-than-standarize-2">
-<h3>standarize is better than standarize_2<a class="headerlink" href="#standarize-is-better-than-standarize-2" title="Permalink to this headline">#</a></h3>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaled_train_data</span> <span class="o">=</span> <span class="n">scale_df</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;scaled_train_data_10M_2.csv&#39;</span><span class="p">,</span>
-                             <span class="n">scale_func</span><span class="o">=</span><span class="n">standarize</span><span class="p">,</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaled_train_data</span> <span class="o">=</span> <span class="n">L_scale_df</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;scaled_train_data_10M_2.csv&#39;</span><span class="p">,</span>
                              <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">scaled_test_data</span> <span class="o">=</span> <span class="n">scale_df</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span>  <span class="n">title</span><span class="o">=</span><span class="s1">&#39;scaled_test_data_10M_2.csv&#39;</span><span class="p">,</span>
-                            <span class="n">scale_func</span><span class="o">=</span><span class="n">standarize</span><span class="p">,</span>
+<span class="n">scaled_test_data</span> <span class="o">=</span> <span class="n">L_scale_df</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span>  <span class="n">title</span><span class="o">=</span><span class="s1">&#39;scaled_test_data_10M_2.csv&#39;</span><span class="p">,</span>
                             <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="n">explore_data</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">scaled_train_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Braden Kronheim-scaled Dataframe: standarize_IQN&#39;</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">explore_data</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">scaled_train_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Braden Kronheim-L-scaled Dataframe&#39;</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>          genDatapT    RecoDatapT    genDataeta   RecoDataeta    genDataphi  \
 count  10000.000000  10000.000000  10000.000000  10000.000000  10000.000000   
-mean       0.193019      0.349439      0.499998      0.496183      0.500691   
-std        0.151402      0.137091      0.218950      0.221660      0.288015   
-min        0.000000      0.000000      0.000000      0.000000      0.000000   
-25%        0.076371      0.256223      0.338524      0.332046      0.252303   
-50%        0.158137      0.332218      0.499438      0.495075      0.496276   
-75%        0.271209      0.428161      0.662592      0.660927      0.747239   
-max        1.000000      1.000000      1.000000      1.000000      1.000000   
+mean       3.423686      3.415715     -0.007169     -0.007198      0.004215   
+std        0.335502      0.380772      2.209883      2.202264      1.809176   
+min        2.995962      2.445143     -5.053690     -4.936930     -3.140890   
+25%        3.165199      3.156806     -1.636940     -1.637945     -1.556042   
+50%        3.346389      3.367884     -0.012826     -0.018205     -0.023519   
+75%        3.596952      3.634366      1.633903      1.629590      1.552912   
+max        5.211931      5.222656      5.039390      4.998390      3.140640   
 
         RecoDataphi      genDatam     RecoDatam           tau  
 count  10000.000000  10000.000000  10000.000000  10000.000000  
-mean       0.498494      0.488433      0.440818      0.501375  
-std        0.268781      0.100227      0.113154      0.288104  
-min        0.000000      0.000000      0.000000      0.000014  
-25%        0.266707      0.421777      0.367851      0.252924  
-50%        0.494279      0.485817      0.438496      0.501390  
-75%        0.729062      0.553336      0.512428      0.751112  
-max        1.000000      1.000000      1.000000      0.999968  
+mean       0.004905      2.153090      1.964980      0.008250  
+std        1.809657      0.286049      0.326472      1.728625  
+min       -3.351365      0.759091      0.693136     -2.999914  
+25%       -1.555673      1.962853      1.754458     -1.482457  
+50%       -0.023471      2.145624      1.958280      0.008340  
+75%        1.557280      2.338325      2.171590      1.506673  
+max        3.381455      3.613113      3.578328      2.999809  
 
 
 
           genDatapT    RecoDatapT    genDataeta   RecoDataeta    genDataphi  \
 count  10000.000000  10000.000000  10000.000000  10000.000000  10000.000000   
-mean       0.143909      0.275600      0.507399      0.505858      0.504341   
-std        0.112547      0.110219      0.217335      0.222251      0.289598   
-min        0.000000      0.000000      0.000000      0.000000      0.000000   
-25%        0.059885      0.203154      0.344565      0.339593      0.254367   
-50%        0.119371      0.263623      0.511950      0.510924      0.506544   
-75%        0.201243      0.337655      0.667306      0.669468      0.757987   
-max        1.000000      1.000000      1.000000      1.000000      1.000000   
+mean       3.432007      3.420870      0.032961      0.032736      0.026741   
+std        0.341107      0.390866      2.211242      2.206106      1.819197   
+min        2.995847      2.443520     -5.129500     -4.988500     -3.141430   
+25%        3.177347      3.163957     -1.623770     -1.617640     -1.543545   
+50%        3.357637      3.378399      0.079263      0.083027      0.040577   
+75%        3.605775      3.640936      1.659910      1.656760      1.620092   
+max        6.026646      5.989788      5.044860      4.937680      3.140370   
 
         RecoDataphi      genDatam     RecoDatam           tau  
 count  10000.000000  10000.000000  10000.000000  10000.000000  
-mean       0.502875      0.330795      0.354760      0.507559  
-std        0.277433      0.089873      0.091590      0.290743  
-min        0.000000      0.000000      0.000000      0.000013  
-25%        0.263911      0.272740      0.295975      0.259261  
-50%        0.504849      0.329915      0.354809      0.511120  
-75%        0.745752      0.387605      0.412537      0.762087  
-max        1.000000      1.000000      1.000000      0.999989  
+mean       0.026698      2.153702      1.967499      0.045356  
+std        1.818557      0.288388      0.329008      1.744457  
+min       -3.269625      1.092228      0.693130     -2.999923  
+25%       -1.539700      1.967410      1.756333     -1.444432  
+50%        0.039632      2.150878      1.967679      0.066719  
+75%        1.618740      2.335998      2.175048      1.572519  
+max        3.285325      4.301086      4.285335      2.999933  
 [&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;]
+[&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;, &#39;tau&#39;]
 Reco_var:  RecoDatapT , 	 gen_var:  genDatapT
 Reco_var:  RecoDataeta , 	 gen_var:  genDataeta
 Reco_var:  RecoDataphi , 	 gen_var:  genDataphi
 Reco_var:  RecoDatam , 	 gen_var:  genDatam
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_43_1.png" src="_images/Braden_Scaling_TrainEval_Mass_43_1.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">denormalize_IQN</span><span class="p">(</span><span class="n">original_values</span><span class="p">,</span> <span class="n">scaled_values</span><span class="p">):</span>
-    <span class="n">expected_min</span><span class="p">,</span> <span class="n">expected_max</span> <span class="o">=</span> <span class="n">original_values</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">original_values</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-    <span class="n">scale_factor</span> <span class="o">=</span> <span class="n">expected_max</span> <span class="o">-</span> <span class="n">expected_min</span>
-    <span class="n">offset</span> <span class="o">=</span> <span class="n">expected_min</span>
-    <span class="k">return</span> <span class="n">scaled_values</span>  <span class="o">*</span> <span class="n">scale_factor</span> <span class="o">+</span> <span class="n">offset</span>
-</pre></div>
-</div>
-</div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_35_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_35_1.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">de_scaled_m</span> <span class="o">=</span> <span class="n">denormalize_IQN</span><span class="p">(</span><span class="n">original_values</span><span class="o">=</span><span class="n">train_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">scaled_values</span><span class="o">=</span><span class="n">scaled_train_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">de_scaled_m</span><span class="p">,</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;de-Braden-scaled $p_T$&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">train_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;original (unscaled) $p_T$&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pT&#39;</span><span class="p">,</span> <span class="s1">&#39;eta&#39;</span><span class="p">,</span><span class="s1">&#39;phi&#39;</span><span class="p">,</span><span class="s1">&#39;m&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">scaled_df</span><span class="o">=</span><span class="n">scaled_train_data</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;$T($&#39;</span> <span class="o">+</span><span class="n">label</span><span class="o">+</span> <span class="s1">&#39;$)$&#39;</span> <span class="p">)</span>
+<span class="c1"># target_pT = T(&#39;pT&#39;, scaled_df=scaled_train_data)</span>
+<span class="c1"># target_eta = T(&#39;eta&#39;, scaled_df=scaled_train_data)</span>
+<span class="c1"># target_phi = T(&#39;phi&#39;, scaled_df=scaled_train_data)</span>
+<span class="c1"># target_m = T(&#39;m&#39;, scaled_df=scaled_train_data)</span>
+<span class="c1"># plt.hist(target_pT, label=&#39;$T(p_T)$&#39;)</span>
+
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_45_0.png" src="_images/Braden_Scaling_TrainEval_Mass_45_0.png" />
+<img alt="_images/Braden_Scaling_TrainEval_Mass_36_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_36_0.svg" /></div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaled_train_data</span> <span class="o">=</span> <span class="n">L_scale_df</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;scaled_train_data_10M_2.csv&#39;</span><span class="p">,</span>
+                             <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">scaled_test_data</span> <span class="o">=</span> <span class="n">L_scale_df</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span>  <span class="n">title</span><span class="o">=</span><span class="s1">&#39;scaled_test_data_10M_2.csv&#39;</span><span class="p">,</span>
+                            <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">explore_data</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">scaled_train_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Braden Kronheim-$L$-scaled Dataframe: standarize_IQN&#39;</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>          genDatapT    RecoDatapT    genDataeta   RecoDataeta    genDataphi  \
+count  10000.000000  10000.000000  10000.000000  10000.000000  10000.000000   
+mean       3.423686      3.415715     -0.007169     -0.007198      0.004215   
+std        0.335502      0.380772      2.209883      2.202264      1.809176   
+min        2.995962      2.445143     -5.053690     -4.936930     -3.140890   
+25%        3.165199      3.156806     -1.636940     -1.637945     -1.556042   
+50%        3.346389      3.367884     -0.012826     -0.018205     -0.023519   
+75%        3.596952      3.634366      1.633903      1.629590      1.552912   
+max        5.211931      5.222656      5.039390      4.998390      3.140640   
+
+        RecoDataphi      genDatam     RecoDatam           tau  
+count  10000.000000  10000.000000  10000.000000  10000.000000  
+mean       0.004905      2.153090      1.964980      0.008250  
+std        1.809657      0.286049      0.326472      1.728625  
+min       -3.351365      0.759091      0.693136     -2.999914  
+25%       -1.555673      1.962853      1.754458     -1.482457  
+50%       -0.023471      2.145624      1.958280      0.008340  
+75%        1.557280      2.338325      2.171590      1.506673  
+max        3.381455      3.613113      3.578328      2.999809  
+
+
+
+          genDatapT    RecoDatapT    genDataeta   RecoDataeta    genDataphi  \
+count  10000.000000  10000.000000  10000.000000  10000.000000  10000.000000   
+mean       3.432007      3.420870      0.032961      0.032736      0.026741   
+std        0.341107      0.390866      2.211242      2.206106      1.819197   
+min        2.995847      2.443520     -5.129500     -4.988500     -3.141430   
+25%        3.177347      3.163957     -1.623770     -1.617640     -1.543545   
+50%        3.357637      3.378399      0.079263      0.083027      0.040577   
+75%        3.605775      3.640936      1.659910      1.656760      1.620092   
+max        6.026646      5.989788      5.044860      4.937680      3.140370   
+
+        RecoDataphi      genDatam     RecoDatam           tau  
+count  10000.000000  10000.000000  10000.000000  10000.000000  
+mean       0.026698      2.153702      1.967499      0.045356  
+std        1.818557      0.288388      0.329008      1.744457  
+min       -3.269625      1.092228      0.693130     -2.999923  
+25%       -1.539700      1.967410      1.756333     -1.444432  
+50%        0.039632      2.150878      1.967679      0.066719  
+75%        1.618740      2.335998      2.175048      1.572519  
+max        3.285325      4.301086      4.285335      2.999933  
+[&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;]
+[&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;, &#39;tau&#39;]
+Reco_var:  RecoDatapT , 	 gen_var:  genDatapT
+Reco_var:  RecoDataeta , 	 gen_var:  genDataeta
+Reco_var:  RecoDataphi , 	 gen_var:  genDataphi
+Reco_var:  RecoDatam , 	 gen_var:  genDatam
+</pre></div>
+</div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_37_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_37_1.svg" /></div>
 </div>
 <hr class="docutils" />
-</section>
 </section>
 </section>
 <hr class="docutils" />
@@ -1610,90 +1518,7 @@ $<span class="math notranslate nohighlight">\(\int d \mathbf{x_m} d \mathbf{y_m}
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_49_0.png" src="_images/Braden_Scaling_TrainEval_Mass_49_0.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SUBSAMPLE</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e4</span><span class="p">)</span>
-<span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;RecoDatam&#39;</span>
-<span class="n">source</span>  <span class="o">=</span> <span class="n">FIELDS</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
-<span class="n">features</span><span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span>
-<span class="c1">########</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;USING NEW DATASET</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="c1">#UNSCALED</span>
-<span class="c1"># train_data_m=pd.read_csv(os.path.join(DATA_DIR,&#39;train_data_10M_2.csv&#39;),</span>
-<span class="c1">#                        usecols=features,</span>
-<span class="c1">#                        nrows=SUBSAMPLE)</span>
-
-<span class="c1"># print(&#39;TRAINING FEATURES\n&#39;, train_data.head())</span>
-
-<span class="c1"># test_data_m= pd.read_csv(os.path.join(DATA_DIR,&#39;test_data_10M_2.csv&#39;),</span>
-<span class="c1">#                        usecols=features,</span>
-<span class="c1">#                        nrows=SUBSAMPLE)</span>
-<span class="c1"># print(&#39;\nTESTING FEATURES\n&#39;, test_data.head())</span>
-<span class="c1"># valid_data= pd.read_csv(os.path.join(DATA_DIR,&#39;valid_data_10M_2.csv&#39;),</span>
-<span class="c1">#                        usecols=features,</span>
-<span class="c1">#                        nrows=SUBSAMPLE)</span>
-
-
-<span class="c1"># SCALED</span>
-<span class="n">train_data_m</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;train_data_10M_2.csv&#39;</span><span class="p">),</span>
-                       <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
-                       <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;TRAINING FEATURES</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">train_data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
-
-<span class="n">test_data_m</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;test_data_10M_2.csv&#39;</span><span class="p">),</span>
-                       <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
-                       <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">TESTING FEATURES</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">test_data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">train set shape:&#39;</span><span class="p">,</span>  <span class="n">train_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">test set shape:  &#39;</span><span class="p">,</span> <span class="n">test_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="c1"># print(&#39;validation set shape:&#39;, valid_data.shape)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>USING NEW DATASET
-
-TRAINING FEATURES
-    genDatapT  genDataeta  genDataphi  genDatam  RecoDatapT  RecoDataeta  \
-0    29.4452    0.828187    2.902130   2.85348     31.9132     0.817082   
-1    24.3193   -1.163510    0.636469   5.83685     27.3513    -1.151020   
-2    24.3193   -1.163510    0.636469   5.83685     27.3513    -1.151020   
-3    24.3193   -1.163510    0.636469   5.83685     27.3513    -1.151020   
-4    20.1703    1.844410   -0.186685   5.69090     24.2158     1.837910   
-
-   RecoDataphi  RecoDatam       tau  
-0     2.919510    2.59587  0.361310  
-1     0.652153    5.35538  0.126899  
-2     0.652153    5.35538  0.962307  
-3     0.652153    5.35538  0.457282  
-4    -0.160621    4.59370  0.840862  
-
-TESTING FEATURES
-    genDatapT  genDataeta  genDataphi  genDatam  RecoDatapT  RecoDataeta  \
-0    43.6113    0.824891    -1.26949   5.93310     44.3274     0.824645   
-1    43.6113    0.824891    -1.26949   5.93310     44.3274     0.824645   
-2    26.0153    3.529970     1.55495   7.41270     27.4750     3.590390   
-3    28.4944   -1.159650     1.82602   7.84157     33.8797    -1.139940   
-4    21.9840    2.747660     2.03085   5.18315     23.3141     2.775790   
-
-   RecoDataphi  RecoDatam       tau  
-0     -1.26117    5.80270  0.250046  
-1     -1.26117    5.80270  0.847493  
-2      1.52062    4.81403  0.851995  
-3      1.76254    7.06425  0.052378  
-4      2.10209    4.08061  0.542549  
-
-train set shape: (8000000, 9)
-
-test set shape:   (1000000, 9)
-</pre></div>
-</div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_41_0.png" src="_images/Braden_Scaling_TrainEval_Mass_41_0.png" />
 </div>
 </div>
 <section id="batches-validation-losses-and-plotting-of-losses-functions">
@@ -1778,13 +1603,96 @@ test set shape:   (1000000, 9)
     <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">save_loss_plots</span><span class="p">:</span>
-        <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;IQNx4_</span><span class="si">%s</span><span class="s1">_Loss.dict&#39;</span> <span class="o">%</span> <span class="n">target</span> 
+        <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;IQNx4_</span><span class="si">%s</span><span class="s1">_Loss.png&#39;</span> <span class="o">%</span> <span class="n">target</span> 
         <span class="n">mkdir</span><span class="p">(</span><span class="s1">&#39;images/loss_plots&#39;</span><span class="p">)</span>
         <span class="n">PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span> <span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="s1">&#39;loss_plots&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;images/loss_curves/IQN_&#39;</span><span class="o">+</span><span class="n">N</span><span class="o">+</span><span class="n">T</span><span class="o">+</span><span class="s1">&#39;_Consecutive_2.png&#39;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">loss curve saved in images/loss_curves/IQN_&#39;</span><span class="o">+</span><span class="n">N</span><span class="o">+</span><span class="n">target</span><span class="o">+</span><span class="s1">&#39;_Consecutive.png&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">show_loss_plots</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SUBSAMPLE</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e4</span><span class="p">)</span>
+<span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;RecoDatam&#39;</span>
+<span class="n">source</span>  <span class="o">=</span> <span class="n">FIELDS</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
+<span class="n">features</span><span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span>
+<span class="c1">########</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;USING NEW DATASET</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="c1">#UNSCALED</span>
+<span class="c1"># train_data_m=pd.read_csv(os.path.join(DATA_DIR,&#39;train_data_10M_2.csv&#39;),</span>
+<span class="c1">#                        usecols=features,</span>
+<span class="c1">#                        nrows=SUBSAMPLE)</span>
+
+<span class="c1"># print(&#39;TRAINING FEATURES\n&#39;, train_data.head())</span>
+
+<span class="c1"># test_data_m= pd.read_csv(os.path.join(DATA_DIR,&#39;test_data_10M_2.csv&#39;),</span>
+<span class="c1">#                        usecols=features,</span>
+<span class="c1">#                        nrows=SUBSAMPLE)</span>
+<span class="c1"># print(&#39;\nTESTING FEATURES\n&#39;, test_data.head())</span>
+<span class="c1"># valid_data= pd.read_csv(os.path.join(DATA_DIR,&#39;valid_data_10M_2.csv&#39;),</span>
+<span class="c1">#                        usecols=features,</span>
+<span class="c1">#                        nrows=SUBSAMPLE)</span>
+
+
+<span class="c1"># SCALED</span>
+<span class="n">train_data_m</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;scaled_train_data_10M_2.csv&#39;</span><span class="p">),</span>
+                       <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
+                       <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;TRAINING FEATURES</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">train_data_m</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+<span class="n">test_data_m</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;scaled_test_data_10M_2.csv&#39;</span><span class="p">),</span>
+                       <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
+                       <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">TESTING FEATURES</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">test_data_m</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">train set shape:&#39;</span><span class="p">,</span>  <span class="n">train_data_m</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">test set shape:  &#39;</span><span class="p">,</span> <span class="n">test_data_m</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="c1"># print(&#39;validation set shape:&#39;, valid_data.shape)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>USING NEW DATASET
+
+TRAINING FEATURES
+    genDatapT  RecoDatapT  genDataeta  RecoDataeta  genDataphi  RecoDataphi  \
+0   3.382531    3.463020    0.828187     0.817082    2.902130     2.919510   
+1   3.191270    3.308764   -1.163510    -1.151020    0.636469     0.652153   
+2   3.191270    3.308764   -1.163510    -1.151020    0.636469     0.652153   
+3   3.191270    3.308764   -1.163510    -1.151020    0.636469     0.652153   
+4   3.004211    3.187005    1.844410     1.837910   -0.186685    -0.160621   
+
+   genDatam  RecoDatam       tau  
+0  1.579696   1.525158 -0.832143  
+1  2.058837   1.995432 -2.238604  
+2  2.058837   1.995432  2.773841  
+3  2.058837   1.995432 -0.256307  
+4  2.040038   1.886115  2.045169  
+
+TESTING FEATURES
+    genDatapT  RecoDatapT  genDataeta  RecoDataeta  genDataphi  RecoDataphi  \
+0   3.775316    3.791603    0.824891     0.824645    -1.26949     -1.26117   
+1   3.775316    3.791603    0.824891     0.824645    -1.26949     -1.26117   
+2   3.258685    3.313277    3.529970     3.590390     1.55495      1.52062   
+3   3.349708    3.522816   -1.159650    -1.139940     1.82602      1.76254   
+4   3.090315    3.149058    2.747660     2.775790     2.03085      2.10209   
+
+   genDatam  RecoDatam       tau  
+0  2.071044   2.054470 -1.499727  
+1  2.071044   2.054470  2.084955  
+2  2.242060   1.918984  2.111972  
+3  2.286615   2.204338 -2.685729  
+4  1.971738   1.805105  0.255292  
+
+train set shape: (10000, 9)
+
+test set shape:   (10000, 9)
 </pre></div>
 </div>
 </div>
@@ -1801,9 +1709,17 @@ test set shape:   (1000000, 9)
 <span class="k">def</span> <span class="nf">split_t_x</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="p">):</span>
     <span class="c1"># change from pandas dataframe format to a numpy </span>
     <span class="c1"># array of the specified types</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
+    <span class="c1"># t = np.array(df[target])</span>
+    <span class="k">if</span> <span class="n">target</span><span class="o">==</span><span class="s1">&#39;RecoDatam&#39;</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="n">scaled_df</span><span class="o">=</span><span class="n">train_data_m</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">target</span><span class="o">==</span><span class="s1">&#39;RecoDatapT&#39;</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="s1">&#39;pT&#39;</span><span class="p">,</span> <span class="n">scaled_df</span><span class="o">=</span><span class="n">train_data_m</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">target</span><span class="o">==</span><span class="s1">&#39;RecoDataeta&#39;</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="s1">&#39;eta&#39;</span><span class="p">,</span> <span class="n">scaled_df</span><span class="o">=</span><span class="n">train_data_m</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">target</span><span class="o">==</span><span class="s1">&#39;RecoDataphi&#39;</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="n">scaled_df</span><span class="o">=</span><span class="n">train_data_m</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">input_features</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">x</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;spliting data for </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="n">train_t</span><span class="p">,</span> <span class="n">train_x</span> <span class="o">=</span> <span class="n">split_t_x</span><span class="p">(</span><span class="n">df</span><span class="o">=</span> <span class="n">train_data_m</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
@@ -1823,13 +1739,13 @@ train_t shape =  (10000,) train_x shape =  (10000, 5)
 
  Training features:
 
-[[29.4452      0.828187    2.90213     2.85348     0.36130954]
- [24.3193     -1.16351     0.636469    5.83685     0.12689925]
- [24.3193     -1.16351     0.636469    5.83685     0.96230681]
+[[ 3.38253091  0.828187    2.90213     1.57969597 -0.83214275]
+ [ 3.19127027 -1.16351     0.636469    2.05883697 -2.23860448]
+ [ 3.19127027 -1.16351     0.636469    2.05883697  2.77384086]
  ...
- [36.0059      3.537       3.1117      7.61186     0.30763637]
- [36.0059      3.537       3.1117      7.61186     0.83365051]
- [31.3881      2.70158     0.267685    9.22485     0.89913462]]
+ [ 3.58368281  3.537       3.1117      2.26299775 -1.15418175]
+ [ 3.58368281  3.537       3.1117      2.26299775  2.00190305]
+ [ 3.44642884  2.70158     0.267685    2.41813007  2.39480772]]
 valid_t shape =  (10000,) valid_x shape =  (10000, 5)
 no need to train_test_split since we already have the split dataframes
 </pre></div>
@@ -2070,6 +1986,35 @@ no need to train_test_split since we already have the split dataframes
 <h2>Run training<a class="headerlink" href="#run-training" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">valid_x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">valid_x</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">train_x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">train_x</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[3.43200706 0.03296074 0.02674094 2.15370158 0.04535625] [0.34109032 2.21113156 1.81910579 0.28837389 1.74437024]
+[ 3.42368585 -0.00716868  0.00421532  2.15308963  0.00824955] [0.33548512 2.20977298 1.80908512 0.28603437 1.7285385 ]
+</pre></div>
+</div>
+</div>
+</div>
+<p>we expect the targets to have mean 0 and variance=1, since theyre the only things standarized</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">valid_t</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">valid_t</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">train_t</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">train_t</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-7.684093361604027e-14 1.0000000000000002
+-7.684093361604027e-14 1.0000000000000002
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Training for </span><span class="si">{</span><span class="n">n_iterations</span><span class="si">}</span><span class="s1"> iterations&#39;</span><span class="p">)</span>
 <span class="n">start</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;estimating </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">target</span><span class="p">)</span>
@@ -2092,11 +2037,43 @@ estimating RecoDatam
 
 Iteration vs average loss
  iteration	 train-set	 valid-set
-         0	  4.042081	  4.107997
-      9950	  0.490166	  0.486542	  0.493084
+         0	-216185.750000	-215364.296875
+      7000	-542412.312500	-540274.625000	-473953.093750
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_61_1.png" src="_images/Braden_Scaling_TrainEval_Mass_61_1.png" />
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_282404</span><span class="o">/</span><span class="mf">244478561.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span>         <span class="n">valid_x</span><span class="o">=</span><span class="n">valid_x</span><span class="p">,</span> <span class="n">valid_t</span><span class="o">=</span><span class="n">valid_t</span><span class="p">,</span> <span class="n">traces</span><span class="o">=</span><span class="n">IQN_trace</span><span class="p">,</span> <span class="n">n_batch</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span>         <span class="n">n_iterations</span><span class="o">=</span><span class="n">n_iterations</span><span class="p">,</span> <span class="n">traces_step</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">traces_window</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+<span class="ne">----&gt; </span><span class="mi">9</span>         <span class="n">save_model</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span> 
+<span class="g g-Whitespace">     </span><span class="mi">11</span> <span class="n">end</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="nn">/tmp/ipykernel_282404/1130991293.py</span> in <span class="ni">run</span><span class="nt">(model, target, train_x, train_t, valid_x, valid_t, traces, n_batch, n_iterations, traces_step, traces_window, save_model)</span>
+<span class="g g-Whitespace">    </span><span class="mi">109</span>                   <span class="n">traces</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">110</span>                   <span class="n">step</span><span class="o">=</span><span class="n">traces_step</span><span class="p">,</span>
+<span class="ne">--&gt; </span><span class="mi">111</span>                   <span class="n">window</span><span class="o">=</span><span class="n">traces_window</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">112</span> 
+<span class="g g-Whitespace">    </span><span class="mi">113</span>     <span class="c1"># learning_rate=learning_rate/10</span>
+
+<span class="nn">/tmp/ipykernel_282404/1130991293.py</span> in <span class="ni">train</span><span class="nt">(model, optimizer, avloss, getbatch, train_x, train_t, valid_x, valid_t, batch_size, n_iterations, traces, step, window)</span>
+<span class="g g-Whitespace">     </span><span class="mi">41</span>         <span class="c1"># to work correctly, it is necessary that they have the</span>
+<span class="g g-Whitespace">     </span><span class="mi">42</span>         <span class="c1"># same shape. We can do this with the reshape method.</span>
+<span class="ne">---&gt; </span><span class="mi">43</span>         <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">44</span> 
+<span class="g g-Whitespace">     </span><span class="mi">45</span>         <span class="c1"># compute a noisy approximation to the average loss</span>
+
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/torch/nn/modules/module.py</span> in <span class="ni">_call_impl</span><span class="nt">(self, *input, **kwargs)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1043</span>         <span class="k">return</span> <span class="n">result</span>
+<span class="g g-Whitespace">   </span><span class="mi">1044</span> 
+<span class="ne">-&gt; </span><span class="mi">1045</span>     <span class="k">def</span> <span class="nf">_call_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="g g-Whitespace">   </span><span class="mi">1046</span>         <span class="n">forward_call</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_slow_forward</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">_C</span><span class="o">.</span><span class="n">_get_tracing_state</span><span class="p">()</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1047</span>         <span class="c1"># If we don&#39;t have any hooks, we want to skip the rest of the logic in</span>
+
+<span class="ne">KeyboardInterrupt</span>: 
+</pre></div>
+</div>
 </div>
 </div>
 </section>

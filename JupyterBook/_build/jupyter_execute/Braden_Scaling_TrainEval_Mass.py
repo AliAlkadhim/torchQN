@@ -7,56 +7,13 @@
 # 
 # 
 
-# ## Import utils, and set environemnt variables
-
-# In[9]:
-
-
-try:
-    IQN_BASE = os.environ['IQN_BASE']
-    print('BASE directoy properly set = ', IQN_BASE)
-    utils_dir = os.path.join(IQN_BASE, 'utils')
-    sys.path.append(utils_dir)
-    import utils
-    #usually its not recommended to import everything from a module, but we know
-    #whats in it so its fine
-    from utils import *
-    print('DATA directory also properly set, in %s' % os.environ['DATA_DIR'])
-except Exception:
-    print("""\nBASE directory not properly set. Read repo README.\
-    If you need a function from utils, use the decorator below, or add utils to sys.path\n
-    You can also do os.environ['IQN_BASE']=<ABSOLUTE PATH FOR THE IQN REPO>""")
-    pass
-
-
-# ### A user is competent enought to do `source setup.sh` on a `setup.sh` script that comes in the repo, such as the next cell uncommented
-
-# In[10]:
-
-
-# %%writefile setup.sh
-# #!/bin/bash
-# export IQN_BASE=/home/ali/Desktop/Pulled_Github_Repositories/torchQN
-# #DAVIDSON
-# #export DATA_DIR='/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/data'
-# #LOCAL
-# export DATA_DIR='/home/ali/Desktop/Pulled_Github_Repositories/IQN_HEP/Davidson/data'
-# echo 'DATA DIR'
-# ls -l $DATA_DIR
-# #ln -s $DATA_DIR $IQN_BASE, if you want
-# #conda create env -n torch_env -f torch_env.yml
-# #conda activate torch_env
-# mkdir -p ${IQN_BASE}/images/loss_plots ${IQN_BASE}/trained_models  ${IQN_BASE}/hyperparameters ${IQN_BASE}/predicted_data
-# tree $IQN_BASE
-
-
 # ## External Imports
 # 
 # If you don't have some of these packages installed, you can also use the conda environment that has all of the packages by doing `conda env create -f IQN_env.yml && conda activate IQN_env`
 # 
 # There is also a `requirements.txt` here so that it can be run on an interactive website, eg binder or people can `pip install` it.
 
-# In[11]:
+# In[47]:
 
 
 import numpy as np; import pandas as pd
@@ -90,29 +47,50 @@ import time
 import ipywidgets as wid; 
 
 
-# In[12]:
+# ## Import utils, and set environemnt variables
+
+# In[48]:
 
 
-# import ruamel.yaml
-# yaml = ruamel.yaml.YAML()
-# data = yaml.load(open('IQN_env.yml'))
-# requirements = []
-# for dep in data['dependencies']:
-#     if isinstance(dep, str):
-#         package, package_version, python_version = dep.split('=')
-#         if python_version == '0':
-#             continue
-#         requirements.append(package + '==' + package_version)
-#     elif isinstance(dep, dict):
-#         for preq in dep.get('pip', []):
-#             requirements.append(preq)
-
-# with open('requirements.txt', 'w') as fp:
-#     for requirement in requirements:
-#        print(requirement, file=fp)
+try:
+    IQN_BASE = os.environ['IQN_BASE']
+    print('BASE directoy properly set = ', IQN_BASE)
+    utils_dir = os.path.join(IQN_BASE, 'utils')
+    sys.path.append(utils_dir)
+    import utils
+    #usually its not recommended to import everything from a module, but we know
+    #whats in it so its fine
+    from utils import *
+    print('DATA directory also properly set, in %s' % os.environ['DATA_DIR'])
+except Exception:
+    print("""\nBASE directory not properly set. Read repo README.\
+    If you need a function from utils, use the decorator below, or add utils to sys.path\n
+    You can also do os.environ['IQN_BASE']=<ABSOLUTE PATH FOR THE IQN REPO>""")
+    pass
 
 
-# In[13]:
+# ### A user is competent enought to do `source setup.sh` on a `setup.sh` script that comes in the repo, such as the next cell uncommented
+
+# In[49]:
+
+
+# %%writefile setup.sh
+# #!/bin/bash
+# export IQN_BASE=/home/ali/Desktop/Pulled_Github_Repositories/torchQN
+# #DAVIDSON
+# #export DATA_DIR='/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/data'
+# #LOCAL
+# export DATA_DIR='/home/ali/Desktop/Pulled_Github_Repositories/IQN_HEP/Davidson/data'
+# echo 'DATA DIR'
+# ls -l $DATA_DIR
+# #ln -s $DATA_DIR $IQN_BASE, if you want
+# #conda create env -n torch_env -f torch_env.yml
+# #conda activate torch_env
+# mkdir -p ${IQN_BASE}/images/loss_plots ${IQN_BASE}/trained_models  ${IQN_BASE}/hyperparameters ${IQN_BASE}/predicted_data
+# tree $IQN_BASE
+
+
+# In[50]:
 
 
 # update fonts
@@ -136,7 +114,7 @@ wid.HTMLMath('$\LaTeX$')
 
 # ## Set arguments and configurations
 
-# In[14]:
+# In[51]:
 
 
 ################################### ARGUMENTS ###################################
@@ -201,7 +179,7 @@ def get_model_params():
 
 # Plotting
 
-# In[15]:
+# In[52]:
 
 
 def show_jupyter_image(image_filename, width = 1300, height = 300):
@@ -219,7 +197,7 @@ def reset_plt_params():
     use_svg_display()
     mpl.rcParams.update(mpl.rcParamsDefault)
 
-def show_plot(legend=None):
+def show_plot(legend=False):
     use_svg_display()
     plt.tight_layout();
     plt.show()
@@ -260,7 +238,7 @@ def set_axes(ax, xlabel, ylabel=None, xmin=None, xmax=None, ymin=None, ymax=None
     plt.show()
 
 
-# In[16]:
+# In[53]:
 
 
 use_svg_display()
@@ -269,7 +247,7 @@ show_jupyter_image('images/pythia_ppt_diagram.png', width=2000,height=500)
 
 # <!-- For Davidson team, please read try to all the code/comments before asking me questions! -->
 
-# In[16]:
+# In[54]:
 
 
 ################################### SET DATA CONFIGURATIONS ###################################
@@ -306,7 +284,7 @@ loss_y_label_dict ={'RecoDatapT':'$p_T^{reco}$',
                     'RecoDatam':'$m^{reco}$'}
 
 
-# In[17]:
+# In[55]:
 
 
 all_variable_cols=['genDatapT', 'genDataeta', 'genDataphi', 'genDatam','RecoDatapT', 'RecoDataeta', 'RecoDataphi', 'RecoDatam']
@@ -324,7 +302,7 @@ test_data=pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
                      )
 
 
-# In[18]:
+# In[56]:
 
 
 def explore_data(df, title, scaled=False):
@@ -362,41 +340,35 @@ def explore_data(df, title, scaled=False):
     show_plot()
 
 
-# In[19]:
+# In[58]:
 
 
 explore_data(df=train_data, title='Unscaled Dataframe')
 
 
-# In[20]:
+# In[15]:
 
 
 print(train_data.shape)
 train_data.describe()#unscaled
 
 
-# standarize: $$ X' = \frac{X-X_{min}}{X_{max}-X_{min}} \qquad \rightarrow \qquad X= X' (X_{max}-X_{min}) + X_{min}$$
+# standarization is someimes done in the following way:
+# $$ X' = \frac{X-X_{min}}{X_{max}-X_{min}} \qquad \rightarrow \qquad X= X' (X_{max}-X_{min}) + X_{min}$$
 
-# In[21]:
-
-
-def standarize(values):
-    expected_min, expected_max = values.min(), values.max()
-    scale_factor = expected_max - expected_min
-    offset = expected_min
-    standarized_values = (values - offset)/scale_factor 
-    return standarized_values
+# In[16]:
 
 
-# standarize_2:
+# def standarize(values):
+#     expected_min, expected_max = values.min(), values.max()
+#     scale_factor = expected_max - expected_min
+#     offset = expected_min
+#     standarized_values = (values - offset)/scale_factor 
+#     return standarized_values
+
+
+# Or by taking z-score:
 # $$ X'=\frac{X-E[X]}{\sigma_{X}}  \qquad \rightarrow \qquad X = X' \sigma_{X} + E[X]$$
-
-# In[22]:
-
-
-def standarize_2(values):
-    return values - (np.mean(values)/np.std(values))
-
 
 # ## Results prior to Braden-scaling
 # 
@@ -411,87 +383,129 @@ show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height =
 
 # ## Scale the data accoding to the "Braden Kronheim scaling" :
 # 
-# $$\mathbb{T}(p_T) = z(\log p_T), \qquad \mathbb{T}(\eta) = z(\eta), \qquad \mathbb{T}(\phi) = z(\phi), \qquad \mathbb{T}(m) = z(\log (m + 2)), \qquad  \mathbb{T}(\tau) = 6\tau - 3 $$
-
-# In[24]:
-
-
-fig, ax= set_figsize(get_axes=True)
-ax.hist(np.log(train_data.iloc[:,0]), label='log $p_T$',alpha=0.35);
-ax.hist(standarize_2(np.log(train_data.iloc[:,0])), label='$z(log\ p_T$)');
-ax.hist(standarize_2(np.log(train_data.iloc[:,0]) +10), label='$z(log\ p_T + 10$)');
-ratio_of_cons_inside_log=standarize_2(np.log(train_data.iloc[:,0]) +10)/standarize_2(np.log(train_data.iloc[:,0]) +10)
-
-ax.hist(standarize_2(np.log(train_data.iloc[:,0]))+10, label='$z(log\ p_T)+10$',alpha=0.35)
-set_axes(ax=ax, xlabel=r'$p_T$ [GeV]')
-
-
-# standarize_IQN:
-# $$ X' = \frac{X-X_{min}}{X_{max}-X_{min}} \qquad \rightarrow \qquad X= X' (X_{max}-X_{min}) + X_{min}$$
+# $$\mathbb{T}(p_T) = z(\log p_T), \qquad \mathbb{T}(\eta) = z(\eta), \qquad \mathbb{T}(\phi) = z(\phi), \qquad \mathbb{T}(m) = z(\log (m + 2))$$ 
 # 
-# Standarize_IQN_2:
-# $$ p_T^{\text{scaled}} = \frac{\log p_T - E[\log p_T] }{\sigma_{\log (p_T)}} + 10 \qquad \rightarrow \qquad p_T^{\text{unscaled}} = \text{exp} \left((p_T^{\text{scaled}} - 10) \sigma_{\log (p_T)} + E[\log (p_T) ] \right) \tag{8}$$
+# $$ \mathbb{T}(\tau) = 6\tau - 3 $$
 
-# Standarize_IQN_3:
-# $$p_T^{\text{scaled}} = \frac $$
+# For a jet observable $\mathcal{O}$ (or $\tau$), the data is first scaled according to:
+# 
+# $$
+# \begin{align}
+#     \mathbb{L} (\mathcal{O}) &=
+#     \begin{cases}
+#         \log{\mathcal{O}}, \qquad & \text{if } \mathcal{O}= p_T \\
+#         \mathcal{O}, \qquad & \text{if } \mathcal{O}=\eta \\
+#         \log (\mathcal{O} + 2), \qquad & \text{if } \mathcal{O}=m \\
+#         \mathcal{O}, \qquad & \text{if } \mathcal{O}=\phi \\
+#         6 \mathcal{O} -3, \qquad & \text{if } \mathcal{O}=\tau
+#     \end{cases}
+# \end{align}
+# $$
+# 
+# Then the predicted target for a desired reco observable $\mathcal{O}$ is chosen to be the following function
+# 
+# $$
+#     \mathbb{T}(O) = z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
+# $$
+# 
+# where for a random variable $x$, $z$ is the standardization function (z-score):
+# 
+# $$
+#    x'= z (x) \equiv \frac{x-\bar{x}}{\sigma_{x}}.
+# $$
+# 
+# Such that its inverse is 
+# $$ z^{-1}(x') = x' \ \sigma_x + \bar{x} $$
+# If we do this on the data, after training, the NN $f_{\text{IQN}}$ will not estimate the observable, $\mathcal{O}^{\text{predicted}} \ne \mathcal{O}^{\text{reco}}$, but will instead estimate 
+# 
+# $$
+#         f_{\text{IQN}} (\mathcal{O}) =  z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
+# $$
+# 
+# which needs to be de-scaled (when evaluated on the data that which has been scaled according to $\mathbb{T}(\text{evaluation data}) = z \left( \frac{\mathbb{L} (\text{data}^{\text{reco}}) +10 }{\mathbb{L}(\text{data}^{\text{gen}}) +10} \right) $
+# )
+# in order to copare with $\mathcal{O}$ directly. The descaling for $\mathcal{O}=p_T$ (as an example) would be:
+# $$
+#     p_T^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (p_T^\text{gen})+10 \right] -10 \right]
+# $$
 
-# In[29]:
+# In[60]:
 
 
-def standarize_IQN(orig_values, label, const=None):
+def z(x):
+    return (x - np.mean(x))/np.std(x)
+def z_inverse(xprime, x):
+    return xprime * np.std(x) + np.mean(x)
+
+
+# In[61]:
+
+
+def L(orig_observable, label):
     if label=='pT':
-        const=10
-        log_pT_pls_const=np.log(orig_values+const) 
-        pT_scaled = ((log_pT_pls_const - np.mean(log_pT_pls_const) )/np.std(log_pT_pls_const) ) 
-        standarized_values =pT_scaled 
-    return standarized_values
+        const=0
+        log_pT_=np.log(orig_observable) 
+        L_observable = log_pT_
+    if label=='eta':
+        const=0
+        L_observable=orig_observable
+    if label=='m':
+        const=2
+        L_observable=np.log(orig_observable + const)
+    if label=='phi':
+        L_observable=orig_observable
+    if label=='tau':
+        L_observable = (6*orig_observable) - 3
+        
+    return L_observable
 
 
-# In[ ]:
+# In[62]:
 
 
-# plt.hist(ratio_of_cons_inside_log, label=r'$z(log\ p_T + 10$)/z(log p_T + 10$)$',bins=100,range=(1,1.1) );plt.legend();plt.show()
-
-
-# In[26]:
-
-
-def de_standarize_IQN(standarized_values, label, const=None):
+def L_inverse(L_observable, label):
     if label=='pT':
-        const=10
-        orig_unscaled_pT=train_data.iloc[:,0]
-        log_orig_unscaled_pT_pls_const = np.log(orig_unscaled_pT+const)
-        # pT_unscaled = np.exp( ((standarized_values-const) * np.std(orig__unscaled_pT)) + np.mean(log_orig__unscaled_pT) )
-        pT_unscaled=np.exp(standarized_values * log_orig_unscaled_pT_pls_const + np.mean(log_orig_unscaled_pT_pls_const)) - const
-    return pT_unscaled
+        const=0
+        L_inverse_observable = np.exp(L_observable)
+    if label=='eta':
+        L_inverse_observable = L_observable
+    if label=='m':
+        const=2
+        L_inverse_observable = np.exp(L_observable) - const
+    if label=='tau':
+        L_inverse_observable = (L_observable+3)/6
+        
+    return L_inverse_observable
 
 
-# In[30]:
+# In[69]:
 
 
-pT_scaled = standarize_IQN(orig_values=train_data.iloc[:,0], label='pT')
-plt.hist(pT_scaled,label='pT scaled');
-plt.legend();plt.show()
+def T(variable, scaled_df):
+    if variable=='pT':
+        L_pT_gen=scaled_df['genDatapT']
+        L_pT_reco = scaled_df['RecoDatapT']
+        target = z( (L_pT_reco+10)/(L_pT_gen+10) )
+    if variable=='eta':
+        L_eta_gen=scaled_df['genDataeta']
+        L_eta_reco = scaled_df['RecoDataeta']
+        target = z( (L_eta_reco+10)/(L_eta_gen+10) )
+    if variable=='phi':
+        L_phi_gen=scaled_df['genDataphi']
+        L_phi_reco = scaled_df['RecoDataphi']
+        target = z( (L_phi_reco+10)/(L_phi_gen+10) )
+    if variable=='m':
+        L_m_gen=scaled_df['genDatam']
+        L_m_reco = scaled_df['RecoDatam']
+        target = z( (L_m_reco+10)/(L_m_gen+10) )
+    
+    return target
 
 
-# In[32]:
+# In[83]:
 
 
-pT_unscaled = de_standarize_IQN(standarized_values=pT_scaled, label='pT')
-plt.hist(pT_unscaled, label='pT unscaled',bins=100 , 
-         # range=(20,100),
-         alpha=0.3);
-# plt.hist(train_data.iloc[:,0],label='original pT', bins=100,
-#          # range=(20,100),
-#          alpha=0.3)
-
-plt.legend();plt.show()
-
-
-# In[71]:
-
-
-def scale_df(df, title, scale_func, save=False):
+def L_scale_df(df, title, save=False):
     #scale
     SUBSAMPLE=int(1e4)
     df = df[all_cols]#[:SUBSAMPLE]
@@ -500,21 +514,21 @@ def scale_df(df, title, scale_func, save=False):
     #select the columns by index: 
     # 0:genDatapT, 1:genDataeta, 2:genDataphi, 3:genDatam, 
     # 4:RecoDatapT, 5:RecoDataeta, 6:RecoDataphi, 7: Recodatam
-    scaled_df['genDatapT'] = scale_func(np.log(df.iloc[:,0]) )
-    scaled_df['RecoDatapT'] = scale_func(np.log(df.iloc[:,4]) )
+    scaled_df['genDatapT'] = L(df.iloc[:,0], label='pT')
+    scaled_df['RecoDatapT'] = L(df.iloc[:,4], label='pT')
     
-    scaled_df['genDataeta'] = scale_func(df.iloc[:,1])
-    scaled_df['RecoDataeta'] = scale_func(df.iloc[:,5])
+    scaled_df['genDataeta'] = L(df.iloc[:,1], label='eta')
+    scaled_df['RecoDataeta'] = L(df.iloc[:,5],label='eta')
     
     
-    scaled_df['genDataphi'] = scale_func(df.iloc[:,2])
-    scaled_df['RecoDataphi'] = scale_func(df.iloc[:,6])
+    scaled_df['genDataphi'] = L(df.iloc[:,2],label='phi')
+    scaled_df['RecoDataphi'] = L(df.iloc[:,6],label='phi')
 
-    scaled_df['genDatam'] = scale_func(np.log(df.iloc[:,3] + 2) )
-    scaled_df['RecoDatam'] = scale_func(np.log(df.iloc[:,7] + 2) )
+    scaled_df['genDatam'] = L(df.iloc[:,3],label='m')
+    scaled_df['RecoDatam'] = L(df.iloc[:,7],label='m')
     #why scale tau?
     # scaled_df['tau'] = 6 * df.iloc[:,8] - 3
-    scaled_df['tau'] = df.iloc[:,8]
+    scaled_df['tau'] = L(df.iloc[:,8],label='tau')
     
     print(scaled_df.describe())
     
@@ -523,67 +537,44 @@ def scale_df(df, title, scale_func, save=False):
     return scaled_df
 
 
-# In[74]:
+# In[80]:
 
 
-scaled_train_data = scale_df(train_data, title='scaled_train_data_10M_2.csv',
-                             scale_func=standarize,
-                             save=False)
+scaled_train_data = L_scale_df(train_data, title='scaled_train_data_10M_2.csv',
+                             save=True)
 print('\n\n')
-scaled_test_data = scale_df(test_data,  title='scaled_test_data_10M_2.csv',
-                            scale_func=standarize,
-                            save=False)
+scaled_test_data = L_scale_df(test_data,  title='scaled_test_data_10M_2.csv',
+                            save=True)
 
-explore_data(df=scaled_train_data, title='Braden Kronheim-scaled Dataframe: standarize_IQN', scaled=True)
+explore_data(df=scaled_train_data, title='Braden Kronheim-L-scaled Dataframe', scaled=True)
 
 
 # In[75]:
 
 
-scaled_train_data = scale_df(train_data, title='scaled_train_data_10M_2.csv',
-                             scale_func=standarize_2,
-                             save=False)
-print('\n\n')
-scaled_test_data = scale_df(test_data,  title='scaled_test_data_10M_2.csv',
-                            scale_func=standarize_2,
-                            save=False)
+labels = ['pT', 'eta','phi','m']
+for label in labels:
+    target = T(label, scaled_df=scaled_train_data)
+    plt.hist(target, label = '$T($' +label+ '$)$' )
+# target_pT = T('pT', scaled_df=scaled_train_data)
+# target_eta = T('eta', scaled_df=scaled_train_data)
+# target_phi = T('phi', scaled_df=scaled_train_data)
+# target_m = T('m', scaled_df=scaled_train_data)
+# plt.hist(target_pT, label='$T(p_T)$')
 
-explore_data(df=scaled_train_data, title='Braden Kronheim-scaled Dataframe: standarize_IQN_2', scaled=True)
-
-
-# ### standarize is better than standarize_2
-
-# In[76]:
+plt.legend();plt.show()
 
 
-scaled_train_data = scale_df(train_data, title='scaled_train_data_10M_2.csv',
-                             scale_func=standarize,
+# In[84]:
+
+
+scaled_train_data = L_scale_df(train_data, title='scaled_train_data_10M_2.csv',
                              save=True)
 print('\n\n')
-scaled_test_data = scale_df(test_data,  title='scaled_test_data_10M_2.csv',
-                            scale_func=standarize,
+scaled_test_data = L_scale_df(test_data,  title='scaled_test_data_10M_2.csv',
                             save=True)
 
-explore_data(df=scaled_train_data, title='Braden Kronheim-scaled Dataframe: standarize_IQN', scaled=True)
-
-
-# In[46]:
-
-
-def denormalize_IQN(original_values, scaled_values):
-    expected_min, expected_max = original_values.min(), original_values.max()
-    scale_factor = expected_max - expected_min
-    offset = expected_min
-    return scaled_values  * scale_factor + offset
-
-
-# In[29]:
-
-
-de_scaled_m = denormalize_IQN(original_values=train_data.iloc[:,0], scaled_values=scaled_train_data.iloc[:,0])
-plt.hist(de_scaled_m,bins=100, label='de-Braden-scaled $p_T$',alpha=0.4)
-plt.hist(train_data.iloc[:,0],bins=100,label='original (unscaled) $p_T$',alpha=0.4)
-plt.legend();plt.show()
+explore_data(df=scaled_train_data, title='Braden Kronheim-$L$-scaled Dataframe: standarize_IQN', scaled=True)
 
 
 # ---------
@@ -670,58 +661,15 @@ plt.legend();plt.show()
 # for mass, $\mathbf{y_m}=m_{\text{reco}}$ and $\mathbf{x_m}=\{p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}$.
 # 
 
-# In[17]:
+# In[85]:
 
 
 show_jupyter_image('images/IQN_training_flowchart.png',width=2000,height=600)
 
 
-# In[151]:
-
-
-SUBSAMPLE=int(1e4)
-target = 'RecoDatam'
-source  = FIELDS[target]
-features= source['inputs']
-########
-
-print('USING NEW DATASET\n')
-#UNSCALED
-# train_data_m=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
-#                        usecols=features,
-#                        nrows=SUBSAMPLE)
-
-# print('TRAINING FEATURES\n', train_data.head())
-
-# test_data_m= pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
-#                        usecols=features,
-#                        nrows=SUBSAMPLE)
-# print('\nTESTING FEATURES\n', test_data.head())
-# valid_data= pd.read_csv(os.path.join(DATA_DIR,'valid_data_10M_2.csv'),
-#                        usecols=features,
-#                        nrows=SUBSAMPLE)
-
-
-# SCALED
-train_data_m=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
-                       usecols=all_cols,
-                       nrows=SUBSAMPLE)
-
-print('TRAINING FEATURES\n', train_data.head())
-
-test_data_m= pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
-                       usecols=all_cols,
-                       nrows=SUBSAMPLE)
-print('\nTESTING FEATURES\n', test_data.head())
-
-print('\ntrain set shape:',  train_data.shape)
-print('\ntest set shape:  ', test_data.shape)
-# print('validation set shape:', valid_data.shape)
-
-
 # ### Batches, validation, losses, and plotting of losses functions
 
-# In[177]:
+# In[95]:
 
 
 def get_batch(x, t, batch_size):
@@ -802,7 +750,7 @@ def plot_average_loss(traces, ftsize=18,save_loss_plots=False, show_loss_plots=T
     ax.grid(True, which="both", linestyle='-')
     ax.legend(loc='upper right')
     if save_loss_plots:
-        filename='IQNx4_%s_Loss.dict' % target 
+        filename='IQNx4_%s_Loss.png' % target 
         mkdir('images/loss_plots')
         PATH = os.path.join(IQN_BASE, 'images', 'loss_plots', filename)
         plt.savefig('images/loss_curves/IQN_'+N+T+'_Consecutive_2.png')
@@ -811,9 +759,52 @@ def plot_average_loss(traces, ftsize=18,save_loss_plots=False, show_loss_plots=T
         plt.show()
 
 
+# In[97]:
+
+
+SUBSAMPLE=int(1e4)
+target = 'RecoDatam'
+source  = FIELDS[target]
+features= source['inputs']
+########
+
+print('USING NEW DATASET\n')
+#UNSCALED
+# train_data_m=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
+#                        usecols=features,
+#                        nrows=SUBSAMPLE)
+
+# print('TRAINING FEATURES\n', train_data.head())
+
+# test_data_m= pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
+#                        usecols=features,
+#                        nrows=SUBSAMPLE)
+# print('\nTESTING FEATURES\n', test_data.head())
+# valid_data= pd.read_csv(os.path.join(DATA_DIR,'valid_data_10M_2.csv'),
+#                        usecols=features,
+#                        nrows=SUBSAMPLE)
+
+
+# SCALED
+train_data_m=pd.read_csv(os.path.join(DATA_DIR,'scaled_train_data_10M_2.csv'),
+                       usecols=all_cols,
+                       nrows=SUBSAMPLE)
+
+print('TRAINING FEATURES\n', train_data_m.head())
+
+test_data_m= pd.read_csv(os.path.join(DATA_DIR,'scaled_test_data_10M_2.csv'),
+                       usecols=all_cols,
+                       nrows=SUBSAMPLE)
+print('\nTESTING FEATURES\n', test_data_m.head())
+
+print('\ntrain set shape:',  train_data_m.shape)
+print('\ntest set shape:  ', test_data_m.shape)
+# print('validation set shape:', valid_data.shape)
+
+
 # ### Get training and testing features and targets
 
-# In[178]:
+# In[98]:
 
 
 target = 'RecoDatam'
@@ -823,9 +814,17 @@ features= source['inputs']
 def split_t_x(df, target, input_features):
     # change from pandas dataframe format to a numpy 
     # array of the specified types
-    t = np.array(df[target])
+    # t = np.array(df[target])
+    if target=='RecoDatam':
+        t = T('m', scaled_df=train_data_m)
+    if target=='RecoDatapT':
+        t = T('pT', scaled_df=train_data_m)
+    if target=='RecoDataeta':
+        t = T('eta', scaled_df=train_data_m)
+    if target=='RecoDataphi':
+        t = T('phi', scaled_df=train_data_m)
     x = np.array(df[input_features])
-    return t, x
+    return np.array(t), x
 
 print(f'spliting data for {target}')
 train_t, train_x = split_t_x(df= train_data_m, target = target, input_features=features)
@@ -840,7 +839,7 @@ print('no need to train_test_split since we already have the split dataframes')
 
 # ### Training and running-of-training functions
 
-# In[179]:
+# In[91]:
 
 
 def train(model, optimizer, avloss, getbatch,
@@ -997,7 +996,7 @@ def run(model, target,
 
 # ### Define basic NN model
 
-# In[180]:
+# In[92]:
 
 
 class RegularizedRegressionModel(nn.Module):
@@ -1037,7 +1036,7 @@ class RegularizedRegressionModel(nn.Module):
         return self.model(x)
 
 
-# In[181]:
+# In[93]:
 
 
 n_iterations, n_layers, n_hidden, starting_learning_rate, dropout = get_model_params()
@@ -1051,7 +1050,23 @@ print(model)
 
 # ### Run training
 
-# In[182]:
+# In[109]:
+
+
+print(valid_x.mean(axis=0), valid_x.std(axis=0))
+print(train_x.mean(axis=0), train_x.std(axis=0))
+
+
+# we expect the targets to have mean 0 and variance=1, since theyre the only things standarized
+
+# In[104]:
+
+
+print(valid_t.mean(), valid_t.std())
+print(train_t.mean(), train_t.std())
+
+
+# In[110]:
 
 
 print(f'Training for {n_iterations} iterations')
