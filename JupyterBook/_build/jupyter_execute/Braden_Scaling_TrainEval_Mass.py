@@ -601,7 +601,8 @@ plt.legend();plt.show()
 # $$ \frac{\delta R}{\delta f}=0,$$
 # 
 # where $L$ is the loss function, $f$ is the model (in this case IQN) (implicitly parameterized by potentially a  gazillion parameters), $y$ is the target(s) that we want to estimate, $x$ is the (set of) training features, $R$ is the risk functional:
-# $$R[f] = \int \cdots \int \, p(t, \mathbf{x}) \, L(t, f(\mathbf{x}, \theta)) \, dt \, d\mathbf{x}$$
+# 
+# $$ R[f] = \int \cdots \int \, p(t, \mathbf{x}) \, L(t, f(\mathbf{x}, \theta)) \, dt \, d\mathbf{x}$$
 # 
 # 
 # So, for IQNs,
