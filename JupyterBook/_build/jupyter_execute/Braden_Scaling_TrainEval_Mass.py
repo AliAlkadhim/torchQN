@@ -1230,17 +1230,17 @@ for i in range(NFEATURES):
 plt.legend();plt.show()
 
 
-# In[48]:
+# In[76]:
 
 
 IQN.eval()
 valid_x_tensor=torch.from_numpy(valid_x).float()
 pred = IQN(valid_x_tensor)
 p = pred.detach().numpy()
-plt.hist(p, label='using $T$ ratio');plt.legend();plt.show()
+plt.hist(p, label='predicted $T$ ratio');plt.legend();plt.show()
 
 
-# In[68]:
+# In[77]:
 
 
 def get_finite(values):
@@ -1268,7 +1268,7 @@ print(recom_unsc_mean,recom_unsc_std)
 
 # Get unscaled again, just to verify
 
-# In[51]:
+# In[78]:
 
 
 SUBSAMPLE=int(1e5)#subsample use for development - in production use whole dataset
@@ -1284,7 +1284,7 @@ raw_test_data=pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
 raw_test_data.describe()
 
 
-# In[52]:
+# In[79]:
 
 
 m_reco = raw_test_data['RecoDatam']
@@ -1292,53 +1292,71 @@ m_gen = raw_test_data['genDatam']
 plt.hist(m_reco);plt.show()
 
 
-# In[53]:
+# In[80]:
 
 
 print(valid_t_ratio.shape, valid_t_ratio[:5])
 
 
-# In[54]:
+# $ f_{\text{IQN}} $ estimates:
+# 
+# $$
+#         f_{\text{IQN}} (\mathcal{O}) =  z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
+# $$
+# 
+# Apply the descaling formula for our observable
+# 
+# $$
+#     m^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 \right]
+# $$
+# 
+# First, calculate $z^{-1} (f_{\text{IQN}} )$
+
+# In[82]:
 
 
 z_inv_f =z_inverse(xprime=p, mean=np.mean(valid_t_ratio), std=np.std(valid_t_ratio))
 z_inv_f[:5]
 
 
-# In[55]:
+# $\mathbb{L}(\mathcal{O^{\text{gen}}}) = L (m^{\text{gen}})$
+
+# In[83]:
 
 
 L_obs = L(orig_observable=m_gen, label='m')
 L_obs[:5]
 
 
-# In[59]:
+# In[84]:
 
 
 print(L_obs.shape, z_inv_f.shape)
 
 
-# In[60]:
+# In[85]:
 
 
 z_inv_f = z_inv_f.flatten();print(z_inv_f.shape)
 
 
-# In[62]:
+# "factor" $ = z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 $
+
+# In[86]:
 
 
 factor = (z_inv_f * (L_obs  + 10) )-10
 factor[:5]
 
 
-# In[69]:
+# In[87]:
 
 
 pT_pred = L_inverse(L_observable=factor, label='m')
 # pT_pred=get_finite(pT_pred)
 
 
-# In[70]:
+# In[88]:
 
 
 pT_pred

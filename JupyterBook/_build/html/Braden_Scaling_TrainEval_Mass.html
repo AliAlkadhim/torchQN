@@ -2378,7 +2378,7 @@ evaluating m took  11.571345329284668 seconds
 <span class="n">valid_x_tensor</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">valid_x</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
 <span class="n">pred</span> <span class="o">=</span> <span class="n">IQN</span><span class="p">(</span><span class="n">valid_x_tensor</span><span class="p">)</span>
 <span class="n">p</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;using $T$ ratio&#39;</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;predicted $T$ ratio&#39;</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -2587,6 +2587,17 @@ evaluating m took  11.571345329284668 seconds
 </div>
 </div>
 </div>
+<p><span class="math notranslate nohighlight">\( f_{\text{IQN}} \)</span> estimates:</p>
+<div class="math notranslate nohighlight">
+\[
+        f_{\text{IQN}} (\mathcal{O}) =  z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
+\]</div>
+<p>Apply the descaling formula for our observable</p>
+<div class="math notranslate nohighlight">
+\[
+    m^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 \right]
+\]</div>
+<p>First, calculate <span class="math notranslate nohighlight">\(z^{-1} (f_{\text{IQN}} )\)</span></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z_inv_f</span> <span class="o">=</span><span class="n">z_inverse</span><span class="p">(</span><span class="n">xprime</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">valid_t_ratio</span><span class="p">),</span> <span class="n">std</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">valid_t_ratio</span><span class="p">))</span>
@@ -2604,6 +2615,7 @@ evaluating m took  11.571345329284668 seconds
 </div>
 </div>
 </div>
+<p><span class="math notranslate nohighlight">\(\mathbb{L}(\mathcal{O^{\text{gen}}}) = L (m^{\text{gen}})\)</span></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">L_obs</span> <span class="o">=</span> <span class="n">L</span><span class="p">(</span><span class="n">orig_observable</span><span class="o">=</span><span class="n">m_gen</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
@@ -2641,6 +2653,7 @@ evaluating m took  11.571345329284668 seconds
 </div>
 </div>
 </div>
+<p>“factor” <span class="math notranslate nohighlight">\( = z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 \)</span></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">factor</span> <span class="o">=</span> <span class="p">(</span><span class="n">z_inv_f</span> <span class="o">*</span> <span class="p">(</span><span class="n">L_obs</span>  <span class="o">+</span> <span class="mi">10</span><span class="p">)</span> <span class="p">)</span><span class="o">-</span><span class="mi">10</span>
@@ -2697,7 +2710,7 @@ evaluating m took  11.571345329284668 seconds
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_88_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_88_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_91_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_91_0.svg" /></div>
 </div>
 <hr class="docutils" />
 <div class="cell docutils container">
@@ -2754,7 +2767,7 @@ no need to train_test_split since we already have the split dataframes
 1.9649797331536134 0.3264556967084843
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_91_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_91_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_94_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_94_1.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2794,7 +2807,7 @@ Iteration vs average loss
      19950	-784456.312500	-773300.125000	-690390.937500
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_92_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_92_1.svg" /><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>evaluating m took  21.789092540740967 seconds
+<img alt="_images/Braden_Scaling_TrainEval_Mass_95_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_95_1.svg" /><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>evaluating m took  21.789092540740967 seconds
 </pre></div>
 </div>
 </div>
@@ -2813,7 +2826,7 @@ Iteration vs average loss
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_93_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_93_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_96_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_96_0.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2847,7 +2860,7 @@ valid_t shape =  (10000,) valid_x shape =  (10000, 5)
 no need to train_test_split since we already have the split dataframes
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_94_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_94_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_97_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_97_1.svg" /></div>
 </div>
 <section id="evalute-model-and-save-evaluated-data">
 <h3>Evalute model and save evaluated data<a class="headerlink" href="#evalute-model-and-save-evaluated-data" title="Permalink to this headline">#</a></h3>
