@@ -13,7 +13,7 @@
 # 
 # There is also a `requirements.txt` here so that it can be run on an interactive website, eg binder or people can `pip install` it.
 
-# In[47]:
+# In[1]:
 
 
 import numpy as np; import pandas as pd
@@ -49,7 +49,7 @@ import ipywidgets as wid;
 
 # ## Import utils, and set environemnt variables
 
-# In[48]:
+# In[2]:
 
 
 try:
@@ -63,15 +63,26 @@ try:
     from utils import *
     print('DATA directory also properly set, in %s' % os.environ['DATA_DIR'])
 except Exception:
+    # IQN_BASE=os.getcwd()
     print("""\nBASE directory not properly set. Read repo README.\
     If you need a function from utils, use the decorator below, or add utils to sys.path\n
-    You can also do os.environ['IQN_BASE']=<ABSOLUTE PATH FOR THE IQN REPO>""")
+    You can also do 
+    os.environ['IQN_BASE']=<ABSOLUTE PATH FOR THE IQN REPO>
+    or
+    os.environ['IQN_BASE']=os.getcwd()""")
     pass
+
+
+# In[3]:
+
+
+# os.environ['IQN_BASE']='/home/ali/Desktop/Pulled_Github_Repositories/torchQN'
+# os.environ['DATA_DIR']='/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/data'
 
 
 # ### A user is competent enought to do `source setup.sh` on a `setup.sh` script that comes in the repo, such as the next cell uncommented
 
-# In[49]:
+# In[4]:
 
 
 # %%writefile setup.sh
@@ -90,7 +101,7 @@ except Exception:
 # tree $IQN_BASE
 
 
-# In[50]:
+# In[5]:
 
 
 # update fonts
@@ -114,7 +125,7 @@ wid.HTMLMath('$\LaTeX$')
 
 # ## Set arguments and configurations
 
-# In[51]:
+# In[6]:
 
 
 ################################### ARGUMENTS ###################################
@@ -179,7 +190,7 @@ def get_model_params():
 
 # Plotting
 
-# In[52]:
+# In[7]:
 
 
 def show_jupyter_image(image_filename, width = 1300, height = 300):
@@ -238,7 +249,7 @@ def set_axes(ax, xlabel, ylabel=None, xmin=None, xmax=None, ymin=None, ymax=None
     plt.show()
 
 
-# In[53]:
+# In[8]:
 
 
 use_svg_display()
@@ -247,7 +258,7 @@ show_jupyter_image('images/pythia_ppt_diagram.png', width=2000,height=500)
 
 # <!-- For Davidson team, please read try to all the code/comments before asking me questions! -->
 
-# In[54]:
+# In[9]:
 
 
 ################################### SET DATA CONFIGURATIONS ###################################
@@ -284,13 +295,13 @@ loss_y_label_dict ={'RecoDatapT':'$p_T^{reco}$',
                     'RecoDatam':'$m^{reco}$'}
 
 
-# In[55]:
+# In[11]:
 
 
 all_variable_cols=['genDatapT', 'genDataeta', 'genDataphi', 'genDatam','RecoDatapT', 'RecoDataeta', 'RecoDataphi', 'RecoDatam']
 all_cols=['genDatapT', 'genDataeta', 'genDataphi', 'genDatam','RecoDatapT', 'RecoDataeta', 'RecoDataphi', 'RecoDatam', 'tau']
 ################################### Load unscaled dataframes ###################################
-SUBSAMPLE=int(1e4)#subsample use for development - in production use whole dataset
+SUBSAMPLE=int(1e3)#subsample use for development - in production use whole dataset
 train_data=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
                       usecols=all_cols,
                       nrows=SUBSAMPLE
@@ -302,7 +313,7 @@ test_data=pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
                      )
 
 
-# In[56]:
+# In[12]:
 
 
 def explore_data(df, title, scaled=False):
@@ -340,17 +351,23 @@ def explore_data(df, title, scaled=False):
     show_plot()
 
 
-# In[58]:
+# In[13]:
 
 
 explore_data(df=train_data, title='Unscaled Dataframe')
 
 
-# In[15]:
+# In[14]:
 
 
 print(train_data.shape)
 train_data.describe()#unscaled
+
+
+# In[19]:
+
+
+# np.array(train_data['genDatapT'])
 
 
 # standarization is someimes done in the following way:
@@ -381,6 +398,8 @@ train_data.describe()#unscaled
 show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height = 100)
 
 
+# # Braden Scaling
+# 
 # ## Scale the data accoding to the "Braden Kronheim scaling" :
 # 
 # $$\mathbb{T}(p_T) = z(\log p_T), \qquad \mathbb{T}(\eta) = z(\eta), \qquad \mathbb{T}(\phi) = z(\phi), \qquad \mathbb{T}(m) = z(\log (m + 2))$$ 
@@ -429,6 +448,28 @@ show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height =
 #     p_T^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (p_T^\text{gen})+10 \right] -10 \right]
 # $$
 
+# -----------
+# 
+# ## Basically the scaling procedure is the following:
+# 
+# 1. Split the data into train and test dataframes
+# 2. fit the scaler on each of the train and test sets independently, that is, get the mean and std, ( optionally and min and max or other quantities) of each feature (column) of each of the train and test dataframes, independently.
+# 3. transform each of the train and test sets independently. That is, use the means and stds of each column to transform a column $X$ into a column $X'$ e.g. according to 
+# $$ X'=z(X)= \frac{X-E[X]}{\sigma_{X}}$$
+# 4. Train NN on transformed features $X_{train}'$ (and target $y_{train}'$) (in train df, but validate on test set, which will not influence the weights of NN ( just used for observation that it doesnt overfit) )
+# 5. Once the training is done, *evaluate the NN on transformed features of the test set* $X_{test}'$, i.e. do $NN(X_{test}')$, which will result in a scaled prediction of the target $y_{pred}'$
+# 6. Unscale the $y_{pred}'$, i.e. apply the inverse of the scaling operation, e.g.
+# $$ y_{pred}=z^{-1}(y_{pred}')= y_{pred}' \sigma{y} + E[y]$$,
+# where $\sigma{y}$ and $E[y]$ are attained from the test set *prior to training and scaling*.
+# 7. Compare to $y$ (the actual distribution you're trying to estimate) one-to-one
+
+# In[15]:
+
+
+use_svg_display()
+show_jupyter_image('images/scaling_forNN.jpg', width=2000,height=500)
+
+
 # In[60]:
 
 
@@ -438,7 +479,33 @@ def z_inverse(xprime, x):
     return xprime * np.std(x) + np.mean(x)
 
 
-# In[167]:
+# In[40]:
+
+
+def get_scaling_info(df):
+    """args: df is train or eval df.
+    returns: dictionary with mean of std of each feature (column) in the df"""
+    features=['genDatapT', 'genDataeta', 'genDataphi', 'genDatam',
+              'RecoDatapT', 'RecoDataeta', 'RecoDataphi', 'RecoDatam', 'tau']
+    SCALE_DICT = dict.fromkeys(features)
+    for i in range(8):
+        feature = features[i]
+        feature_values = np.array(df[feature])
+        SCALE_DICT[feature]={}
+        SCALE_DICT[feature]['mean'] = np.mean(feature_values)
+        SCALE_DICT[feature]['std'] = np.std(feature_values)
+    return SCALE_DICT
+
+
+# In[48]:
+
+
+TRAIN_SCALE_DICT = get_scaling_info(train_data);print(TRAIN_SCALE_DICT)
+print('\n\n')
+TEST_SCALE_DICT = get_scaling_info(test_data);print(TEST_SCALE_DICT)
+
+
+# In[43]:
 
 
 def L(orig_observable, label):
@@ -460,7 +527,7 @@ def L(orig_observable, label):
     return L_observable.to_numpy()
 
 
-# In[180]:
+# In[44]:
 
 
 def L_inverse(L_observable, label):
@@ -480,7 +547,7 @@ def L_inverse(L_observable, label):
     return L_inverse_observable
 
 
-# In[69]:
+# In[45]:
 
 
 def T(variable, scaled_df):
@@ -504,7 +571,7 @@ def T(variable, scaled_df):
     return target
 
 
-# In[83]:
+# In[46]:
 
 
 def L_scale_df(df, title, save=False):
@@ -539,14 +606,14 @@ def L_scale_df(df, title, save=False):
     return scaled_df
 
 
-# In[80]:
+# In[47]:
 
 
 scaled_train_data = L_scale_df(train_data, title='scaled_train_data_10M_2.csv',
-                             save=True)
+                             save=False)
 print('\n\n')
 scaled_test_data = L_scale_df(test_data,  title='scaled_test_data_10M_2.csv',
-                            save=True)
+                            save=False)
 
 explore_data(df=scaled_train_data, title='Braden Kronheim-L-scaled Dataframe', scaled=True)
 
