@@ -155,6 +155,7 @@ parser.add_argument('--save_loss_plots', type=bool, help='''Boolean to save the 
 ################################### CONFIGURATIONS ###################################
 DATA_DIR=os.environ['DATA_DIR']
 JUPYTER=True
+SUBSAMPLE=int(1e5)#subsample use for development - in production use whole dataset
 
 if JUPYTER:
     args = parser.parse_args(args=[])
@@ -256,34 +257,8 @@ use_svg_display()
 show_jupyter_image('images/pythia_ppt_diagram.png', width=2000,height=500)
 
 
-# <!-- For Davidson team, please read try to all the code/comments before asking me questions! -->
-
 # In[9]:
 
-
-################################### SET DATA CONFIGURATIONS ###################################
-X       = ['genDatapT', 'genDataeta', 'genDataphi', 'genDatam', 'tau']
-
-FIELDS  = {'RecoDatam' : {'inputs': X, 
-                           'xlabel':  r'$m$ (GeV)', 
-                           'xmin': 0, 
-                           'xmax': 25},
-           
-           'RecoDatapT': {'inputs': ['RecoDatam']+X, 
-                           'xlabel':  r'$p_T$ (GeV)' , 
-                           'xmin'  : 20, 
-                           'xmax'  :  80},
-           
-           'RecoDataeta': {'inputs': ['RecoDatam','RecoDatapT'] + X, 
-                           'xlabel': r'$\eta$',
-                           'xmin'  : -5,
-                           'xmax'  :  5},
-           
-           'RecoDataphi'  : {'inputs': ['RecoDatam', 'RecodatapT', 'RecoDataeta']+X,
-                           'xlabel': r'$\phi$' ,
-                           'xmin'  : -3.2, 
-                           'xmax'  :3.2}
-          }
 
 ###############################################################################################
 y_label_dict ={'RecoDatapT':'$p(p_T)$'+' [ GeV'+'$^{-1} $'+']',
@@ -295,19 +270,54 @@ loss_y_label_dict ={'RecoDatapT':'$p_T^{reco}$',
                     'RecoDatam':'$m^{reco}$'}
 
 
+# <!-- For Davidson team, please read try to all the code/comments before asking me questions! -->
+
+# In[10]:
+
+
+################################### SET DATA CONFIGURATIONS ###################################
+X       = ['genDatapT', 'genDataeta', 'genDataphi', 'genDatam', 'tau']
+
+#set order of training:
+#pT_first: pT->>m->eta->phi
+#m_first: m->pT->eta->phi
+ORDER='m_First'
+
+if ORDER=='m_First':
+    FIELDS  = {'RecoDatam' : {'inputs': X, 
+                               'xlabel':  r'$m$ (GeV)', 
+                               'xmin': 0, 
+                               'xmax': 25},
+
+               'RecoDatapT': {'inputs': ['RecoDatam']+X, 
+                               'xlabel':  r'$p_T$ (GeV)' , 
+                               'xmin'  : 20, 
+                               'xmax'  :  80},
+
+               'RecoDataeta': {'inputs': ['RecoDatam','RecoDatapT'] + X, 
+                               'xlabel': r'$\eta$',
+                               'xmin'  : -5,
+                               'xmax'  :  5},
+
+               'RecoDataphi'  : {'inputs': ['RecoDatam', 'RecodatapT', 'RecoDataeta']+X,
+                               'xlabel': r'$\phi$' ,
+                               'xmin'  : -3.2, 
+                               'xmax'  :3.2}
+              }
+
+
 # In[11]:
 
 
 all_variable_cols=['genDatapT', 'genDataeta', 'genDataphi', 'genDatam','RecoDatapT', 'RecoDataeta', 'RecoDataphi', 'RecoDatam']
 all_cols=['genDatapT', 'genDataeta', 'genDataphi', 'genDatam','RecoDatapT', 'RecoDataeta', 'RecoDataphi', 'RecoDatam', 'tau']
 ################################### Load unscaled dataframes ###################################
-SUBSAMPLE=int(1e3)#subsample use for development - in production use whole dataset
-train_data=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
+raw_train_data=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
                       usecols=all_cols,
                       nrows=SUBSAMPLE
                       )
 
-test_data=pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
+raw_test_data=pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
                       usecols=all_cols,
                      nrows=SUBSAMPLE
                      )
@@ -354,24 +364,24 @@ def explore_data(df, title, scaled=False):
 # In[13]:
 
 
-explore_data(df=train_data, title='Unscaled Dataframe')
+explore_data(df=raw_train_data, title='Unscaled Dataframe')
 
 
-# In[131]:
+# In[14]:
 
 
-print(train_data.shape)
-train_data.describe()#unscaled
+print(raw_train_data.shape)
+raw_train_data.describe()#unscaled
 
 
-# In[132]:
+# In[15]:
 
 
-print(test_data.shape)
-test_data.describe()#unscaled
+print(raw_test_data.shape)
+raw_test_data.describe()#unscaled
 
 
-# In[19]:
+# In[16]:
 
 
 # np.array(train_data['genDatapT'])
@@ -380,7 +390,7 @@ test_data.describe()#unscaled
 # standarization is someimes done in the following way:
 # $$ X' = \frac{X-X_{min}}{X_{max}-X_{min}} \qquad \rightarrow \qquad X= X' (X_{max}-X_{min}) + X_{min}$$
 
-# In[16]:
+# In[17]:
 
 
 # def standarize(values):
@@ -399,7 +409,7 @@ test_data.describe()#unscaled
 # Recall that the best IQNx4 autoregressive results that I attained prior to trying the Braden scaling was the following (which was implemented in the Davidson cluster here: `/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/OCT_7/*.py` and copied to my repo [here](https://github.com/AliAlkadhim/torchQN/tree/master/OCT_7)):
 # 
 
-# In[23]:
+# In[18]:
 
 
 show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height = 100)
@@ -419,11 +429,11 @@ show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height =
 # \begin{align}
 #     \mathbb{L} (\mathcal{O}) &=
 #     \begin{cases}
-#         \log{\mathcal{O}}, \qquad & \text{if } \mathcal{O}= p_T \\
-#         \mathcal{O}, \qquad & \text{if } \mathcal{O}=\eta \\
-#         \log (\mathcal{O} + 2), \qquad & \text{if } \mathcal{O}=m \\
-#         \mathcal{O}, \qquad & \text{if } \mathcal{O}=\phi \\
-#         6 \mathcal{O} -3, \qquad & \text{if } \mathcal{O}=\tau
+#         z \left( \log{\mathcal{O}} \right), \qquad & \text{if } \mathcal{O}= p_T \\
+#         z \left(\mathcal{O} \right), \qquad & \text{if } \mathcal{O}=\eta \\
+#         z \left( \log (\mathcal{O} + 2) \right), \qquad & \text{if } \mathcal{O}=m \\
+#         z \left( \mathcal{O} \right), \qquad & \text{if } \mathcal{O}=\phi \\
+#         z \left( 6 \mathcal{O} -3 \right), \qquad & \text{if } \mathcal{O}=\tau
 #     \end{cases}
 # \end{align}
 # $$
@@ -466,18 +476,18 @@ show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height =
 # 4. Train NN on transformed features $X_{train}'$ (and target $y_{train}'$) (in train df, but validate on test set, which will not influence the weights of NN ( just used for observation that it doesnt overfit) )
 # 5. Once the training is done, *evaluate the NN on transformed features of the test set* $X_{test}'$, i.e. do $NN(X_{test}')$, which will result in a scaled prediction of the target $y_{pred}'$
 # 6. Unscale the $y_{pred}'$, i.e. apply the inverse of the scaling operation, e.g.
-# $$ y_{pred}=z^{-1}(y_{pred}')= y_{pred}' \sigma{y} + E[y]$$,
+# $$ y_{pred}=z^{-1}(y_{pred}')= y_{pred}' \sigma_{y} + E[y]$$,
 # where $\sigma{y}$ and $E[y]$ are attained from the test set *prior to training and scaling*.
 # 7. Compare to $y$ (the actual distribution you're trying to estimate) one-to-one
 
-# In[15]:
+# In[19]:
 
 
 use_svg_display()
 show_jupyter_image('images/scaling_forNN.jpg', width=2000,height=500)
 
 
-# In[91]:
+# In[20]:
 
 
 def z(x):
@@ -487,7 +497,7 @@ def z_inverse(xprime, x):
     return xprime * np.std(x) + np.mean(x)
 
 
-# In[40]:
+# In[21]:
 
 
 def get_scaling_info(df):
@@ -505,19 +515,19 @@ def get_scaling_info(df):
     return SCALE_DICT
 
 
-# In[48]:
+# In[22]:
 
 
-TRAIN_SCALE_DICT = get_scaling_info(train_data);print(TRAIN_SCALE_DICT)
+TRAIN_SCALE_DICT = get_scaling_info(raw_train_data);print(TRAIN_SCALE_DICT)
 print('\n\n')
-TEST_SCALE_DICT = get_scaling_info(test_data);print(TEST_SCALE_DICT)
+TEST_SCALE_DICT = get_scaling_info(raw_test_data);print(TEST_SCALE_DICT)
 
 
-# In[98]:
+# In[23]:
 
 
 def L(orig_observable, label):
-    eps=1e-10
+    eps=1e-20
     orig_observable=orig_observable+eps
     if label=='pT':
         const=0
@@ -537,11 +547,11 @@ def L(orig_observable, label):
     return L_observable.to_numpy()
 
 
-# In[99]:
+# In[24]:
 
 
 def L_inverse(L_observable, label):
-    eps=1e-10
+    eps=1e-20
     L_observable=L_observable+eps
     if label=='pT':
         const=0
@@ -559,7 +569,7 @@ def L_inverse(L_observable, label):
     return L_inverse_observable
 
 
-# In[100]:
+# In[25]:
 
 
 def T(variable, scaled_df):
@@ -583,12 +593,12 @@ def T(variable, scaled_df):
     return target
 
 
-# In[101]:
+# In[26]:
 
 
 def L_scale_df(df, title, save=False):
     #scale
-    SUBSAMPLE=int(1e4)
+    # SUBSAMPLE=int(1e6)
     df = df[all_cols]#[:SUBSAMPLE]
     # print(df.head())
     scaled_df = pd.DataFrame()
@@ -618,19 +628,19 @@ def L_scale_df(df, title, save=False):
     return scaled_df
 
 
-# In[103]:
+# In[27]:
 
 
-scaled_train_data = L_scale_df(train_data, title='scaled_train_data_10M_2.csv',
-                             save=False)
+scaled_train_data = L_scale_df(raw_train_data, title='scaled_train_data_10M_2.csv',
+                             save=True)
 print('\n\n')
-scaled_test_data = L_scale_df(test_data,  title='scaled_test_data_10M_2.csv',
-                            save=False)
+scaled_test_data = L_scale_df(raw_test_data,  title='scaled_test_data_10M_2.csv',
+                            save=True)
 
 explore_data(df=scaled_train_data, title='Braden Kronheim-L-scaled Dataframe', scaled=True)
 
 
-# In[104]:
+# In[28]:
 
 
 labels = ['pT', 'eta','phi','m']
@@ -646,7 +656,7 @@ for label in labels:
 plt.legend();plt.show()
 
 
-# In[105]:
+# In[29]:
 
 
 # scaled_train_data = L_scale_df(train_data, title='scaled_train_data_10M_2.csv',
@@ -742,7 +752,7 @@ plt.legend();plt.show()
 # for mass, $\mathbf{y_m}=m_{\text{reco}}$ and $\mathbf{x_m}=\{p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}$.
 # 
 
-# In[106]:
+# In[30]:
 
 
 show_jupyter_image('images/IQN_training_flowchart.png',width=2000,height=600)
@@ -750,7 +760,7 @@ show_jupyter_image('images/IQN_training_flowchart.png',width=2000,height=600)
 
 # ### Batches, validation, losses, and plotting of losses functions
 
-# In[107]:
+# In[31]:
 
 
 def get_batch(x, t, batch_size):
@@ -840,11 +850,10 @@ def plot_average_loss(traces, ftsize=18,save_loss_plots=False, show_loss_plots=T
         plt.show()
 
 
-# In[108]:
+# In[32]:
 
 
-SUBSAMPLE=int(1e3)
-target = 'RecoDatapT'
+target = 'RecoDatam'
 source  = FIELDS[target]
 features= source['inputs']
 ########
@@ -885,7 +894,7 @@ print('\ntest set shape:  ', test_data_m.shape)
 
 # ### Get training and testing features and targets
 
-# In[127]:
+# In[33]:
 
 
 def split_t_x(df, target, input_features):
@@ -911,7 +920,14 @@ def normal_split_t_x(df, target, input_features):
     return t, x
 
 
-# In[110]:
+# In[34]:
+
+
+print(features)
+print('\n', target)
+
+
+# In[36]:
 
 
 print(f'spliting data for {target}')
@@ -925,7 +941,7 @@ print('valid_t shape = ',valid_t_ratio.shape , 'valid_x shape = ', valid_x.shape
 print('no need to train_test_split since we already have the split dataframes')
 
 
-# In[111]:
+# In[37]:
 
 
 print(valid_x.mean(axis=0), valid_x.std(axis=0))
@@ -934,16 +950,40 @@ print(train_x.mean(axis=0), train_x.std(axis=0))
 
 # we expect the targets to have mean 0 and variance=1, since theyre the only things standarized
 
-# In[112]:
+# In[38]:
 
 
 print(valid_t_ratio.mean(), valid_t_ratio.std())
 print(train_t_ratio.mean(), train_t_ratio.std())
 
 
+# Aplly final $z$ to the train and test set features
+
+# In[39]:
+
+
+NFEATURES=train_x.shape[1]
+for i in range(NFEATURES):
+    train_x[:,i] = z(train_x[:,i])
+    valid_x[:,i] = z(valid_x[:,i])
+    
+print(valid_x.mean(axis=0), valid_x.std(axis=0))
+
+print(train_x.mean(axis=0), train_x.std(axis=0))
+
+
+# In[40]:
+
+
+for i in range(NFEATURES):
+    plt.hist(train_x[:,i], alpha=0.35)
+    plt.title('training features post-z score')
+plt.show()
+
+
 # ### Training and running-of-training functions
 
-# In[113]:
+# In[41]:
 
 
 n_iterations, n_layers, n_hidden, starting_learning_rate, dropout = get_model_params()
@@ -1037,7 +1077,7 @@ def train(model, optimizer, avloss, getbatch,
     return (xx, yy_t, yy_v, yy_v_avg)
 
 
-def run(model, target, 
+def run(model, 
         train_x, train_t, 
         valid_x, valid_t, traces,
         n_batch=BATCHSIZE, 
@@ -1047,7 +1087,9 @@ def run(model, target,
         save_model=False):
 
     learning_rate= starting_learning_rate
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate) 
+    #add weight decay
+    L2=1e-3
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=L2) 
     #starting at 10^-3	    
     traces = train(model, optimizer, 
                       average_quantile_loss,
@@ -1102,7 +1144,7 @@ def run(model, target,
 
 # ### Define basic NN model
 
-# In[114]:
+# In[42]:
 
 
 class RegularizedRegressionModel(nn.Module):
@@ -1121,14 +1163,14 @@ class RegularizedRegressionModel(nn.Module):
                 #Dropout seems to worsen model performance
                 # layers.append(nn.Dropout(dropout))
                 #ReLU activation 
-                layers.append(nn.ReLU())
+                layers.append(nn.LeakyReLU())
             else:
                 #if this is not the first layer (we dont have layers)
                 layers.append(nn.Linear(hidden_size, hidden_size))
                 # layers.append(nn.BatchNorm1d(hidden_size))
                 #Dropout seems to worsen model performance
                 # layers.append(nn.Dropout(dropout))
-                layers.append(nn.ReLU())
+                layers.append(nn.LeakyReLU())
                 #output layer:
         layers.append(nn.Linear(hidden_size, ntargets)) 
 
@@ -1144,30 +1186,32 @@ class RegularizedRegressionModel(nn.Module):
 
 # ### Run training
 
-# In[115]:
+# In[43]:
 
 
+n_layers=2;n_hidden=5
+NFEATURES=train_x.shape[1]
 def load_untrained_model():
-    NFEATURES=train_x.shape[1]
     model=RegularizedRegressionModel(nfeatures=NFEATURES, ntargets=1,
                                nlayers=n_layers, hidden_size=n_hidden, dropout=dropout)
     return model
-model=load_untrained_model()
-print(model)
 
 
 # ## See if trainig works on T ratio
 
-# In[116]:
+# In[45]:
 
+
+model=load_untrained_model()
+print(model)
 
 print(f'Training for {n_iterations} iterations')
 start=time.time()
 print('estimating %s\n' % target)
 IQN_trace=([], [], [], [])
 traces_step = 50
-n_iterations=1000
-IQN = run(model=model, target=target,train_x=train_x, train_t=train_t_ratio, 
+n_iterations=10000
+IQN = run(model=model,train_x=train_x, train_t=train_t_ratio, 
         valid_x=valid_x, valid_t=valid_t_ratio, traces=IQN_trace, n_batch=1000, 
         n_iterations=n_iterations, traces_step=50, traces_window=50,
         save_model=False)
@@ -1177,7 +1221,16 @@ difference=end-start
 print('evaluating m took ',difference, 'seconds')
 
 
-# In[123]:
+# In[47]:
+
+
+plt.hist(valid_t_ratio, label='ratio target');
+for i in range(NFEATURES):
+    plt.hist(valid_x[:,i], label =f"feature {i}", alpha=0.35)
+plt.legend();plt.show()
+
+
+# In[48]:
 
 
 IQN.eval()
@@ -1187,14 +1240,14 @@ p = pred.detach().numpy()
 plt.hist(p, label='using $T$ ratio');plt.legend();plt.show()
 
 
-# In[122]:
+# In[68]:
 
 
 def get_finite(values):
-    return np.isfinite(values)
+    return values[np.isfinite(values)]
 
-def z_inverse(xprime, unscaled_mean, unscaled_std):
-    return xprime * unscaled_std + unscaled_mean
+def z_inverse(xprime, mean, std):
+    return xprime * std + mean
 
 
 # Apparently not, but let's continue
@@ -1203,69 +1256,105 @@ def z_inverse(xprime, unscaled_mean, unscaled_std):
 #     m^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 \right]
 # $$
 # 
+# Note that $z^{-1} (f_{\text{IQN}} )$ should use the mean and std of the ratio thing for the target $z^{-1} (f_{\text{IQN}} ) = z^{-1}\left( y_{pred}, \text{mean}=\text{mean}(T(\text{target_var})), std=std (T(\text{target_var} ) \right)$
 
-# In[118]:
+# In[50]:
 
 
-recopt_unsc_mean=TEST_SCALE_DICT[target]['mean']
-recop_unsc_std=TEST_SCALE_DICT[target]['std']
-print(recopt_unsc_mean,recop_unsc_std)
+recom_unsc_mean=TEST_SCALE_DICT[target]['mean']
+recom_unsc_std=TEST_SCALE_DICT[target]['std']
+print(recom_unsc_mean,recom_unsc_std)
 
 
 # Get unscaled again, just to verify
 
-# In[133]:
+# In[51]:
 
 
-SUBSAMPLE=int(1e3)#subsample use for development - in production use whole dataset
-train_data=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
+SUBSAMPLE=int(1e5)#subsample use for development - in production use whole dataset
+raw_train_data=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
                       usecols=all_cols,
                       nrows=SUBSAMPLE
                       )
 
-test_data=pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
+raw_test_data=pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
                       usecols=all_cols,
                      nrows=SUBSAMPLE
                      )
-test_data.describe()
+raw_test_data.describe()
 
 
-# In[137]:
+# In[52]:
 
 
-pT_reco = test_data['RecoDatapT']
-pT_gen = test_data['genDatapT']
-plt.hist(pT_reco);plt.show()
+m_reco = raw_test_data['RecoDatam']
+m_gen = raw_test_data['genDatam']
+plt.hist(m_reco);plt.show()
 
 
-# In[141]:
+# In[53]:
 
 
-p = pred.detach().numpy()
-plt.hist(p);plt.show()
+print(valid_t_ratio.shape, valid_t_ratio[:5])
 
 
-# In[142]:
+# In[54]:
 
 
-z_inv_f =z_inverse(xprime=p, unscaled_mean=recopt_unsc_mean, unscaled_std=recop_unsc_std)
+z_inv_f =z_inverse(xprime=p, mean=np.mean(valid_t_ratio), std=np.std(valid_t_ratio))
+z_inv_f[:5]
 
-factor = z_inv_f * (L(orig_observable=pT_reco, label='pT') + 10) -10
 
-pT_pred = L_inverse(L_observable=factor, label='pT')
+# In[55]:
+
+
+L_obs = L(orig_observable=m_gen, label='m')
+L_obs[:5]
+
+
+# In[59]:
+
+
+print(L_obs.shape, z_inv_f.shape)
+
+
+# In[60]:
+
+
+z_inv_f = z_inv_f.flatten();print(z_inv_f.shape)
+
+
+# In[62]:
+
+
+factor = (z_inv_f * (L_obs  + 10) )-10
+factor[:5]
+
+
+# In[69]:
+
+
+pT_pred = L_inverse(L_observable=factor, label='m')
 # pT_pred=get_finite(pT_pred)
 
 
-# In[146]:
+# In[70]:
 
 
-pT_pred.flatten()
+pT_pred
 
 
-# In[145]:
+# In[74]:
 
 
-plt.hist(get_finite(pT_pred.flatten()),bins=100);plt.show()
+pT_pred=get_finite(pT_pred)
+pT_pred
+
+
+# In[75]:
+
+
+plt.hist(pT_pred.flatten());plt.show()
 
 
 # ----
