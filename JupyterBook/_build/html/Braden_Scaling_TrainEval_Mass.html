@@ -1378,19 +1378,24 @@ $<span class="math notranslate nohighlight">\( X'=\frac{X-E[X]}{\sigma_{X}}  \qq
 \[
    x'= z (x) \equiv \frac{x-\bar{x}}{\sigma_{x}}.
 \]</div>
-<p>Such that its inverse is
-$<span class="math notranslate nohighlight">\( z^{-1}(x') = x' \ \sigma_x + \bar{x} \)</span><span class="math notranslate nohighlight">\(
-If we do this on the data, after training, the NN \)</span>f_{\text{IQN}}<span class="math notranslate nohighlight">\( will not estimate the observable, \)</span>\mathcal{O}^{\text{predicted}} \ne \mathcal{O}^{\text{reco}}$, but will instead estimate</p>
+<p>Such that its inverse is</p>
+<div class="math notranslate nohighlight">
+\[ z^{-1}(x') = x' \ \sigma_x + \bar{x} \]</div>
+<p>If we do this on the data, after training, the NN <span class="math notranslate nohighlight">\(f_{\text{IQN}}\)</span> will not estimate the observable,</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{O}^{\text{predicted}} \ne \mathcal{O}^{\text{reco}}\]</div>
+<p>but will instead estimate</p>
 <div class="math notranslate nohighlight">
 \[
-        f_{\text{IQN}} (\mathcal{O}) =  z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
+        f_{\text{IQN}} (\mathcal{O}) \approx  z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
 \]</div>
 <p>which needs to be de-scaled (when evaluated on the data that which has been scaled according to <span class="math notranslate nohighlight">\(\mathbb{T}(\text{evaluation data}) = z \left( \frac{\mathbb{L} (\text{data}^{\text{reco}}) +10 }{\mathbb{L}(\text{data}^{\text{gen}}) +10} \right) \)</span>
 )
-in order to copare with <span class="math notranslate nohighlight">\(\mathcal{O}\)</span> directly. The descaling for <span class="math notranslate nohighlight">\(\mathcal{O}=p_T\)</span> (as an example) would be:
-$<span class="math notranslate nohighlight">\(
+in order to copare with <span class="math notranslate nohighlight">\(\mathcal{O}\)</span> directly. The descaling for <span class="math notranslate nohighlight">\(\mathcal{O}=p_T\)</span> (as an example) would be:</p>
+<div class="math notranslate nohighlight">
+\[
     p_T^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (p_T^\text{gen})+10 \right] -10 \right]
-\)</span>$</p>
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="basically-the-scaling-procedure-is-the-following">

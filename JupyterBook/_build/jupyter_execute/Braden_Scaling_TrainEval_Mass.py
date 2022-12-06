@@ -451,19 +451,27 @@ show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height =
 # $$
 # 
 # Such that its inverse is 
+# 
 # $$ z^{-1}(x') = x' \ \sigma_x + \bar{x} $$
-# If we do this on the data, after training, the NN $f_{\text{IQN}}$ will not estimate the observable, $\mathcal{O}^{\text{predicted}} \ne \mathcal{O}^{\text{reco}}$, but will instead estimate 
+# 
+# If we do this on the data, after training, the NN $f_{\text{IQN}}$ will not estimate the observable, 
+# 
+# $$\mathcal{O}^{\text{predicted}} \ne \mathcal{O}^{\text{reco}}$$
+# 
+# but will instead estimate 
 # 
 # $$
-#         f_{\text{IQN}} (\mathcal{O}) =  z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
+#         f_{\text{IQN}} (\mathcal{O}) \approx  z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
 # $$
 # 
 # which needs to be de-scaled (when evaluated on the data that which has been scaled according to $\mathbb{T}(\text{evaluation data}) = z \left( \frac{\mathbb{L} (\text{data}^{\text{reco}}) +10 }{\mathbb{L}(\text{data}^{\text{gen}}) +10} \right) $
 # )
 # in order to copare with $\mathcal{O}$ directly. The descaling for $\mathcal{O}=p_T$ (as an example) would be:
+# 
 # $$
 #     p_T^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (p_T^\text{gen})+10 \right] -10 \right]
 # $$
+# 
 
 # -----------
 # 
