@@ -357,11 +357,18 @@ def explore_data(df, title, scaled=False):
 explore_data(df=train_data, title='Unscaled Dataframe')
 
 
-# In[14]:
+# In[131]:
 
 
 print(train_data.shape)
 train_data.describe()#unscaled
+
+
+# In[132]:
+
+
+print(test_data.shape)
+test_data.describe()#unscaled
 
 
 # In[19]:
@@ -470,11 +477,12 @@ use_svg_display()
 show_jupyter_image('images/scaling_forNN.jpg', width=2000,height=500)
 
 
-# In[60]:
+# In[91]:
 
 
 def z(x):
-    return (x - np.mean(x))/np.std(x)
+    eps=1e-20
+    return (x - np.mean(x))/(np.std(x)+ eps)
 def z_inverse(xprime, x):
     return xprime * np.std(x) + np.mean(x)
 
@@ -505,10 +513,12 @@ print('\n\n')
 TEST_SCALE_DICT = get_scaling_info(test_data);print(TEST_SCALE_DICT)
 
 
-# In[43]:
+# In[98]:
 
 
 def L(orig_observable, label):
+    eps=1e-10
+    orig_observable=orig_observable+eps
     if label=='pT':
         const=0
         log_pT_=np.log(orig_observable) 
@@ -523,14 +533,16 @@ def L(orig_observable, label):
         L_observable=orig_observable
     if label=='tau':
         L_observable = (6*orig_observable) - 3
-        
+    
     return L_observable.to_numpy()
 
 
-# In[44]:
+# In[99]:
 
 
 def L_inverse(L_observable, label):
+    eps=1e-10
+    L_observable=L_observable+eps
     if label=='pT':
         const=0
         L_inverse_observable = np.exp(L_observable)
@@ -547,7 +559,7 @@ def L_inverse(L_observable, label):
     return L_inverse_observable
 
 
-# In[45]:
+# In[100]:
 
 
 def T(variable, scaled_df):
@@ -571,7 +583,7 @@ def T(variable, scaled_df):
     return target
 
 
-# In[46]:
+# In[101]:
 
 
 def L_scale_df(df, title, save=False):
@@ -606,7 +618,7 @@ def L_scale_df(df, title, save=False):
     return scaled_df
 
 
-# In[47]:
+# In[103]:
 
 
 scaled_train_data = L_scale_df(train_data, title='scaled_train_data_10M_2.csv',
@@ -618,7 +630,7 @@ scaled_test_data = L_scale_df(test_data,  title='scaled_test_data_10M_2.csv',
 explore_data(df=scaled_train_data, title='Braden Kronheim-L-scaled Dataframe', scaled=True)
 
 
-# In[75]:
+# In[104]:
 
 
 labels = ['pT', 'eta','phi','m']
@@ -634,16 +646,16 @@ for label in labels:
 plt.legend();plt.show()
 
 
-# In[84]:
+# In[105]:
 
 
-scaled_train_data = L_scale_df(train_data, title='scaled_train_data_10M_2.csv',
-                             save=True)
-print('\n\n')
-scaled_test_data = L_scale_df(test_data,  title='scaled_test_data_10M_2.csv',
-                            save=True)
+# scaled_train_data = L_scale_df(train_data, title='scaled_train_data_10M_2.csv',
+#                              save=True)
+# print('\n\n')
+# scaled_test_data = L_scale_df(test_data,  title='scaled_test_data_10M_2.csv',
+#                             save=True)
 
-explore_data(df=scaled_train_data, title='Braden Kronheim-$L$-scaled Dataframe: standarize_IQN', scaled=True)
+# explore_data(df=scaled_train_data, title='Braden Kronheim-$L$-scaled Dataframe: standarize_IQN', scaled=True)
 
 
 # ---------
@@ -730,7 +742,7 @@ explore_data(df=scaled_train_data, title='Braden Kronheim-$L$-scaled Dataframe: 
 # for mass, $\mathbf{y_m}=m_{\text{reco}}$ and $\mathbf{x_m}=\{p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}$.
 # 
 
-# In[85]:
+# In[106]:
 
 
 show_jupyter_image('images/IQN_training_flowchart.png',width=2000,height=600)
@@ -738,7 +750,7 @@ show_jupyter_image('images/IQN_training_flowchart.png',width=2000,height=600)
 
 # ### Batches, validation, losses, and plotting of losses functions
 
-# In[95]:
+# In[107]:
 
 
 def get_batch(x, t, batch_size):
@@ -828,11 +840,11 @@ def plot_average_loss(traces, ftsize=18,save_loss_plots=False, show_loss_plots=T
         plt.show()
 
 
-# In[97]:
+# In[108]:
 
 
-SUBSAMPLE=int(1e4)
-target = 'RecoDatam'
+SUBSAMPLE=int(1e3)
+target = 'RecoDatapT'
 source  = FIELDS[target]
 features= source['inputs']
 ########
@@ -873,13 +885,9 @@ print('\ntest set shape:  ', test_data_m.shape)
 
 # ### Get training and testing features and targets
 
-# In[120]:
+# In[127]:
 
 
-target = 'RecoDatam'
-source  = FIELDS[target]
-features= source['inputs']
-################################################
 def split_t_x(df, target, input_features):
     """ Get teh target as the ratio, according to the T equation"""
     
@@ -903,21 +911,21 @@ def normal_split_t_x(df, target, input_features):
     return t, x
 
 
-# In[123]:
+# In[110]:
 
 
 print(f'spliting data for {target}')
 train_t_ratio, train_x = split_t_x(df= train_data_m, target = target, input_features=features)
-print('train_t shape = ',train_t.shape , 'train_x shape = ', train_x.shape)
+print('train_t shape = ',train_t_ratio.shape , 'train_x shape = ', train_x.shape)
 print('\n Training features:\n')
 print(train_x)
 valid_t_ratio, valid_x = split_t_x(df= test_data_m, target = target, input_features=features)
-print('valid_t shape = ',valid_t.shape , 'valid_x shape = ', valid_x.shape)
+print('valid_t shape = ',valid_t_ratio.shape , 'valid_x shape = ', valid_x.shape)
 
 print('no need to train_test_split since we already have the split dataframes')
 
 
-# In[124]:
+# In[111]:
 
 
 print(valid_x.mean(axis=0), valid_x.std(axis=0))
@@ -926,7 +934,7 @@ print(train_x.mean(axis=0), train_x.std(axis=0))
 
 # we expect the targets to have mean 0 and variance=1, since theyre the only things standarized
 
-# In[125]:
+# In[112]:
 
 
 print(valid_t_ratio.mean(), valid_t_ratio.std())
@@ -935,9 +943,11 @@ print(train_t_ratio.mean(), train_t_ratio.std())
 
 # ### Training and running-of-training functions
 
-# In[126]:
+# In[113]:
 
 
+n_iterations, n_layers, n_hidden, starting_learning_rate, dropout = get_model_params()
+BATCHSIZE=1000
 def train(model, optimizer, avloss, getbatch,
           train_x, train_t, 
           valid_x, valid_t,
@@ -1030,10 +1040,10 @@ def train(model, optimizer, avloss, getbatch,
 def run(model, target, 
         train_x, train_t, 
         valid_x, valid_t, traces,
-        n_batch=256, 
+        n_batch=BATCHSIZE, 
         n_iterations=n_iterations, 
-        traces_step=500, 
-        traces_window=500,
+        traces_step=10, 
+        traces_window=10,
         save_model=False):
 
     learning_rate= starting_learning_rate
@@ -1079,7 +1089,7 @@ def run(model, target,
     #               step=traces_step, 
     #               window=traces_window)
 
-    plot_average_loss(traces)
+    # plot_average_loss(traces)
 
     if save_model:
         filename='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
@@ -1092,7 +1102,7 @@ def run(model, target,
 
 # ### Define basic NN model
 
-# In[157]:
+# In[114]:
 
 
 class RegularizedRegressionModel(nn.Module):
@@ -1134,21 +1144,21 @@ class RegularizedRegressionModel(nn.Module):
 
 # ### Run training
 
-# In[158]:
+# In[115]:
 
 
-n_iterations, n_layers, n_hidden, starting_learning_rate, dropout = get_model_params()
-
-NFEATURES=train_x.shape[1]
-model=RegularizedRegressionModel(nfeatures=NFEATURES, ntargets=1,
-                           nlayers=n_layers, hidden_size=n_hidden, dropout=dropout)
-
+def load_untrained_model():
+    NFEATURES=train_x.shape[1]
+    model=RegularizedRegressionModel(nfeatures=NFEATURES, ntargets=1,
+                               nlayers=n_layers, hidden_size=n_hidden, dropout=dropout)
+    return model
+model=load_untrained_model()
 print(model)
 
 
 # ## See if trainig works on T ratio
 
-# In[159]:
+# In[116]:
 
 
 print(f'Training for {n_iterations} iterations')
@@ -1156,9 +1166,9 @@ start=time.time()
 print('estimating %s\n' % target)
 IQN_trace=([], [], [], [])
 traces_step = 50
-n_iterations=10000
+n_iterations=1000
 IQN = run(model=model, target=target,train_x=train_x, train_t=train_t_ratio, 
-        valid_x=valid_x, valid_t=valid_t_ratio, traces=IQN_trace, n_batch=256, 
+        valid_x=valid_x, valid_t=valid_t_ratio, traces=IQN_trace, n_batch=1000, 
         n_iterations=n_iterations, traces_step=50, traces_window=50,
         save_model=False)
 
@@ -1167,7 +1177,7 @@ difference=end-start
 print('evaluating m took ',difference, 'seconds')
 
 
-# In[160]:
+# In[123]:
 
 
 IQN.eval()
@@ -1177,6 +1187,16 @@ p = pred.detach().numpy()
 plt.hist(p, label='using $T$ ratio');plt.legend();plt.show()
 
 
+# In[122]:
+
+
+def get_finite(values):
+    return np.isfinite(values)
+
+def z_inverse(xprime, unscaled_mean, unscaled_std):
+    return xprime * unscaled_std + unscaled_mean
+
+
 # Apparently not, but let's continue
 # 
 # $$
@@ -1184,20 +1204,68 @@ plt.hist(p, label='using $T$ ratio');plt.legend();plt.show()
 # $$
 # 
 
-# In[181]:
+# In[118]:
 
 
-m_reco = train_data['RecoDatam']
-m_gen = train_data['genDatam']
-z_inv_f = z_inverse(p, x=m_reco)
-factor = z_inv_f * (L(orig_observable=m_gen, label='m') + 10) -10
-m_pred = L_inverse(L_observable=factor, label='m')
+recopt_unsc_mean=TEST_SCALE_DICT[target]['mean']
+recop_unsc_std=TEST_SCALE_DICT[target]['std']
+print(recopt_unsc_mean,recop_unsc_std)
 
 
-# In[ ]:
+# Get unscaled again, just to verify
+
+# In[133]:
 
 
-plt.hist(m_pred.flatten(),bins=100);plt.show()
+SUBSAMPLE=int(1e3)#subsample use for development - in production use whole dataset
+train_data=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
+                      usecols=all_cols,
+                      nrows=SUBSAMPLE
+                      )
+
+test_data=pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
+                      usecols=all_cols,
+                     nrows=SUBSAMPLE
+                     )
+test_data.describe()
+
+
+# In[137]:
+
+
+pT_reco = test_data['RecoDatapT']
+pT_gen = test_data['genDatapT']
+plt.hist(pT_reco);plt.show()
+
+
+# In[141]:
+
+
+p = pred.detach().numpy()
+plt.hist(p);plt.show()
+
+
+# In[142]:
+
+
+z_inv_f =z_inverse(xprime=p, unscaled_mean=recopt_unsc_mean, unscaled_std=recop_unsc_std)
+
+factor = z_inv_f * (L(orig_observable=pT_reco, label='pT') + 10) -10
+
+pT_pred = L_inverse(L_observable=factor, label='pT')
+# pT_pred=get_finite(pT_pred)
+
+
+# In[146]:
+
+
+pT_pred.flatten()
+
+
+# In[145]:
+
+
+plt.hist(get_finite(pT_pred.flatten()),bins=100);plt.show()
 
 
 # ----

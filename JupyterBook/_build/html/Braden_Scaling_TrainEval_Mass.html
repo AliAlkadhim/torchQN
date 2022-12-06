@@ -1158,6 +1158,147 @@ Reco_var:  RecoDatam , 	 gen_var:  genDatam
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">test_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">test_data</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="c1">#unscaled</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1000, 9)
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>genDatapT</th>
+      <th>genDataeta</th>
+      <th>genDataphi</th>
+      <th>genDatam</th>
+      <th>RecoDatapT</th>
+      <th>RecoDataeta</th>
+      <th>RecoDataphi</th>
+      <th>RecoDatam</th>
+      <th>tau</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>1000.000000</td>
+      <td>1000.000000</td>
+      <td>1000.000000</td>
+      <td>1000.000000</td>
+      <td>1000.000000</td>
+      <td>1000.000000</td>
+      <td>1000.000000</td>
+      <td>1000.000000</td>
+      <td>1000.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>34.418632</td>
+      <td>0.003455</td>
+      <td>0.066162</td>
+      <td>7.134023</td>
+      <td>34.426704</td>
+      <td>0.003056</td>
+      <td>0.063102</td>
+      <td>5.657021</td>
+      <td>0.501738</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>23.011432</td>
+      <td>2.220335</td>
+      <td>1.846486</td>
+      <td>3.264236</td>
+      <td>23.901821</td>
+      <td>2.213162</td>
+      <td>1.846551</td>
+      <td>3.340333</td>
+      <td>0.294413</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>20.006000</td>
+      <td>-4.961300</td>
+      <td>-3.138670</td>
+      <td>1.369540</td>
+      <td>12.064300</td>
+      <td>-4.841670</td>
+      <td>-3.269625</td>
+      <td>-0.000026</td>
+      <td>0.001098</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>24.129625</td>
+      <td>-1.671400</td>
+      <td>-1.442860</td>
+      <td>5.230408</td>
+      <td>23.615050</td>
+      <td>-1.675657</td>
+      <td>-1.483980</td>
+      <td>3.652023</td>
+      <td>0.251507</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>28.513650</td>
+      <td>0.071270</td>
+      <td>0.044711</td>
+      <td>6.675750</td>
+      <td>28.985700</td>
+      <td>0.070254</td>
+      <td>0.053989</td>
+      <td>4.965135</td>
+      <td>0.497258</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>36.046575</td>
+      <td>1.611400</td>
+      <td>1.690070</td>
+      <td>8.308600</td>
+      <td>36.842175</td>
+      <td>1.612680</td>
+      <td>1.699597</td>
+      <td>6.765040</td>
+      <td>0.756509</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>276.230000</td>
+      <td>4.838790</td>
+      <td>3.127250</td>
+      <td>33.330200</td>
+      <td>263.818000</td>
+      <td>4.935030</td>
+      <td>3.251495</td>
+      <td>29.382800</td>
+      <td>0.999324</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># np.array(train_data[&#39;genDatapT&#39;])</span>
 </pre></div>
 </div>
@@ -1189,7 +1330,7 @@ $<span class="math notranslate nohighlight">\( X'=\frac{X-E[X]}{\sigma_{X}}  \qq
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_29_0.png" src="_images/Braden_Scaling_TrainEval_Mass_29_0.png" />
+<img alt="_images/Braden_Scaling_TrainEval_Mass_30_0.png" src="_images/Braden_Scaling_TrainEval_Mass_30_0.png" />
 </div>
 </div>
 </section>
@@ -1263,13 +1404,14 @@ where \)</span>\sigma{y}<span class="math notranslate nohighlight">\( and \)</sp
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_33_0.jpg" src="_images/Braden_Scaling_TrainEval_Mass_33_0.jpg" />
+<img alt="_images/Braden_Scaling_TrainEval_Mass_34_0.jpg" src="_images/Braden_Scaling_TrainEval_Mass_34_0.jpg" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">z</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">eps</span><span class="o">=</span><span class="mf">1e-20</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">z_inverse</span><span class="p">(</span><span class="n">xprime</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">xprime</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </pre></div>
@@ -1316,6 +1458,8 @@ where \)</span>\sigma{y}<span class="math notranslate nohighlight">\( and \)</sp
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">L</span><span class="p">(</span><span class="n">orig_observable</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+    <span class="n">eps</span><span class="o">=</span><span class="mf">1e-10</span>
+    <span class="n">orig_observable</span><span class="o">=</span><span class="n">orig_observable</span><span class="o">+</span><span class="n">eps</span>
     <span class="k">if</span> <span class="n">label</span><span class="o">==</span><span class="s1">&#39;pT&#39;</span><span class="p">:</span>
         <span class="n">const</span><span class="o">=</span><span class="mi">0</span>
         <span class="n">log_pT_</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">orig_observable</span><span class="p">)</span> 
@@ -1330,7 +1474,7 @@ where \)</span>\sigma{y}<span class="math notranslate nohighlight">\( and \)</sp
         <span class="n">L_observable</span><span class="o">=</span><span class="n">orig_observable</span>
     <span class="k">if</span> <span class="n">label</span><span class="o">==</span><span class="s1">&#39;tau&#39;</span><span class="p">:</span>
         <span class="n">L_observable</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="n">orig_observable</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span>
-        
+    
     <span class="k">return</span> <span class="n">L_observable</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -1339,6 +1483,8 @@ where \)</span>\sigma{y}<span class="math notranslate nohighlight">\( and \)</sp
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">L_inverse</span><span class="p">(</span><span class="n">L_observable</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+    <span class="n">eps</span><span class="o">=</span><span class="mf">1e-10</span>
+    <span class="n">L_observable</span><span class="o">=</span><span class="n">L_observable</span><span class="o">+</span><span class="n">eps</span>
     <span class="k">if</span> <span class="n">label</span><span class="o">==</span><span class="s1">&#39;pT&#39;</span><span class="p">:</span>
         <span class="n">const</span><span class="o">=</span><span class="mi">0</span>
         <span class="n">L_inverse_observable</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">L_observable</span><span class="p">)</span>
@@ -1436,8 +1582,8 @@ count  1000.000000  1000.000000  1000.000000  1000.000000  1000.000000
 mean      3.427073     3.412441     0.050779     0.051683     0.066099   
 std       0.345756     0.402823     2.255014     2.247815     1.775189   
 min       2.998129     2.466573    -4.943180    -4.931720    -3.118970   
-25%       3.162489     3.159661    -1.649890    -1.674450    -1.513733   
-50%       3.348514     3.377029     0.199267     0.203443     0.147703   
+25%       3.162489     3.159661    -1.649890    -1.674450    -1.513732   
+50%       3.348514     3.377029     0.199267     0.203443     0.147704   
 75%       3.596545     3.619874     1.887120     1.879710     1.665870   
 max       5.132947     5.222656     4.948750     4.923390     3.135630   
 
@@ -1470,7 +1616,7 @@ std       1.846551     0.304043     0.356519     1.766476
 min      -3.269625     1.214776     0.693134    -2.993412  
 25%      -1.483980     1.978295     1.732013    -1.490957  
 50%       0.053989     2.160532     1.940917    -0.016454  
-75%       1.699597     2.332978     2.170771     1.539055  
+75%       1.699598     2.332978     2.170771     1.539055  
 max       3.251495     3.564738     3.446260     2.995945  
 [&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;]
 [&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;, &#39;tau&#39;]
@@ -1480,7 +1626,7 @@ Reco_var:  RecoDataphi , 	 gen_var:  genDataphi
 Reco_var:  RecoDatam , 	 gen_var:  genDatam
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_41_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_41_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_42_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_42_1.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1499,71 +1645,20 @@ Reco_var:  RecoDatam , 	 gen_var:  genDatam
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_42_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_42_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_43_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_43_0.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaled_train_data</span> <span class="o">=</span> <span class="n">L_scale_df</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;scaled_train_data_10M_2.csv&#39;</span><span class="p">,</span>
-                             <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">scaled_test_data</span> <span class="o">=</span> <span class="n">L_scale_df</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span>  <span class="n">title</span><span class="o">=</span><span class="s1">&#39;scaled_test_data_10M_2.csv&#39;</span><span class="p">,</span>
-                            <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># scaled_train_data = L_scale_df(train_data, title=&#39;scaled_train_data_10M_2.csv&#39;,</span>
+<span class="c1">#                              save=True)</span>
+<span class="c1"># print(&#39;\n\n&#39;)</span>
+<span class="c1"># scaled_test_data = L_scale_df(test_data,  title=&#39;scaled_test_data_10M_2.csv&#39;,</span>
+<span class="c1">#                             save=True)</span>
 
-<span class="n">explore_data</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">scaled_train_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Braden Kronheim-$L$-scaled Dataframe: standarize_IQN&#39;</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># explore_data(df=scaled_train_data, title=&#39;Braden Kronheim-$L$-scaled Dataframe: standarize_IQN&#39;, scaled=True)</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>          genDatapT    RecoDatapT    genDataeta   RecoDataeta    genDataphi  \
-count  10000.000000  10000.000000  10000.000000  10000.000000  10000.000000   
-mean       3.423686      3.415715     -0.007169     -0.007198      0.004215   
-std        0.335502      0.380772      2.209883      2.202264      1.809176   
-min        2.995962      2.445143     -5.053690     -4.936930     -3.140890   
-25%        3.165199      3.156806     -1.636940     -1.637945     -1.556042   
-50%        3.346389      3.367884     -0.012826     -0.018205     -0.023519   
-75%        3.596952      3.634366      1.633903      1.629590      1.552912   
-max        5.211931      5.222656      5.039390      4.998390      3.140640   
-
-        RecoDataphi      genDatam     RecoDatam           tau  
-count  10000.000000  10000.000000  10000.000000  10000.000000  
-mean       0.004905      2.153090      1.964980      0.008250  
-std        1.809657      0.286049      0.326472      1.728625  
-min       -3.351365      0.759091      0.693136     -2.999914  
-25%       -1.555673      1.962853      1.754458     -1.482457  
-50%       -0.023471      2.145624      1.958280      0.008340  
-75%        1.557280      2.338325      2.171590      1.506673  
-max        3.381455      3.613113      3.578328      2.999809  
-
-
-
-          genDatapT    RecoDatapT    genDataeta   RecoDataeta    genDataphi  \
-count  10000.000000  10000.000000  10000.000000  10000.000000  10000.000000   
-mean       3.432007      3.420870      0.032961      0.032736      0.026741   
-std        0.341107      0.390866      2.211242      2.206106      1.819197   
-min        2.995847      2.443520     -5.129500     -4.988500     -3.141430   
-25%        3.177347      3.163957     -1.623770     -1.617640     -1.543545   
-50%        3.357637      3.378399      0.079263      0.083027      0.040577   
-75%        3.605775      3.640936      1.659910      1.656760      1.620092   
-max        6.026646      5.989788      5.044860      4.937680      3.140370   
-
-        RecoDataphi      genDatam     RecoDatam           tau  
-count  10000.000000  10000.000000  10000.000000  10000.000000  
-mean       0.026698      2.153702      1.967499      0.045356  
-std        1.818557      0.288388      0.329008      1.744457  
-min       -3.269625      1.092228      0.693130     -2.999923  
-25%       -1.539700      1.967410      1.756333     -1.444432  
-50%        0.039632      2.150878      1.967679      0.066719  
-75%        1.618740      2.335998      2.175048      1.572519  
-max        3.285325      4.301086      4.285335      2.999933  
-[&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;]
-[&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;, &#39;tau&#39;]
-Reco_var:  RecoDatapT , 	 gen_var:  genDatapT
-Reco_var:  RecoDataeta , 	 gen_var:  genDataeta
-Reco_var:  RecoDataphi , 	 gen_var:  genDataphi
-Reco_var:  RecoDatam , 	 gen_var:  genDatam
-</pre></div>
-</div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_43_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_43_1.svg" /></div>
 </div>
 <hr class="docutils" />
 </section>
@@ -1644,7 +1739,7 @@ $<span class="math notranslate nohighlight">\(\int d \mathbf{x_m} d \mathbf{y_m}
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_47_0.png" src="_images/Braden_Scaling_TrainEval_Mass_47_0.png" />
+<img alt="_images/Braden_Scaling_TrainEval_Mass_48_0.png" src="_images/Braden_Scaling_TrainEval_Mass_48_0.png" />
 </div>
 </div>
 <section id="batches-validation-losses-and-plotting-of-losses-functions">
@@ -1742,8 +1837,8 @@ $<span class="math notranslate nohighlight">\(\int d \mathbf{x_m} d \mathbf{y_m}
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SUBSAMPLE</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e4</span><span class="p">)</span>
-<span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;RecoDatam&#39;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SUBSAMPLE</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e3</span><span class="p">)</span>
+<span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;RecoDatapT&#39;</span>
 <span class="n">source</span>  <span class="o">=</span> <span class="n">FIELDS</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
 <span class="n">features</span><span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span>
 <span class="c1">########</span>
@@ -1816,9 +1911,9 @@ TESTING FEATURES
 3  2.286615   2.204338 -2.685729  
 4  1.971738   1.805105  0.255292  
 
-train set shape: (10000, 9)
+train set shape: (1000, 9)
 
-test set shape:   (10000, 9)
+test set shape:   (1000, 9)
 </pre></div>
 </div>
 </div>
@@ -1828,11 +1923,7 @@ test set shape:   (10000, 9)
 <h2>Get training and testing features and targets<a class="headerlink" href="#get-training-and-testing-features-and-targets" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;RecoDatam&#39;</span>
-<span class="n">source</span>  <span class="o">=</span> <span class="n">FIELDS</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
-<span class="n">features</span><span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span>
-<span class="c1">################################################</span>
-<span class="k">def</span> <span class="nf">split_t_x</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">split_t_x</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Get teh target as the ratio, according to the T equation&quot;&quot;&quot;</span>
     
     <span class="k">if</span> <span class="n">target</span><span class="o">==</span><span class="s1">&#39;RecoDatam&#39;</span><span class="p">:</span>
@@ -1861,30 +1952,30 @@ test set shape:   (10000, 9)
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;spliting data for </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="n">train_t_ratio</span><span class="p">,</span> <span class="n">train_x</span> <span class="o">=</span> <span class="n">split_t_x</span><span class="p">(</span><span class="n">df</span><span class="o">=</span> <span class="n">train_data_m</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;train_t shape = &#39;</span><span class="p">,</span><span class="n">train_t</span><span class="o">.</span><span class="n">shape</span> <span class="p">,</span> <span class="s1">&#39;train_x shape = &#39;</span><span class="p">,</span> <span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;train_t shape = &#39;</span><span class="p">,</span><span class="n">train_t_ratio</span><span class="o">.</span><span class="n">shape</span> <span class="p">,</span> <span class="s1">&#39;train_x shape = &#39;</span><span class="p">,</span> <span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> Training features:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">train_x</span><span class="p">)</span>
 <span class="n">valid_t_ratio</span><span class="p">,</span> <span class="n">valid_x</span> <span class="o">=</span> <span class="n">split_t_x</span><span class="p">(</span><span class="n">df</span><span class="o">=</span> <span class="n">test_data_m</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;valid_t shape = &#39;</span><span class="p">,</span><span class="n">valid_t</span><span class="o">.</span><span class="n">shape</span> <span class="p">,</span> <span class="s1">&#39;valid_x shape = &#39;</span><span class="p">,</span> <span class="n">valid_x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;valid_t shape = &#39;</span><span class="p">,</span><span class="n">valid_t_ratio</span><span class="o">.</span><span class="n">shape</span> <span class="p">,</span> <span class="s1">&#39;valid_x shape = &#39;</span><span class="p">,</span> <span class="n">valid_x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;no need to train_test_split since we already have the split dataframes&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>spliting data for RecoDatam
-train_t shape =  (10000,) train_x shape =  (10000, 5)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>spliting data for RecoDatapT
+train_t shape =  (1000,) train_x shape =  (1000, 6)
 
  Training features:
 
-[[ 3.38253091  0.828187    2.90213     1.57969597 -0.83214275]
- [ 3.19127027 -1.16351     0.636469    2.05883697 -2.23860448]
- [ 3.19127027 -1.16351     0.636469    2.05883697  2.77384086]
+[[ 1.52515807  3.38253091  0.828187    2.90213     1.57969597 -0.83214275]
+ [ 1.99543202  3.19127027 -1.16351     0.636469    2.05883697 -2.23860448]
+ [ 1.99543202  3.19127027 -1.16351     0.636469    2.05883697  2.77384086]
  ...
- [ 3.58368281  3.537       3.1117      2.26299775 -1.15418175]
- [ 3.58368281  3.537       3.1117      2.26299775  2.00190305]
- [ 3.44642884  2.70158     0.267685    2.41813007  2.39480772]]
-valid_t shape =  (10000,) valid_x shape =  (10000, 5)
+ [ 1.62272722  3.31508015  2.06093    -0.662784    1.84351824  0.4175643 ]
+ [ 1.62272722  3.31508015  2.06093    -0.662784    1.84351824  0.18229998]
+ [ 1.96635263  3.2254303  -1.60933     0.484667    2.26304977 -2.99808182]]
+valid_t shape =  (1000,) valid_x shape =  (1000, 6)
 no need to train_test_split since we already have the split dataframes
 </pre></div>
 </div>
@@ -1898,8 +1989,9 @@ no need to train_test_split since we already have the split dataframes
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[3.43200706 0.03296074 0.02674094 2.15370158 0.04535625] [0.34109032 2.21113156 1.81910579 0.28837389 1.74437024]
-[ 3.42368585 -0.00716868  0.00421532  2.15308963  0.00824955] [0.33548512 2.20977298 1.80908512 0.28603437 1.7285385 ]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1.96658181 3.44308905 0.00345505 0.06616172 2.16278192 0.01042762] [0.35634067 0.37786429 2.21922437 1.84556242 0.30389056 1.76559299]
+[ 1.96621508e+00  3.42707327e+00  5.07786730e-02  6.60992919e-02
+  2.15803967e+00 -3.18814199e-03] [0.34975744 0.34558347 2.25388637 1.77430158 0.27379512 1.73287822]
 </pre></div>
 </div>
 </div>
@@ -1913,8 +2005,8 @@ no need to train_test_split since we already have the split dataframes
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-7.684093361604027e-14 1.0000000000000002
--7.684093361604027e-14 1.0000000000000002
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-6.675904273834021e-14 1.0000000000000002
+-6.675904273834021e-14 1.0000000000000002
 </pre></div>
 </div>
 </div>
@@ -1924,7 +2016,9 @@ no need to train_test_split since we already have the split dataframes
 <h2>Training and running-of-training functions<a class="headerlink" href="#training-and-running-of-training-functions" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">avloss</span><span class="p">,</span> <span class="n">getbatch</span><span class="p">,</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_iterations</span><span class="p">,</span> <span class="n">n_layers</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">,</span> <span class="n">starting_learning_rate</span><span class="p">,</span> <span class="n">dropout</span> <span class="o">=</span> <span class="n">get_model_params</span><span class="p">()</span>
+<span class="n">BATCHSIZE</span><span class="o">=</span><span class="mi">1000</span>
+<span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">avloss</span><span class="p">,</span> <span class="n">getbatch</span><span class="p">,</span>
           <span class="n">train_x</span><span class="p">,</span> <span class="n">train_t</span><span class="p">,</span> 
           <span class="n">valid_x</span><span class="p">,</span> <span class="n">valid_t</span><span class="p">,</span>
           <span class="n">batch_size</span><span class="p">,</span> 
@@ -2016,10 +2110,10 @@ no need to train_test_split since we already have the split dataframes
 <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> 
         <span class="n">train_x</span><span class="p">,</span> <span class="n">train_t</span><span class="p">,</span> 
         <span class="n">valid_x</span><span class="p">,</span> <span class="n">valid_t</span><span class="p">,</span> <span class="n">traces</span><span class="p">,</span>
-        <span class="n">n_batch</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> 
+        <span class="n">n_batch</span><span class="o">=</span><span class="n">BATCHSIZE</span><span class="p">,</span> 
         <span class="n">n_iterations</span><span class="o">=</span><span class="n">n_iterations</span><span class="p">,</span> 
-        <span class="n">traces_step</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> 
-        <span class="n">traces_window</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+        <span class="n">traces_step</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> 
+        <span class="n">traces_window</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
         <span class="n">save_model</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
     <span class="n">learning_rate</span><span class="o">=</span> <span class="n">starting_learning_rate</span>
@@ -2065,7 +2159,7 @@ no need to train_test_split since we already have the split dataframes
     <span class="c1">#               step=traces_step, </span>
     <span class="c1">#               window=traces_window)</span>
 
-    <span class="n">plot_average_loss</span><span class="p">(</span><span class="n">traces</span><span class="p">)</span>
+    <span class="c1"># plot_average_loss(traces)</span>
 
     <span class="k">if</span> <span class="n">save_model</span><span class="p">:</span>
         <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;Trained_IQNx4_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">K_iter.dict&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">n_iterations</span><span class="o">/</span><span class="mi">1000</span><span class="p">))</span> <span class="p">)</span>
@@ -2127,12 +2221,12 @@ no need to train_test_split since we already have the split dataframes
 <h2>Run training<a class="headerlink" href="#run-training" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_iterations</span><span class="p">,</span> <span class="n">n_layers</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">,</span> <span class="n">starting_learning_rate</span><span class="p">,</span> <span class="n">dropout</span> <span class="o">=</span> <span class="n">get_model_params</span><span class="p">()</span>
-
-<span class="n">NFEATURES</span><span class="o">=</span><span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">model</span><span class="o">=</span><span class="n">RegularizedRegressionModel</span><span class="p">(</span><span class="n">nfeatures</span><span class="o">=</span><span class="n">NFEATURES</span><span class="p">,</span> <span class="n">ntargets</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                           <span class="n">nlayers</span><span class="o">=</span><span class="n">n_layers</span><span class="p">,</span> <span class="n">hidden_size</span><span class="o">=</span><span class="n">n_hidden</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">dropout</span><span class="p">)</span>
-
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">load_untrained_model</span><span class="p">():</span>
+    <span class="n">NFEATURES</span><span class="o">=</span><span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">RegularizedRegressionModel</span><span class="p">(</span><span class="n">nfeatures</span><span class="o">=</span><span class="n">NFEATURES</span><span class="p">,</span> <span class="n">ntargets</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                               <span class="n">nlayers</span><span class="o">=</span><span class="n">n_layers</span><span class="p">,</span> <span class="n">hidden_size</span><span class="o">=</span><span class="n">n_hidden</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">dropout</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span>
+<span class="n">model</span><span class="o">=</span><span class="n">load_untrained_model</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -2140,7 +2234,7 @@ no need to train_test_split since we already have the split dataframes
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RegularizedRegressionModel(
   (model): Sequential(
-    (0): Linear(in_features=5, out_features=10, bias=True)
+    (0): Linear(in_features=6, out_features=10, bias=True)
     (1): ReLU()
     (2): Linear(in_features=10, out_features=1, bias=True)
   )
@@ -2159,9 +2253,9 @@ no need to train_test_split since we already have the split dataframes
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;estimating </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">target</span><span class="p">)</span>
 <span class="n">IQN_trace</span><span class="o">=</span><span class="p">([],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[])</span>
 <span class="n">traces_step</span> <span class="o">=</span> <span class="mi">50</span>
-<span class="n">n_iterations</span><span class="o">=</span><span class="mi">10000</span>
+<span class="n">n_iterations</span><span class="o">=</span><span class="mi">1000</span>
 <span class="n">IQN</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span><span class="n">train_x</span><span class="o">=</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_t</span><span class="o">=</span><span class="n">train_t_ratio</span><span class="p">,</span> 
-        <span class="n">valid_x</span><span class="o">=</span><span class="n">valid_x</span><span class="p">,</span> <span class="n">valid_t</span><span class="o">=</span><span class="n">valid_t_ratio</span><span class="p">,</span> <span class="n">traces</span><span class="o">=</span><span class="n">IQN_trace</span><span class="p">,</span> <span class="n">n_batch</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> 
+        <span class="n">valid_x</span><span class="o">=</span><span class="n">valid_x</span><span class="p">,</span> <span class="n">valid_t</span><span class="o">=</span><span class="n">valid_t_ratio</span><span class="p">,</span> <span class="n">traces</span><span class="o">=</span><span class="n">IQN_trace</span><span class="p">,</span> <span class="n">n_batch</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> 
         <span class="n">n_iterations</span><span class="o">=</span><span class="n">n_iterations</span><span class="p">,</span> <span class="n">traces_step</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">traces_window</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
         <span class="n">save_model</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
@@ -2172,16 +2266,14 @@ no need to train_test_split since we already have the split dataframes
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training for 20000 iterations
-estimating RecoDatam
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training for 1000 iterations
+estimating RecoDatapT
 
 Iteration vs average loss
  iteration	 train-set	 valid-set
-         0	  0.558299	  0.558299
-      9950	  0.245781	  0.245781	  0.247308
-</pre></div>
-</div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_64_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_64_1.svg" /><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>evaluating m took  8.094625473022461 seconds
+         0	  0.265967	  0.340284
+       950	-5486.585449	-5520.383301	-5520.383301
+evaluating m took  1.0448627471923828 seconds
 </pre></div>
 </div>
 </div>
@@ -2197,7 +2289,18 @@ Iteration vs average loss
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_65_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_65_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_66_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_66_0.svg" /></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_finite</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">z_inverse</span><span class="p">(</span><span class="n">xprime</span><span class="p">,</span> <span class="n">unscaled_mean</span><span class="p">,</span> <span class="n">unscaled_std</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">xprime</span> <span class="o">*</span> <span class="n">unscaled_std</span> <span class="o">+</span> <span class="n">unscaled_mean</span>
+</pre></div>
+</div>
+</div>
 </div>
 <p>Apparently not, but let’s continue</p>
 <div class="math notranslate nohighlight">
@@ -2206,135 +2309,273 @@ Iteration vs average loss
 \]</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m_reco</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="s1">&#39;RecoDatam&#39;</span><span class="p">]</span>
-<span class="n">m_gen</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="s1">&#39;genDatam&#39;</span><span class="p">]</span>
-<span class="n">z_inv_f</span> <span class="o">=</span> <span class="n">z_inverse</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">m_reco</span><span class="p">)</span>
-<span class="n">factor</span> <span class="o">=</span> <span class="n">z_inv_f</span> <span class="o">*</span> <span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">orig_observable</span><span class="o">=</span><span class="n">m_gen</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-</span><span class="mi">10</span>
-<span class="n">m_pred</span> <span class="o">=</span> <span class="n">L_inverse</span><span class="p">(</span><span class="n">L_observable</span><span class="o">=</span><span class="n">factor</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">recopt_unsc_mean</span><span class="o">=</span><span class="n">TEST_SCALE_DICT</span><span class="p">[</span><span class="n">target</span><span class="p">][</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span>
+<span class="n">recop_unsc_std</span><span class="o">=</span><span class="n">TEST_SCALE_DICT</span><span class="p">[</span><span class="n">target</span><span class="p">][</span><span class="s1">&#39;std&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">recopt_unsc_mean</span><span class="p">,</span><span class="n">recop_unsc_std</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_67_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_67_0.svg" /></div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>34.4267035 23.889866966647546
+</pre></div>
+</div>
+</div>
+</div>
+<p>Get unscaled again, just to verify</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SUBSAMPLE</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e3</span><span class="p">)</span><span class="c1">#subsample use for development - in production use whole dataset</span>
+<span class="n">train_data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;train_data_10M_2.csv&#39;</span><span class="p">),</span>
+                      <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
+                      <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span>
+                      <span class="p">)</span>
+
+<span class="n">test_data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;test_data_10M_2.csv&#39;</span><span class="p">),</span>
+                      <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
+                     <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span>
+                     <span class="p">)</span>
+<span class="n">test_data</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>genDatapT</th>
+      <th>genDataeta</th>
+      <th>genDataphi</th>
+      <th>genDatam</th>
+      <th>RecoDatapT</th>
+      <th>RecoDataeta</th>
+      <th>RecoDataphi</th>
+      <th>RecoDatam</th>
+      <th>tau</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>1000.000000</td>
+      <td>1000.000000</td>
+      <td>1000.000000</td>
+      <td>1000.000000</td>
+      <td>1000.000000</td>
+      <td>1000.000000</td>
+      <td>1000.000000</td>
+      <td>1000.000000</td>
+      <td>1000.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>34.418632</td>
+      <td>0.003455</td>
+      <td>0.066162</td>
+      <td>7.134023</td>
+      <td>34.426704</td>
+      <td>0.003056</td>
+      <td>0.063102</td>
+      <td>5.657021</td>
+      <td>0.501738</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>23.011432</td>
+      <td>2.220335</td>
+      <td>1.846486</td>
+      <td>3.264236</td>
+      <td>23.901821</td>
+      <td>2.213162</td>
+      <td>1.846551</td>
+      <td>3.340333</td>
+      <td>0.294413</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>20.006000</td>
+      <td>-4.961300</td>
+      <td>-3.138670</td>
+      <td>1.369540</td>
+      <td>12.064300</td>
+      <td>-4.841670</td>
+      <td>-3.269625</td>
+      <td>-0.000026</td>
+      <td>0.001098</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>24.129625</td>
+      <td>-1.671400</td>
+      <td>-1.442860</td>
+      <td>5.230408</td>
+      <td>23.615050</td>
+      <td>-1.675657</td>
+      <td>-1.483980</td>
+      <td>3.652023</td>
+      <td>0.251507</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>28.513650</td>
+      <td>0.071270</td>
+      <td>0.044711</td>
+      <td>6.675750</td>
+      <td>28.985700</td>
+      <td>0.070254</td>
+      <td>0.053989</td>
+      <td>4.965135</td>
+      <td>0.497258</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>36.046575</td>
+      <td>1.611400</td>
+      <td>1.690070</td>
+      <td>8.308600</td>
+      <td>36.842175</td>
+      <td>1.612680</td>
+      <td>1.699597</td>
+      <td>6.765040</td>
+      <td>0.756509</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>276.230000</td>
+      <td>4.838790</td>
+      <td>3.127250</td>
+      <td>33.330200</td>
+      <td>263.818000</td>
+      <td>4.935030</td>
+      <td>3.251495</td>
+      <td>29.382800</td>
+      <td>0.999324</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">m_pred</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pT_reco</span> <span class="o">=</span> <span class="n">test_data</span><span class="p">[</span><span class="s1">&#39;RecoDatapT&#39;</span><span class="p">]</span>
+<span class="n">pT_gen</span> <span class="o">=</span> <span class="n">test_data</span><span class="p">[</span><span class="s1">&#39;genDatapT&#39;</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">pT_reco</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/Braden_Scaling_TrainEval_Mass_72_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_72_0.svg" /></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">p</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/Braden_Scaling_TrainEval_Mass_73_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_73_0.svg" /></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z_inv_f</span> <span class="o">=</span><span class="n">z_inverse</span><span class="p">(</span><span class="n">xprime</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">unscaled_mean</span><span class="o">=</span><span class="n">recopt_unsc_mean</span><span class="p">,</span> <span class="n">unscaled_std</span><span class="o">=</span><span class="n">recop_unsc_std</span><span class="p">)</span>
+
+<span class="n">factor</span> <span class="o">=</span> <span class="n">z_inv_f</span> <span class="o">*</span> <span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="n">orig_observable</span><span class="o">=</span><span class="n">pT_reco</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;pT&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-</span><span class="mi">10</span>
+
+<span class="n">pT_pred</span> <span class="o">=</span> <span class="n">L_inverse</span><span class="p">(</span><span class="n">L_observable</span><span class="o">=</span><span class="n">factor</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;pT&#39;</span><span class="p">)</span>
+<span class="c1"># pT_pred=get_finite(pT_pred)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pT_pred</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 0.,  0.,  0., ..., inf, inf, inf])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">get_finite</span><span class="p">(</span><span class="n">pT_pred</span><span class="o">.</span><span class="n">flatten</span><span class="p">()),</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_282404</span><span class="o">/</span><span class="mf">413469304.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">m_pred</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="ne">KeyError</span><span class="g g-Whitespace">                                  </span>Traceback (most recent call last)
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/numpy/lib/histograms.py</span> in <span class="ni">_unsigned_subtract</span><span class="nt">(a, b)</span>
+<span class="g g-Whitespace">    </span><span class="mi">350</span>     <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">351</span>         <span class="n">dt</span> <span class="o">=</span> <span class="n">signed_to_unsigned</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">type</span><span class="p">]</span>
+<span class="g g-Whitespace">    </span><span class="mi">352</span>     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
 
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/matplotlib/pyplot.py</span> in <span class="ni">show</span><span class="nt">(*args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">366</span>     <span class="sd">&quot;&quot;&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">367</span><span class="sd">     _warn_if_gui_out_of_main_thread()</span>
-<span class="ne">--&gt; </span><span class="mi">368</span><span class="sd">     return _backend_mod.show(*args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">369</span><span class="sd"> </span>
-<span class="g g-Whitespace">    </span><span class="mi">370</span><span class="sd"> </span>
+<span class="ne">KeyError</span>: &lt;class &#39;numpy.bool_&#39;&gt;
 
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/matplotlib_inline/backend_inline.py</span> in <span class="ni">show</span><span class="nt">(close, block)</span>
-<span class="g g-Whitespace">     </span><span class="mi">41</span><span class="sd">             display(</span>
-<span class="g g-Whitespace">     </span><span class="mi">42</span><span class="sd">                 figure_manager.canvas.figure,</span>
-<span class="ne">---&gt; </span><span class="mi">43</span><span class="sd">                 metadata=_fetch_figure_metadata(figure_manager.canvas.figure)</span>
-<span class="g g-Whitespace">     </span><span class="mi">44</span><span class="sd">             )</span>
-<span class="g g-Whitespace">     </span><span class="mi">45</span><span class="sd">     finally:</span>
+<span class="n">During</span> <span class="n">handling</span> <span class="n">of</span> <span class="n">the</span> <span class="n">above</span> <span class="n">exception</span><span class="p">,</span> <span class="n">another</span> <span class="n">exception</span> <span class="n">occurred</span><span class="p">:</span>
 
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/IPython/core/display.py</span> in <span class="ni">display</span><span class="nt">(include, exclude, metadata, transient, display_id, *objs, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">318</span><span class="sd">             publish_display_data(data=obj, metadata=metadata, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">319</span><span class="sd">         else:</span>
-<span class="ne">--&gt; </span><span class="mi">320</span><span class="sd">             format_dict, md_dict = format(obj, include=include, exclude=exclude)</span>
-<span class="g g-Whitespace">    </span><span class="mi">321</span><span class="sd">             if not format_dict:</span>
-<span class="g g-Whitespace">    </span><span class="mi">322</span><span class="sd">                 # nothing to display (e.g. _ipython_display_ took over)</span>
+<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_135083</span><span class="o">/</span><span class="mf">2899778202.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">get_finite</span><span class="p">(</span><span class="n">pT_pred</span><span class="o">.</span><span class="n">flatten</span><span class="p">()),</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/IPython/core/formatters.py</span> in <span class="ni">format</span><span class="nt">(self, obj, include, exclude)</span>
-<span class="g g-Whitespace">    </span><span class="mi">178</span><span class="sd">             md = None</span>
-<span class="g g-Whitespace">    </span><span class="mi">179</span><span class="sd">             try:</span>
-<span class="ne">--&gt; </span><span class="mi">180</span><span class="sd">                 data = formatter(obj)</span>
-<span class="g g-Whitespace">    </span><span class="mi">181</span><span class="sd">             except:</span>
-<span class="g g-Whitespace">    </span><span class="mi">182</span><span class="sd">                 # FIXME: log the exception</span>
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/matplotlib/pyplot.py</span> in <span class="ni">hist</span><span class="nt">(x, bins, range, density, weights, cumulative, bottom, histtype, align, orientation, rwidth, log, color, label, stacked, data, **kwargs)</span>
+<span class="g g-Whitespace">   </span><span class="mi">2593</span>         <span class="n">align</span><span class="o">=</span><span class="n">align</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="n">orientation</span><span class="p">,</span> <span class="n">rwidth</span><span class="o">=</span><span class="n">rwidth</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="n">log</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">2594</span>         <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">stacked</span><span class="o">=</span><span class="n">stacked</span><span class="p">,</span>
+<span class="ne">-&gt; </span><span class="mi">2595</span>         <span class="o">**</span><span class="p">({</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">}</span> <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">{}),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">2596</span> 
+<span class="g g-Whitespace">   </span><span class="mi">2597</span> 
 
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/decorator.py</span> in <span class="ni">fun</span><span class="nt">(*args, **kw)</span>
-<span class="g g-Whitespace">    </span><span class="mi">230</span><span class="sd">             if not kwsyntax:</span>
-<span class="g g-Whitespace">    </span><span class="mi">231</span><span class="sd">                 args, kw = fix(args, kw, sig)</span>
-<span class="ne">--&gt; </span><span class="mi">232</span><span class="sd">             return caller(func, *(extras + args), **kw)</span>
-<span class="g g-Whitespace">    </span><span class="mi">233</span><span class="sd">     fun.__name__ = func.__name__</span>
-<span class="g g-Whitespace">    </span><span class="mi">234</span><span class="sd">     fun.__doc__ = func.__doc__</span>
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/matplotlib/__init__.py</span> in <span class="ni">inner</span><span class="nt">(ax, data, *args, **kwargs)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1410</span>     <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="g g-Whitespace">   </span><span class="mi">1411</span>         <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">1412</span>             <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="n">sanitize_sequence</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1413</span> 
+<span class="g g-Whitespace">   </span><span class="mi">1414</span>         <span class="n">bound</span> <span class="o">=</span> <span class="n">new_sig</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/IPython/core/formatters.py</span> in <span class="ni">catch_format_error</span><span class="nt">(method, self, *args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">222</span><span class="sd">     &quot;&quot;&quot;</span><span class="n">show</span> <span class="n">traceback</span> <span class="n">on</span> <span class="n">failed</span> <span class="nb">format</span> <span class="n">call</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">223</span><span class="s2">     try:</span>
-<span class="ne">--&gt; </span><span class="mi">224</span><span class="s2">         r = method(self, *args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">225</span><span class="s2">     except NotImplementedError:</span>
-<span class="g g-Whitespace">    </span><span class="mi">226</span><span class="s2">         # don&#39;t warn on NotImplementedErrors</span>
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/matplotlib/axes/_axes.py</span> in <span class="ni">hist</span><span class="nt">(self, x, bins, range, density, weights, cumulative, bottom, histtype, align, orientation, rwidth, log, color, label, stacked, **kwargs)</span>
+<span class="g g-Whitespace">   </span><span class="mi">6637</span>             <span class="c1"># this will automatically overwrite bins,</span>
+<span class="g g-Whitespace">   </span><span class="mi">6638</span>             <span class="c1"># so that each histogram uses the same bins</span>
+<span class="ne">-&gt; </span><span class="mi">6639</span>             <span class="n">m</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">bins</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="o">**</span><span class="n">hist_kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">6640</span>             <span class="n">tops</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">6641</span>         <span class="n">tops</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tops</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>  <span class="c1"># causes problems later if it&#39;s an int</span>
 
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/IPython/core/formatters.py</span> in <span class="ni">__call__</span><span class="nt">(self, obj)</span>
-<span class="g g-Whitespace">    </span><span class="mi">339</span><span class="s2">                 pass</span>
-<span class="g g-Whitespace">    </span><span class="mi">340</span><span class="s2">             else:</span>
-<span class="ne">--&gt; </span><span class="mi">341</span><span class="s2">                 return printer(obj)</span>
-<span class="g g-Whitespace">    </span><span class="mi">342</span><span class="s2">             # Finally look for special method names</span>
-<span class="g g-Whitespace">    </span><span class="mi">343</span><span class="s2">             method = get_real_method(obj, self.print_method)</span>
+<span class="nn">&lt;__array_function__ internals&gt;</span> in <span class="ni">histogram</span><span class="nt">(*args, **kwargs)</span>
 
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/IPython/core/pylabtools.py</span> in <span class="ni">print_figure</span><span class="nt">(fig, fmt, bbox_inches, base64, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">149</span><span class="s2">         FigureCanvasBase(fig)</span>
-<span class="g g-Whitespace">    </span><span class="mi">150</span><span class="s2"> </span>
-<span class="ne">--&gt; </span><span class="mi">151</span><span class="s2">     fig.canvas.print_figure(bytes_io, **kw)</span>
-<span class="g g-Whitespace">    </span><span class="mi">152</span><span class="s2">     data = bytes_io.getvalue()</span>
-<span class="g g-Whitespace">    </span><span class="mi">153</span><span class="s2">     if fmt == &#39;svg&#39;:</span>
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/numpy/lib/histograms.py</span> in <span class="ni">histogram</span><span class="nt">(a, bins, range, normed, weights, density)</span>
+<span class="g g-Whitespace">    </span><span class="mi">821</span> 
+<span class="g g-Whitespace">    </span><span class="mi">822</span>         <span class="c1"># Pre-compute histogram scaling factor</span>
+<span class="ne">--&gt; </span><span class="mi">823</span>         <span class="n">norm</span> <span class="o">=</span> <span class="n">n_equal_bins</span> <span class="o">/</span> <span class="n">_unsigned_subtract</span><span class="p">(</span><span class="n">last_edge</span><span class="p">,</span> <span class="n">first_edge</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">824</span> 
+<span class="g g-Whitespace">    </span><span class="mi">825</span>         <span class="c1"># We iterate over blocks here for two reasons: the first is that for</span>
 
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/matplotlib/backend_bases.py</span> in <span class="ni">print_figure</span><span class="nt">(self, filename, dpi, facecolor, edgecolor, orientation, format, bbox_inches, pad_inches, bbox_extra_artists, backend, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2298</span><span class="s2">                 if bbox_inches == &quot;tight&quot;:</span>
-<span class="g g-Whitespace">   </span><span class="mi">2299</span><span class="s2">                     bbox_inches = self.figure.get_tightbbox(</span>
-<span class="ne">-&gt; </span><span class="mi">2300</span><span class="s2">                         renderer, bbox_extra_artists=bbox_extra_artists)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2301</span><span class="s2">                     if pad_inches is None:</span>
-<span class="g g-Whitespace">   </span><span class="mi">2302</span><span class="s2">                         pad_inches = rcParams[&#39;savefig.pad_inches&#39;]</span>
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/numpy/lib/histograms.py</span> in <span class="ni">_unsigned_subtract</span><span class="nt">(a, b)</span>
+<span class="g g-Whitespace">    </span><span class="mi">351</span>         <span class="n">dt</span> <span class="o">=</span> <span class="n">signed_to_unsigned</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">type</span><span class="p">]</span>
+<span class="g g-Whitespace">    </span><span class="mi">352</span>     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">353</span>         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dt</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">354</span>     <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">355</span>         <span class="c1"># we know the inputs are integers, and we are deliberately casting</span>
 
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/matplotlib/figure.py</span> in <span class="ni">get_tightbbox</span><span class="nt">(self, renderer, bbox_extra_artists)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1630</span><span class="s2"> </span>
-<span class="g g-Whitespace">   </span><span class="mi">1631</span><span class="s2">         for a in artists:</span>
-<span class="ne">-&gt; </span><span class="mi">1632</span><span class="s2">             bbox = a.get_tightbbox(renderer)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1633</span><span class="s2">             if bbox is not None and (bbox.width != 0 or bbox.height != 0):</span>
-<span class="g g-Whitespace">   </span><span class="mi">1634</span><span class="s2">                 bb.append(bbox)</span>
-
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/matplotlib/axes/_base.py</span> in <span class="ni">get_tightbbox</span><span class="nt">(self, renderer, call_axes_locator, bbox_extra_artists, for_layout_only)</span>
-<span class="g g-Whitespace">   </span><span class="mi">4664</span><span class="s2">                     # this artist</span>
-<span class="g g-Whitespace">   </span><span class="mi">4665</span><span class="s2">                     continue</span>
-<span class="ne">-&gt; </span><span class="mi">4666</span><span class="s2">             bbox = a.get_tightbbox(renderer)</span>
-<span class="g g-Whitespace">   </span><span class="mi">4667</span><span class="s2">             if (bbox is not None</span>
-<span class="g g-Whitespace">   </span><span class="mi">4668</span><span class="s2">                     and 0 &lt; bbox.width &lt; np.inf</span>
-
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/matplotlib/artist.py</span> in <span class="ni">get_tightbbox</span><span class="nt">(self, renderer)</span>
-<span class="g g-Whitespace">    </span><span class="mi">353</span><span class="s2">             The enclosing bounding box (in figure pixel coordinates).</span>
-<span class="g g-Whitespace">    </span><span class="mi">354</span><span class="s2">         &quot;&quot;&quot;</span>
-<span class="ne">--&gt; </span><span class="mi">355</span>         <span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_window_extent</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">356</span>         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clip_on</span><span class="p">():</span>
-<span class="g g-Whitespace">    </span><span class="mi">357</span>             <span class="n">clip_box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clip_box</span><span class="p">()</span>
-
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/matplotlib/patches.py</span> in <span class="ni">get_window_extent</span><span class="nt">(self, renderer)</span>
-<span class="g g-Whitespace">    </span><span class="mi">621</span> 
-<span class="g g-Whitespace">    </span><span class="mi">622</span>     <span class="k">def</span> <span class="nf">get_window_extent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="ne">--&gt; </span><span class="mi">623</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">()</span><span class="o">.</span><span class="n">get_extents</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_transform</span><span class="p">())</span>
-<span class="g g-Whitespace">    </span><span class="mi">624</span> 
-<span class="g g-Whitespace">    </span><span class="mi">625</span>     <span class="k">def</span> <span class="nf">_convert_xy_units</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xy</span><span class="p">):</span>
-
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/matplotlib/path.py</span> in <span class="ni">get_extents</span><span class="nt">(self, transform, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">631</span>             <span class="n">xys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">xys</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">632</span>         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xys</span><span class="p">):</span>
-<span class="ne">--&gt; </span><span class="mi">633</span>             <span class="k">return</span> <span class="n">Bbox</span><span class="p">([</span><span class="n">xys</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">xys</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)])</span>
-<span class="g g-Whitespace">    </span><span class="mi">634</span>         <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">635</span>             <span class="k">return</span> <span class="n">Bbox</span><span class="o">.</span><span class="n">null</span><span class="p">()</span>
-
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/numpy/core/_methods.py</span> in <span class="ni">_amin</span><span class="nt">(a, axis, out, keepdims, initial, where)</span>
-<span class="g g-Whitespace">     </span><span class="mi">42</span> <span class="k">def</span> <span class="nf">_amin</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">43</span>           <span class="n">initial</span><span class="o">=</span><span class="n">_NoValue</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="ne">---&gt; </span><span class="mi">44</span>     <span class="k">return</span> <span class="n">umr_minimum</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">keepdims</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="n">where</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">45</span> 
-<span class="g g-Whitespace">     </span><span class="mi">46</span> <span class="k">def</span> <span class="nf">_sum</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-
-<span class="ne">KeyboardInterrupt</span>: 
+<span class="ne">TypeError</span>: numpy boolean subtract, the `-` operator, is not supported, use the bitwise_xor, the `^` operator, or the logical_xor function instead.
 </pre></div>
 </div>
 </div>
@@ -2394,7 +2635,7 @@ no need to train_test_split since we already have the split dataframes
 1.9649797331536134 0.3264556967084843
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_71_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_71_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_79_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_79_1.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2434,7 +2675,7 @@ Iteration vs average loss
      19950	-784456.312500	-773300.125000	-690390.937500
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_72_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_72_1.svg" /><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>evaluating m took  21.789092540740967 seconds
+<img alt="_images/Braden_Scaling_TrainEval_Mass_80_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_80_1.svg" /><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>evaluating m took  21.789092540740967 seconds
 </pre></div>
 </div>
 </div>
@@ -2453,7 +2694,7 @@ Iteration vs average loss
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_73_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_73_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_81_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_81_0.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2487,7 +2728,7 @@ valid_t shape =  (10000,) valid_x shape =  (10000, 5)
 no need to train_test_split since we already have the split dataframes
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_74_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_74_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_82_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_82_1.svg" /></div>
 </div>
 <section id="evalute-model-and-save-evaluated-data">
 <h3>Evalute model and save evaluated data<a class="headerlink" href="#evalute-model-and-save-evaluated-data" title="Permalink to this headline">#</a></h3>
