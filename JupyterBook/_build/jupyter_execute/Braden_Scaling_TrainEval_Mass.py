@@ -1025,13 +1025,6 @@ def run(model, target,
 
 # ### Define basic NN model
 
-# In[175]:
-
-
-x = np.array([1])
-isinstance(x,np.ndarray)
-
-
 # In[157]:
 
 
