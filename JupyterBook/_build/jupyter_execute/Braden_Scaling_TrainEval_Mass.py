@@ -972,12 +972,12 @@ print(valid_x.mean(axis=0), valid_x.std(axis=0))
 print(train_x.mean(axis=0), train_x.std(axis=0))
 
 
-# In[40]:
+# In[90]:
 
 
 for i in range(NFEATURES):
     plt.hist(train_x[:,i], alpha=0.35)
-    plt.title('training features post-z score')
+    plt.title("training features post-z score: X'=z(L(X))")
 plt.show()
 
 
@@ -1230,7 +1230,7 @@ for i in range(NFEATURES):
 plt.legend();plt.show()
 
 
-# In[76]:
+# In[91]:
 
 
 IQN.eval()
