@@ -364,8 +364,8 @@ title="Print to PDF"
     </a>
    </li>
    <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#basically-the-scaling-procedure-is-the-following">
-     Basically the scaling procedure is the following:
+    <a class="reference internal nav-link" href="#basically-a-standard-scaling-procedure-is-the-following-background">
+     Basically a “standard scaling procedure” is the following (background):
     </a>
    </li>
   </ul>
@@ -409,13 +409,18 @@ title="Print to PDF"
     <a class="reference internal nav-link" href="#see-if-trainig-works-on-t-ratio">
      See if trainig works on T ratio
     </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#evalute-model-and-save-evaluated-data">
-       Evalute model and save evaluated data
-      </a>
-     </li>
-    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scaling-notebook-over-results-are-weird">
+   Scaling Notebook Over (results are weird)
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#evalute-model-and-save-evaluated-data">
+     Evalute model and save evaluated data
+    </a>
    </li>
   </ul>
  </li>
@@ -540,8 +545,8 @@ title="Print to PDF"
     </a>
    </li>
    <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#basically-the-scaling-procedure-is-the-following">
-     Basically the scaling procedure is the following:
+    <a class="reference internal nav-link" href="#basically-a-standard-scaling-procedure-is-the-following-background">
+     Basically a “standard scaling procedure” is the following (background):
     </a>
    </li>
   </ul>
@@ -585,13 +590,18 @@ title="Print to PDF"
     <a class="reference internal nav-link" href="#see-if-trainig-works-on-t-ratio">
      See if trainig works on T ratio
     </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#evalute-model-and-save-evaluated-data">
-       Evalute model and save evaluated data
-      </a>
-     </li>
-    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scaling-notebook-over-results-are-weird">
+   Scaling Notebook Over (results are weird)
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#evalute-model-and-save-evaluated-data">
+     Evalute model and save evaluated data
+    </a>
    </li>
   </ul>
  </li>
@@ -1344,16 +1354,6 @@ $<span class="math notranslate nohighlight">\( X'=\frac{X-E[X]}{\sigma_{X}}  \qq
 <img alt="_images/Braden_Scaling_TrainEval_Mass_31_0.png" src="_images/Braden_Scaling_TrainEval_Mass_31_0.png" />
 </div>
 </div>
-</section>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="braden-scaling">
-<h1>Braden Scaling<a class="headerlink" href="#braden-scaling" title="Permalink to this headline">#</a></h1>
-<section id="scale-the-data-accoding-to-the-braden-kronheim-scaling">
-<h2>Scale the data accoding to the “Braden Kronheim scaling” :<a class="headerlink" href="#scale-the-data-accoding-to-the-braden-kronheim-scaling" title="Permalink to this headline">#</a></h2>
-<div class="math notranslate nohighlight">
-\[\mathbb{T}(p_T) = z(\log p_T), \qquad \mathbb{T}(\eta) = z(\eta), \qquad \mathbb{T}(\phi) = z(\phi), \qquad \mathbb{T}(m) = z(\log (m + 2))\]</div>
-<div class="math notranslate nohighlight">
-\[ \mathbb{T}(\tau) = 6\tau - 3 \]</div>
 <p>For a jet observable <span class="math notranslate nohighlight">\(\mathcal{O}\)</span> (or <span class="math notranslate nohighlight">\(\tau\)</span>), the data is first scaled according to:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -1397,9 +1397,19 @@ in order to copare with <span class="math notranslate nohighlight">\(\mathcal{O}
     p_T^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (p_T^\text{gen})+10 \right] -10 \right]
 \]</div>
 </section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="braden-scaling">
+<h1>Braden Scaling<a class="headerlink" href="#braden-scaling" title="Permalink to this headline">#</a></h1>
+<section id="scale-the-data-accoding-to-the-braden-kronheim-scaling">
+<h2>Scale the data accoding to the “Braden Kronheim scaling” :<a class="headerlink" href="#scale-the-data-accoding-to-the-braden-kronheim-scaling" title="Permalink to this headline">#</a></h2>
+<div class="math notranslate nohighlight">
+\[\mathbb{T}(p_T) = z(\log p_T), \qquad \mathbb{T}(\eta) = z(\eta), \qquad \mathbb{T}(\phi) = z(\phi), \qquad \mathbb{T}(m) = z(\log (m + 2))\]</div>
+<div class="math notranslate nohighlight">
+\[ \mathbb{T}(\tau) = 6\tau - 3 \]</div>
+</section>
 <hr class="docutils" />
-<section id="basically-the-scaling-procedure-is-the-following">
-<h2>Basically the scaling procedure is the following:<a class="headerlink" href="#basically-the-scaling-procedure-is-the-following" title="Permalink to this headline">#</a></h2>
+<section id="basically-a-standard-scaling-procedure-is-the-following-background">
+<h2>Basically a “standard scaling procedure” is the following (background):<a class="headerlink" href="#basically-a-standard-scaling-procedure-is-the-following-background" title="Permalink to this headline">#</a></h2>
 <ol class="simple">
 <li><p>Split the data into train and test dataframes</p></li>
 <li><p>fit the scaler on each of the train and test sets independently, that is, get the mean and std, ( optionally and min and max or other quantities) of each feature (column) of each of the train and test dataframes, independently.</p></li>
@@ -2402,7 +2412,7 @@ evaluating m took  11.571345329284668 seconds
 </div>
 </div>
 </div>
-<p>Apparently not, but let’s continue</p>
+<p>Apparently it dosn’t work, but let’s continue</p>
 <div class="math notranslate nohighlight">
 \[
     m^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 \right]
@@ -2718,6 +2728,11 @@ evaluating m took  11.571345329284668 seconds
 <div class="cell_output docutils container">
 <img alt="_images/Braden_Scaling_TrainEval_Mass_91_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_91_0.svg" /></div>
 </div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="scaling-notebook-over-results-are-weird">
+<h1>Scaling Notebook Over (results are weird)<a class="headerlink" href="#scaling-notebook-over-results-are-weird" title="Permalink to this headline">#</a></h1>
+<hr class="docutils" />
 <hr class="docutils" />
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2773,7 +2788,7 @@ no need to train_test_split since we already have the split dataframes
 1.9649797331536134 0.3264556967084843
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_94_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_94_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_95_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_95_1.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2813,7 +2828,7 @@ Iteration vs average loss
      19950	-784456.312500	-773300.125000	-690390.937500
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_95_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_95_1.svg" /><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>evaluating m took  21.789092540740967 seconds
+<img alt="_images/Braden_Scaling_TrainEval_Mass_96_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_96_1.svg" /><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>evaluating m took  21.789092540740967 seconds
 </pre></div>
 </div>
 </div>
@@ -2832,7 +2847,7 @@ Iteration vs average loss
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_96_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_96_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_97_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_97_0.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2866,10 +2881,10 @@ valid_t shape =  (10000,) valid_x shape =  (10000, 5)
 no need to train_test_split since we already have the split dataframes
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_97_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_97_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_98_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_98_1.svg" /></div>
 </div>
 <section id="evalute-model-and-save-evaluated-data">
-<h3>Evalute model and save evaluated data<a class="headerlink" href="#evalute-model-and-save-evaluated-data" title="Permalink to this headline">#</a></h3>
+<h2>Evalute model and save evaluated data<a class="headerlink" href="#evalute-model-and-save-evaluated-data" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">target</span><span class="o">==</span> <span class="s1">&#39;RecoDatapT&#39;</span><span class="p">:</span>
@@ -3003,7 +3018,6 @@ no need to train_test_split since we already have the split dataframes
 </div>
 </div>
 </div>
-</section>
 </section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="plot-predicted-vs-real-reco-in-our-paper-s-format">

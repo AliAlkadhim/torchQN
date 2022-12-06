@@ -415,14 +415,6 @@ raw_test_data.describe()#unscaled
 show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height = 100)
 
 
-# # Braden Scaling
-# 
-# ## Scale the data accoding to the "Braden Kronheim scaling" :
-# 
-# $$\mathbb{T}(p_T) = z(\log p_T), \qquad \mathbb{T}(\eta) = z(\eta), \qquad \mathbb{T}(\phi) = z(\phi), \qquad \mathbb{T}(m) = z(\log (m + 2))$$ 
-# 
-# $$ \mathbb{T}(\tau) = 6\tau - 3 $$
-
 # For a jet observable $\mathcal{O}$ (or $\tau$), the data is first scaled according to:
 # 
 # $$
@@ -473,9 +465,17 @@ show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height =
 # $$
 # 
 
+# # Braden Scaling
+# 
+# ## Scale the data accoding to the "Braden Kronheim scaling" :
+# 
+# $$\mathbb{T}(p_T) = z(\log p_T), \qquad \mathbb{T}(\eta) = z(\eta), \qquad \mathbb{T}(\phi) = z(\phi), \qquad \mathbb{T}(m) = z(\log (m + 2))$$ 
+# 
+# $$ \mathbb{T}(\tau) = 6\tau - 3 $$
+
 # -----------
 # 
-# ## Basically the scaling procedure is the following:
+# ## Basically a "standard scaling procedure" is the following (background):
 # 
 # 1. Split the data into train and test dataframes
 # 2. fit the scaler on each of the train and test sets independently, that is, get the mean and std, ( optionally and min and max or other quantities) of each feature (column) of each of the train and test dataframes, independently.
@@ -1261,7 +1261,7 @@ def z_inverse(xprime, mean, std):
     return xprime * std + mean
 
 
-# Apparently not, but let's continue
+# Apparently it dosn't work, but let's continue
 # 
 # $$
 #     m^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 \right]
@@ -1385,6 +1385,10 @@ pT_pred
 
 plt.hist(pT_pred.flatten());plt.show()
 
+
+# # Scaling Notebook Over (results are weird)
+# -------------------
+# 
 
 # ----
 
