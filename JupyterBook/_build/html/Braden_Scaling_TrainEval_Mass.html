@@ -1775,7 +1775,7 @@ Reco_var:  RecoDatam , 	 gen_var:  genDatam
 \tau(y-f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})) &amp; y \geq f(\boldsymbol{x}, \tau ; \boldsymbol{\theta}) \\
 (1-\tau)(f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})-y) &amp; y&lt;f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})
 \end{array},\right.\end{split}\]</div>
-<p>Means that what was done previously is that the risk functional, which could be a functional of many models <span class="math notranslate nohighlight">\(f\)</span>, was a only a functional of a single model: <span class="math notranslate nohighlight">\(R[f_1,..., f_n] = f[f_1]\)</span>. Here we have 4 models</p>
+<p>Means that what was done previously is that the risk functional, which could be a functional of many models <span class="math notranslate nohighlight">\(f\)</span>, was a only a functional of a single model: <span class="math notranslate nohighlight">\(R[f_1,..., f_n] = R[f_1]\)</span>. Here we have 4 models</p>
 <div class="math notranslate nohighlight">
 \[R_{\text{IQN}x4} =R_{\text{IQN}}[f_m, f_{p_T}, f_\eta, f_\phi], \]</div>
 <p>and since we’re choosing the evaluation order:</p>
@@ -1794,7 +1794,7 @@ Reco_var:  RecoDatam , 	 gen_var:  genDatam
 R_{\text{IQN}x4} &amp;= \int L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathbf{y_m} \right) p(\mathbf{x_m, y_m})  d \mathbf{x_m} d \mathbf{y_m} \\
 &amp;\times \  ... \times \\ 
 &amp;\times \int L_\text{IQN} \left( f_\phi (\mathbf{x_\phi},\tau), \mathbf{y_\phi} \right) p(\mathbf{x_\phi, y_\phi})  d \mathbf{x_\phi} d \mathbf{y_\phi}
-\end{align},\end{split}\]</div>
+\end{align}\end{split}\]</div>
 <p>where, again, each model <span class="math notranslate nohighlight">\(f_i\)</span> is also dependent on a set of parameters <span class="math notranslate nohighlight">\(\theta_i\)</span> (dropped for simplicity).</p>
 <p>Our risk functional is minimized for</p>
 <div class="math notranslate nohighlight">
@@ -1834,19 +1834,12 @@ R_{\text{IQN}x4} &amp;= \int L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathb
 \[\mathbf{x_m}=\{p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}.\]</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_jupyter_image</span><span class="p">(</span><span class="s1">&#39;images/IQN_training_flowchart.png&#39;</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_jupyter_image</span><span class="p">(</span><span class="s1">&#39;images/IQN_training_flowchart.png&#39;</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_462494</span><span class="o">/</span><span class="mf">703560992.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">show_jupyter_image</span><span class="p">(</span><span class="s1">&#39;images/IQN_training_flowchart.png&#39;</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-
-<span class="ne">NameError</span>: name &#39;show_jupyter_image&#39; is not defined
-</pre></div>
-</div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_53_0.png" src="_images/Braden_Scaling_TrainEval_Mass_53_0.png" />
 </div>
 </div>
 <section id="batches-validation-losses-and-plotting-of-losses-functions">

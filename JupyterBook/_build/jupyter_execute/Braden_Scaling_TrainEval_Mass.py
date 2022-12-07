@@ -739,7 +739,7 @@ plt.legend();plt.show()
 # (1-\tau)(f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})-y) & y<f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})
 # \end{array},\right.$$
 # 
-# Means that what was done previously is that the risk functional, which could be a functional of many models $f$, was a only a functional of a single model: $R[f_1,..., f_n] = f[f_1]$. Here we have 4 models 
+# Means that what was done previously is that the risk functional, which could be a functional of many models $f$, was a only a functional of a single model: $R[f_1,..., f_n] = R[f_1]$. Here we have 4 models 
 # 
 # $$R_{\text{IQN}x4} =R_{\text{IQN}}[f_m, f_{p_T}, f_\eta, f_\phi], $$ 
 # 
@@ -761,7 +761,7 @@ plt.legend();plt.show()
 # R_{\text{IQN}x4} &= \int L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathbf{y_m} \right) p(\mathbf{x_m, y_m})  d \mathbf{x_m} d \mathbf{y_m} \\
 # &\times \  ... \times \\ 
 # &\times \int L_\text{IQN} \left( f_\phi (\mathbf{x_\phi},\tau), \mathbf{y_\phi} \right) p(\mathbf{x_\phi, y_\phi})  d \mathbf{x_\phi} d \mathbf{y_\phi}
-# \end{align},$$
+# \end{align}$$
 # 
 # where, again, each model $f_i$ is also dependent on a set of parameters $\theta_i$ (dropped for simplicity).
 
@@ -805,10 +805,10 @@ plt.legend();plt.show()
 # $$\mathbf{x_m}=\{p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}.$$
 # 
 
-# In[1]:
+# In[9]:
 
 
-show_jupyter_image('images/IQN_training_flowchart.png',width=2000,height=1000)
+show_jupyter_image('images/IQN_training_flowchart.png',width=3000,height=1000)
 
 
 # ### Batches, validation, losses, and plotting of losses functions
