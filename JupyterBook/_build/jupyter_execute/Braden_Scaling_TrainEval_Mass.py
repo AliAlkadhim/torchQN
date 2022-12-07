@@ -13,7 +13,7 @@
 # 
 # There is also a `requirements.txt` here so that it can be run on an interactive website, eg binder or people can `pip install` it.
 
-# In[10]:
+# In[1]:
 
 
 import numpy as np; import pandas as pd
@@ -49,7 +49,7 @@ import ipywidgets as wid;
 
 # ## Import utils, and set environemnt variables
 
-# In[11]:
+# In[2]:
 
 
 try:
@@ -73,7 +73,7 @@ except Exception:
     pass
 
 
-# In[12]:
+# In[3]:
 
 
 # os.environ['IQN_BASE']='/home/ali/Desktop/Pulled_Github_Repositories/torchQN'
@@ -82,7 +82,7 @@ except Exception:
 
 # ### A user is competent enought to do `source setup.sh` on a `setup.sh` script that comes in the repo, such as the next cell uncommented
 
-# In[13]:
+# In[4]:
 
 
 # %%writefile setup.sh
@@ -103,7 +103,7 @@ except Exception:
 
 # Plotting and image functions
 
-# In[14]:
+# In[5]:
 
 
 def show_jupyter_image(image_filename, width = 1300, height = 300):
@@ -172,7 +172,7 @@ def set_axes(ax, xlabel, ylabel=None, xmin=None, xmax=None, ymin=None, ymax=None
 # Recall that the best IQNx4 autoregressive results that I attained prior to trying the Braden scaling was the following (which was implemented in the Davidson cluster here: `/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/OCT_7/*.py` and copied to my repo [here](https://github.com/AliAlkadhim/torchQN/tree/master/OCT_7) )
 # 
 
-# In[15]:
+# In[6]:
 
 
 show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height = 200)
@@ -496,7 +496,7 @@ show_jupyter_image('images/scaling_forNN.jpg', width=2000,height=500)
 # We mean that the predicted target for a desired reco observable $\mathcal{O}$ is chosen to be the following function
 # 
 # $$
-#     \mathbb{T}(\mathcal{O}) = z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
+#     \mathbb{T}(\mathcal{O} \mid \mathcal{O} \in y) = z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
 # $$
 # 
 # where for a random variable $x$, $z$ is the standardization function (z-score):
