@@ -101,7 +101,81 @@ except Exception:
 # tree $IQN_BASE
 
 
+# # Results prior to Braden-scaling
+# 
+# Recall that the best IQNx4 autoregressive results that I attained prior to trying the Braden scaling was the following (which was implemented in the Davidson cluster here: `/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/OCT_7/*.py` and copied to my repo [here](https://github.com/AliAlkadhim/torchQN/tree/master/OCT_7) )
+# 
+
+# Plotting and image functions
+
 # In[5]:
+
+
+def show_jupyter_image(image_filename, width = 1300, height = 300):
+    """Show a saved image directly in jupyter. Make sure image_filename is in your IQN_BASE !"""
+    display(Image(os.path.join(IQN_BASE,image_filename), width = width, height = height  ))
+    
+    
+def use_svg_display():
+    """Use the svg format to display a plot in Jupyter (better quality)"""
+    from matplotlib_inline import backend_inline
+    backend_inline.set_matplotlib_formats('svg')
+
+def reset_plt_params():
+    """reset matplotlib parameters - often useful"""
+    use_svg_display()
+    mpl.rcParams.update(mpl.rcParamsDefault)
+
+def show_plot(legend=False):
+    use_svg_display()
+    plt.tight_layout();
+    plt.show()
+    if legend:
+        plt.legend(loc='best')
+        
+def set_figsize(get_axes=False,figsize=(7, 7)):
+    use_svg_display()
+    plt.rcParams['figure.figsize'] = figsize
+    if get_axes:
+        fig, ax = plt.subplots(1,1, figsize=figsize)
+        return fig, ax
+    
+def set_axes(ax, xlabel, ylabel=None, xmin=None, xmax=None, ymin=None, ymax=None, title=None):
+    """saves a lot of time in explicitly difining each axis, its title and labels: do them all in one go"""
+    use_svg_display()
+    ax.set_xlabel(xlabel,fontsize=font_axes)
+    if ylabel:
+        ax.set_ylabel(ylabel,fontsize=font_axes)
+    if xmin and xmax:
+        ax.set_xlim(xmin, xmax)
+    
+    if ax.get_title()  != '':
+        #if the axes (plot) does have a title (which is non-empty string), display it 
+        ax.set_title(title)
+    if ax.legend():
+        #if an axis has a legned label, display it
+        ax.legend(loc='best',fontsize=font_legend)
+    if ymin and ymax:
+        #sometimes we dont have ylimits since we do a lot of histograms, but if an axis has ylimits, set them
+        ax.set_ylim(ymin, ymax)
+    
+    try:
+        fig.show()
+    except Exception:
+        pass
+    plt.tight_layout()
+    plt.show()
+
+
+# In[6]:
+
+
+show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height = 200)
+
+
+# So we know IQNx4 works (but not perfect enough), but in this notebook we try the Braden scaling (first time trying this scaling) to see if we can do better.
+
+# In[7]:
 
 
 # update fonts
@@ -125,7 +199,7 @@ wid.HTMLMath('$\LaTeX$')
 
 # ## Set arguments and configurations
 
-# In[6]:
+# In[8]:
 
 
 ################################### ARGUMENTS ###################################
@@ -189,66 +263,7 @@ def get_model_params():
 
 # another flowchart for how IQN works autoregressively to get $p_T'$, etc
 
-# Plotting
-
-# In[7]:
-
-
-def show_jupyter_image(image_filename, width = 1300, height = 300):
-    """Show a saved image directly in jupyter. Make sure image_filename is in your IQN_BASE !"""
-    display(Image(os.path.join(IQN_BASE,image_filename), width = width, height = height  ))
-    
-    
-def use_svg_display():
-    """Use the svg format to display a plot in Jupyter (better quality)"""
-    from matplotlib_inline import backend_inline
-    backend_inline.set_matplotlib_formats('svg')
-
-def reset_plt_params():
-    """reset matplotlib parameters - often useful"""
-    use_svg_display()
-    mpl.rcParams.update(mpl.rcParamsDefault)
-
-def show_plot(legend=False):
-    use_svg_display()
-    plt.tight_layout();
-    plt.show()
-    if legend:
-        plt.legend(loc='best')
-        
-def set_figsize(get_axes=False,figsize=(7, 7)):
-    use_svg_display()
-    plt.rcParams['figure.figsize'] = figsize
-    if get_axes:
-        fig, ax = plt.subplots(1,1, figsize=figsize)
-        return fig, ax
-    
-def set_axes(ax, xlabel, ylabel=None, xmin=None, xmax=None, ymin=None, ymax=None, title=None):
-    """saves a lot of time in explicitly difining each axis, its title and labels: do them all in one go"""
-    use_svg_display()
-    ax.set_xlabel(xlabel,fontsize=font_axes)
-    if ylabel:
-        ax.set_ylabel(ylabel,fontsize=font_axes)
-    if xmin and xmax:
-        ax.set_xlim(xmin, xmax)
-    
-    if ax.get_title()  != '':
-        #if the axes (plot) does have a title (which is non-empty string), display it 
-        ax.set_title(title)
-    if ax.legend():
-        #if an axis has a legned label, display it
-        ax.legend(loc='best',fontsize=font_legend)
-    if ymin and ymax:
-        #sometimes we dont have ylimits since we do a lot of histograms, but if an axis has ylimits, set them
-        ax.set_ylim(ymin, ymax)
-    
-    try:
-        fig.show()
-    except Exception:
-        pass
-    plt.tight_layout()
-    plt.show()
-
+# # Data
 
 # In[8]:
 
@@ -272,6 +287,8 @@ loss_y_label_dict ={'RecoDatapT':'$p_T^{reco}$',
 
 # <!-- For Davidson team, please read try to all the code/comments before asking me questions! -->
 
+# Decide on an evaluation order 
+
 # In[10]:
 
 
@@ -281,6 +298,7 @@ X       = ['genDatapT', 'genDataeta', 'genDataphi', 'genDatam', 'tau']
 #set order of training:
 #pT_first: pT->>m->eta->phi
 #m_first: m->pT->eta->phi
+
 ORDER='m_First'
 
 if ORDER=='m_First':
@@ -305,6 +323,8 @@ if ORDER=='m_First':
                                'xmax'  :3.2}
               }
 
+
+# Load and explore raw (unscaled) dataframes
 
 # In[11]:
 
@@ -387,7 +407,9 @@ raw_test_data.describe()#unscaled
 # np.array(train_data['genDatapT'])
 
 
-# standarization is someimes done in the following way:
+# # Scaling
+# 
+# scaling (or standarization, normalization) is someimes done in the following way:
 # $$ X' = \frac{X-X_{min}}{X_{max}-X_{min}} \qquad \rightarrow \qquad X= X' (X_{max}-X_{min}) + X_{min}$$
 
 # In[17]:
@@ -402,20 +424,20 @@ raw_test_data.describe()#unscaled
 
 
 # Or by taking z-score:
-# $$ X'=\frac{X-E[X]}{\sigma_{X}}  \qquad \rightarrow \qquad X = X' \sigma_{X} + E[X]$$
-
-# ## Results prior to Braden-scaling
 # 
-# Recall that the best IQNx4 autoregressive results that I attained prior to trying the Braden scaling was the following (which was implemented in the Davidson cluster here: `/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/OCT_7/*.py` and copied to my repo [here](https://github.com/AliAlkadhim/torchQN/tree/master/OCT_7)):
+# $$ X'=z(X)=\frac{X-E[X]}{\sigma_{X}}  \qquad \rightarrow \qquad X = z^{-1}(X')= X' \sigma_{X} + E[X].$$
 # 
 
-# In[18]:
-
-
-show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height = 100)
-
-
-# For a jet observable $\mathcal{O}$ (or $\tau$), the data is first scaled according to:
+# # Braden scaling 
+# 
+# In the IQN-scipost overleaf, we say the scaling is the following:
+# 
+# $$\mathbb{T}(p_T) = z(\log p_T), \qquad \mathbb{T}(\eta) = z(\eta), \qquad \mathbb{T}(\phi) = z(\phi), \qquad \mathbb{T}(m) = z(\log (m + 2))$$ 
+# 
+# $$ \mathbb{T}(\tau) = 6\tau - 3 $$
+# 
+# 
+# Which means, for a jet observable $\mathcal{O}$ (or quantile $\tau$), the Braden-scaling perscribes that the data is first scaled according to:
 # 
 # $$
 # \begin{align}
@@ -430,16 +452,23 @@ show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height =
 # \end{align}
 # $$
 # 
-# Then the predicted target for a desired reco observable $\mathcal{O}$ is chosen to be the following function
+# We also say we use the following as targets
 # 
 # $$
-#     \mathbb{T}(O) = z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
+# z\left(\frac{y_n + 10}{x_n + 10}\right), \qquad n = 1,\cdots,4,
+# \label{eq:normalization}
+# $$
+# 
+# We mean that the predicted target for a desired reco observable $\mathcal{O}$ is chosen to be the following function
+# 
+# $$
+#     \mathbb{T}(\mathcal{O}) = z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
 # $$
 # 
 # where for a random variable $x$, $z$ is the standardization function (z-score):
 # 
 # $$
-#    x'= z (x) \equiv \frac{x-\bar{x}}{\sigma_{x}}.
+#    x'= z (x) \equiv \frac{x-\bar{x}}{\sigma_{x}} \ .
 # $$
 # 
 # Such that its inverse is 
@@ -456,22 +485,17 @@ show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height =
 #         f_{\text{IQN}} (\mathcal{O}) \approx  z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
 # $$
 # 
-# which needs to be de-scaled (when evaluated on the data that which has been scaled according to $\mathbb{T}(\text{evaluation data}) = z \left( \frac{\mathbb{L} (\text{data}^{\text{reco}}) +10 }{\mathbb{L}(\text{data}^{\text{gen}}) +10} \right) $
-# )
-# in order to copare with $\mathcal{O}$ directly. The descaling for $\mathcal{O}=p_T$ (as an example) would be:
+# which needs to be de-scaled (when evaluated on the data that which has been scaled according to 
+# 
+# $$\mathbb{T}(\text{evaluation data}) = z \left( \frac{\mathbb{L} (\text{data}^{\text{reco}}) +10 }{\mathbb{L}(\text{data}^{\text{gen}}) +10} \right) $$
+# 
+# 
+# in order to copare with $\mathcal{O}$ directly.) The descaling for $\mathcal{O}=p_T$ (as an example) would be:
 # 
 # $$
 #     p_T^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (p_T^\text{gen})+10 \right] -10 \right]
 # $$
 # 
-
-# # Braden Scaling
-# 
-# ## Scale the data accoding to the "Braden Kronheim scaling" :
-# 
-# $$\mathbb{T}(p_T) = z(\log p_T), \qquad \mathbb{T}(\eta) = z(\eta), \qquad \mathbb{T}(\phi) = z(\phi), \qquad \mathbb{T}(m) = z(\log (m + 2))$$ 
-# 
-# $$ \mathbb{T}(\tau) = 6\tau - 3 $$
 
 # -----------
 # 
@@ -485,7 +509,16 @@ show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height =
 # 5. Once the training is done, *evaluate the NN on transformed features of the test set* $X_{test}'$, i.e. do $NN(X_{test}')$, which will result in a scaled prediction of the target $y_{pred}'$
 # 6. Unscale the $y_{pred}'$, i.e. apply the inverse of the scaling operation, e.g.
 # $$ y_{pred}=z^{-1}(y_{pred}')= y_{pred}' \sigma_{y} + E[y]$$,
-# where $\sigma{y}$ and $E[y]$ are attained from the test set *prior to training and scaling*.
+# where 
+# 
+# $$\sigma{y}$$
+# 
+# and 
+# 
+# $$E[y]$$
+# 
+# are attained from the test set *prior to training and scaling*.
+# 
 # 7. Compare to $y$ (the actual distribution you're trying to estimate) one-to-one
 
 # In[19]:
@@ -494,6 +527,10 @@ show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height =
 use_svg_display()
 show_jupyter_image('images/scaling_forNN.jpg', width=2000,height=500)
 
+
+# 
+# ## Scale the data accoding to the "Braden Kronheim scaling" :
+# 
 
 # In[20]:
 
@@ -692,7 +729,7 @@ plt.legend();plt.show()
 # 
 # where $L$ is the loss function, $f$ is the model (in this case IQN) (implicitly parameterized by potentially a  gazillion parameters), $y$ is the target(s) that we want to estimate, $x$ is the (set of) training features, $R$ is the risk functional:
 # 
-# $$ R[f] = \int \cdots \int \, p(t, \mathbf{x}) \, L(t, f(\mathbf{x}, \theta)) \, dt \, d\mathbf{x}$$
+# $$ R[f] = \int \cdots \int \, p(t, \mathbf{x}) \, L(f(\mathbf{x}, \theta), y) \, dy \, d\mathbf{x}$$
 # 
 # 
 # So, for IQNs,
@@ -702,7 +739,7 @@ plt.legend();plt.show()
 # (1-\tau)(f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})-y) & y<f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})
 # \end{array},\right.$$
 # 
-# Means that what was done previously is that the risk functional, which is generally a functional of many models $f$, was a only a functional of a single model: $R[f_1,..., f_n] = f[f_1]$. Here we have 4 models 
+# Means that what was done previously is that the risk functional, which could be a functional of many models $f$, was a only a functional of a single model: $R[f_1,..., f_n] = f[f_1]$. Here we have 4 models 
 # 
 # $$R_{\text{IQN}x4} =R_{\text{IQN}}[f_m, f_{p_T}, f_\eta, f_\phi], $$ 
 # 
@@ -716,7 +753,6 @@ plt.legend();plt.show()
 #     & \times p(\eta'| \mathbf{x}, m', p_T' )\nonumber\\
 #       & \times p(\phi' |  \mathbf{x}, m', p_T', \eta' ) ,
 # \end{align}
-# 
 # $$
 # 
 # 
@@ -727,7 +763,7 @@ plt.legend();plt.show()
 # &\times \int L_\text{IQN} \left( f_\phi (\mathbf{x_\phi},\tau), \mathbf{y_\phi} \right) p(\mathbf{x_\phi, y_\phi})  d \mathbf{x_\phi} d \mathbf{y_\phi}
 # \end{align},$$
 # 
-# where, again, each model $f_i$ is also dependent on a set of parameters $\theta_i$ (dropped for simplicity)
+# where, again, each model $f_i$ is also dependent on a set of parameters $\theta_i$ (dropped for simplicity).
 
 # Our risk functional is minimized for
 # 
@@ -755,18 +791,24 @@ plt.legend();plt.show()
 # >> ...
 # <br>
 # 
-# Expand Eq (2) in Eq (7) and integrate wrt y to see that  $f(\mathbf{x},\mathbf{\tau})$ is the quantile function for $p(\mathbf{y}|\mathbf{x})$, i.e. (I believe) that IQNx4 should work basically exactly.
+# Expand Eq (2) in Eq (7) and integrate wrt y over the appropriate limits to see that  $f(\mathbf{x},\mathbf{\tau})$ is the quantile function for $p(\mathbf{y}|\mathbf{x})$, i.e. (I believe) that IQNx4 should work basically exactly.
 
 # $$R_{\text{IQN}x4} = [ L \left( f_m( \{ p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}, m^\text{reco} ) $$
 # # Train Mass
 # 
-# for mass, $\mathbf{y_m}=m_{\text{reco}}$ and $\mathbf{x_m}=\{p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}$.
+# for mass, 
+# 
+# $$\mathbf{y_m}=m_{\text{reco}}$$
+# 
+# and 
+# 
+# $$\mathbf{x_m}=\{p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}.$$
 # 
 
-# In[30]:
+# In[1]:
 
 
-show_jupyter_image('images/IQN_training_flowchart.png',width=2000,height=600)
+show_jupyter_image('images/IQN_training_flowchart.png',width=2000,height=1000)
 
 
 # ### Batches, validation, losses, and plotting of losses functions

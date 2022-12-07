@@ -327,6 +327,13 @@ title="Print to PDF"
      </li>
     </ul>
    </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#results-prior-to-braden-scaling">
+   Results prior to Braden-scaling
+  </a>
+  <ul class="visible nav section-nav flex-column">
    <li class="toc-h2 nav-item toc-entry">
     <a class="reference internal nav-link" href="#set-arguments-and-configurations">
      Set arguments and configurations
@@ -345,27 +352,30 @@ title="Print to PDF"
   <a class="reference internal nav-link" href="#explore-the-dataframe-and-preprocess">
    Explore the Dataframe and preprocess
   </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#results-prior-to-braden-scaling">
-     Results prior to Braden-scaling
-    </a>
-   </li>
-  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#data">
+   Data
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scaling">
+   Scaling
+  </a>
  </li>
  <li class="toc-h1 nav-item toc-entry">
   <a class="reference internal nav-link" href="#braden-scaling">
-   Braden Scaling
+   Braden scaling
   </a>
   <ul class="visible nav section-nav flex-column">
    <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#scale-the-data-accoding-to-the-braden-kronheim-scaling">
-     Scale the data accoding to the “Braden Kronheim scaling” :
+    <a class="reference internal nav-link" href="#basically-a-standard-scaling-procedure-is-the-following-background">
+     Basically a “standard scaling procedure” is the following (background):
     </a>
    </li>
    <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#basically-a-standard-scaling-procedure-is-the-following-background">
-     Basically a “standard scaling procedure” is the following (background):
+    <a class="reference internal nav-link" href="#scale-the-data-accoding-to-the-braden-kronheim-scaling">
+     Scale the data accoding to the “Braden Kronheim scaling” :
     </a>
    </li>
   </ul>
@@ -508,6 +518,13 @@ title="Print to PDF"
      </li>
     </ul>
    </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#results-prior-to-braden-scaling">
+   Results prior to Braden-scaling
+  </a>
+  <ul class="visible nav section-nav flex-column">
    <li class="toc-h2 nav-item toc-entry">
     <a class="reference internal nav-link" href="#set-arguments-and-configurations">
      Set arguments and configurations
@@ -526,27 +543,30 @@ title="Print to PDF"
   <a class="reference internal nav-link" href="#explore-the-dataframe-and-preprocess">
    Explore the Dataframe and preprocess
   </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#results-prior-to-braden-scaling">
-     Results prior to Braden-scaling
-    </a>
-   </li>
-  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#data">
+   Data
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scaling">
+   Scaling
+  </a>
  </li>
  <li class="toc-h1 nav-item toc-entry">
   <a class="reference internal nav-link" href="#braden-scaling">
-   Braden Scaling
+   Braden scaling
   </a>
   <ul class="visible nav section-nav flex-column">
    <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#scale-the-data-accoding-to-the-braden-kronheim-scaling">
-     Scale the data accoding to the “Braden Kronheim scaling” :
+    <a class="reference internal nav-link" href="#basically-a-standard-scaling-procedure-is-the-following-background">
+     Basically a “standard scaling procedure” is the following (background):
     </a>
    </li>
    <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#basically-a-standard-scaling-procedure-is-the-following-background">
-     Basically a “standard scaling procedure” is the following (background):
+    <a class="reference internal nav-link" href="#scale-the-data-accoding-to-the-braden-kronheim-scaling">
+     Scale the data accoding to the “Braden Kronheim scaling” :
     </a>
    </li>
   </ul>
@@ -743,6 +763,84 @@ DATA directory also properly set, in /home/ali/Desktop/Pulled_Github_Repositorie
 </div>
 </div>
 </div>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="results-prior-to-braden-scaling">
+<h1>Results prior to Braden-scaling<a class="headerlink" href="#results-prior-to-braden-scaling" title="Permalink to this headline">#</a></h1>
+<p>Recall that the best IQNx4 autoregressive results that I attained prior to trying the Braden scaling was the following (which was implemented in the Davidson cluster here: <code class="docutils literal notranslate"><span class="pre">/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/OCT_7/*.py</span></code> and copied to my repo <a class="reference external" href="https://github.com/AliAlkadhim/torchQN/tree/master/OCT_7">here</a> )</p>
+<p>Plotting and image functions</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">show_jupyter_image</span><span class="p">(</span><span class="n">image_filename</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">1300</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">300</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Show a saved image directly in jupyter. Make sure image_filename is in your IQN_BASE !&quot;&quot;&quot;</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span><span class="n">image_filename</span><span class="p">),</span> <span class="n">width</span> <span class="o">=</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">height</span>  <span class="p">))</span>
+    
+    
+<span class="k">def</span> <span class="nf">use_svg_display</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Use the svg format to display a plot in Jupyter (better quality)&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">matplotlib_inline</span> <span class="kn">import</span> <span class="n">backend_inline</span>
+    <span class="n">backend_inline</span><span class="o">.</span><span class="n">set_matplotlib_formats</span><span class="p">(</span><span class="s1">&#39;svg&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">reset_plt_params</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;reset matplotlib parameters - often useful&quot;&quot;&quot;</span>
+    <span class="n">use_svg_display</span><span class="p">()</span>
+    <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParamsDefault</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">show_plot</span><span class="p">(</span><span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">use_svg_display</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">legend</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+        
+<span class="k">def</span> <span class="nf">set_figsize</span><span class="p">(</span><span class="n">get_axes</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">)):</span>
+    <span class="n">use_svg_display</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">figsize</span>
+    <span class="k">if</span> <span class="n">get_axes</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span>
+    
+<span class="k">def</span> <span class="nf">set_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;saves a lot of time in explicitly difining each axis, its title and labels: do them all in one go&quot;&quot;&quot;</span>
+    <span class="n">use_svg_display</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">font_axes</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ylabel</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">font_axes</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">xmin</span> <span class="ow">and</span> <span class="n">xmax</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_title</span><span class="p">()</span>  <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="c1">#if the axes (plot) does have a title (which is non-empty string), display it </span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">():</span>
+        <span class="c1">#if an axis has a legned label, display it</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">font_legend</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ymin</span> <span class="ow">and</span> <span class="n">ymax</span><span class="p">:</span>
+        <span class="c1">#sometimes we dont have ylimits since we do a lot of histograms, but if an axis has ylimits, set them</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_jupyter_image</span><span class="p">(</span><span class="s1">&#39;OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png&#39;</span><span class="p">,</span><span class="n">width</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/Braden_Scaling_TrainEval_Mass_12_0.png" src="_images/Braden_Scaling_TrainEval_Mass_12_0.png" />
+</div>
+</div>
+<p>So we know IQNx4 works (but not perfect enough), but in this notebook we try the Braden scaling (first time trying this scaling) to see if we can do better.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># update fonts</span>
@@ -767,11 +865,9 @@ DATA directory also properly set, in /home/ali/Desktop/Pulled_Github_Repositorie
 </div>
 <div class="cell_output docutils container">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "8181d231a30241799e1e5de016e69ef0", "version_major": 2, "version_minor": 0}
+{"model_id": "5b179cf8df66487db9ca19a38e85d642", "version_major": 2, "version_minor": 0}
 </script></div>
 </div>
-</section>
-</section>
 <section id="set-arguments-and-configurations">
 <h2>Set arguments and configurations<a class="headerlink" href="#set-arguments-and-configurations" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
@@ -841,67 +937,9 @@ DATA directory also properly set, in /home/ali/Desktop/Pulled_Github_Repositorie
 <section class="tex2jax_ignore mathjax_ignore" id="explore-the-dataframe-and-preprocess">
 <h1>Explore the Dataframe and preprocess<a class="headerlink" href="#explore-the-dataframe-and-preprocess" title="Permalink to this headline">#</a></h1>
 <p>another flowchart for how IQN works autoregressively to get <span class="math notranslate nohighlight">\(p_T'\)</span>, etc</p>
-<p>Plotting</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">show_jupyter_image</span><span class="p">(</span><span class="n">image_filename</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">1300</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">300</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Show a saved image directly in jupyter. Make sure image_filename is in your IQN_BASE !&quot;&quot;&quot;</span>
-    <span class="n">display</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span><span class="n">image_filename</span><span class="p">),</span> <span class="n">width</span> <span class="o">=</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">height</span>  <span class="p">))</span>
-    
-    
-<span class="k">def</span> <span class="nf">use_svg_display</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Use the svg format to display a plot in Jupyter (better quality)&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">matplotlib_inline</span> <span class="kn">import</span> <span class="n">backend_inline</span>
-    <span class="n">backend_inline</span><span class="o">.</span><span class="n">set_matplotlib_formats</span><span class="p">(</span><span class="s1">&#39;svg&#39;</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">reset_plt_params</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;reset matplotlib parameters - often useful&quot;&quot;&quot;</span>
-    <span class="n">use_svg_display</span><span class="p">()</span>
-    <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParamsDefault</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">show_plot</span><span class="p">(</span><span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="n">use_svg_display</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">legend</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
-        
-<span class="k">def</span> <span class="nf">set_figsize</span><span class="p">(</span><span class="n">get_axes</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">)):</span>
-    <span class="n">use_svg_display</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">figsize</span>
-    <span class="k">if</span> <span class="n">get_axes</span><span class="p">:</span>
-        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span>
-    
-<span class="k">def</span> <span class="nf">set_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;saves a lot of time in explicitly difining each axis, its title and labels: do them all in one go&quot;&quot;&quot;</span>
-    <span class="n">use_svg_display</span><span class="p">()</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">font_axes</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">ylabel</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">font_axes</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">xmin</span> <span class="ow">and</span> <span class="n">xmax</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span>
-    
-    <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_title</span><span class="p">()</span>  <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="c1">#if the axes (plot) does have a title (which is non-empty string), display it </span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">():</span>
-        <span class="c1">#if an axis has a legned label, display it</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">font_legend</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">ymin</span> <span class="ow">and</span> <span class="n">ymax</span><span class="p">:</span>
-        <span class="c1">#sometimes we dont have ylimits since we do a lot of histograms, but if an axis has ylimits, set them</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
-    
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">pass</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="data">
+<h1>Data<a class="headerlink" href="#data" title="Permalink to this headline">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">use_svg_display</span><span class="p">()</span>
@@ -910,7 +948,7 @@ DATA directory also properly set, in /home/ali/Desktop/Pulled_Github_Repositorie
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_17_0.png" src="_images/Braden_Scaling_TrainEval_Mass_17_0.png" />
+<img alt="_images/Braden_Scaling_TrainEval_Mass_21_0.png" src="_images/Braden_Scaling_TrainEval_Mass_21_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -927,7 +965,8 @@ DATA directory also properly set, in /home/ali/Desktop/Pulled_Github_Repositorie
 </div>
 </div>
 </div>
-<!-- For Davidson team, please read try to all the code/comments before asking me questions! --><div class="cell docutils container">
+<!-- For Davidson team, please read try to all the code/comments before asking me questions! --><p>Decide on an evaluation order</p>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">################################### SET DATA CONFIGURATIONS ###################################</span>
 <span class="n">X</span>       <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;genDatapT&#39;</span><span class="p">,</span> <span class="s1">&#39;genDataeta&#39;</span><span class="p">,</span> <span class="s1">&#39;genDataphi&#39;</span><span class="p">,</span> <span class="s1">&#39;genDatam&#39;</span><span class="p">,</span> <span class="s1">&#39;tau&#39;</span><span class="p">]</span>
@@ -935,6 +974,7 @@ DATA directory also properly set, in /home/ali/Desktop/Pulled_Github_Repositorie
 <span class="c1">#set order of training:</span>
 <span class="c1">#pT_first: pT-&gt;&gt;m-&gt;eta-&gt;phi</span>
 <span class="c1">#m_first: m-&gt;pT-&gt;eta-&gt;phi</span>
+
 <span class="n">ORDER</span><span class="o">=</span><span class="s1">&#39;m_First&#39;</span>
 
 <span class="k">if</span> <span class="n">ORDER</span><span class="o">==</span><span class="s1">&#39;m_First&#39;</span><span class="p">:</span>
@@ -962,6 +1002,7 @@ DATA directory also properly set, in /home/ali/Desktop/Pulled_Github_Repositorie
 </div>
 </div>
 </div>
+<p>Load and explore raw (unscaled) dataframes</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_variable_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;genDatapT&#39;</span><span class="p">,</span> <span class="s1">&#39;genDataeta&#39;</span><span class="p">,</span> <span class="s1">&#39;genDataphi&#39;</span><span class="p">,</span> <span class="s1">&#39;genDatam&#39;</span><span class="p">,</span><span class="s1">&#39;RecoDatapT&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDataeta&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDataphi&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDatam&#39;</span><span class="p">]</span>
@@ -1034,7 +1075,7 @@ Reco_var:  RecoDataphi , 	 gen_var:  genDataphi
 Reco_var:  RecoDatam , 	 gen_var:  genDatam
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_23_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_23_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_29_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_29_1.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1325,7 +1366,10 @@ Reco_var:  RecoDatam , 	 gen_var:  genDatam
 </div>
 </div>
 </div>
-<p>standarization is someimes done in the following way:
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="scaling">
+<h1>Scaling<a class="headerlink" href="#scaling" title="Permalink to this headline">#</a></h1>
+<p>scaling (or standarization, normalization) is someimes done in the following way:
 $<span class="math notranslate nohighlight">\( X' = \frac{X-X_{min}}{X_{max}-X_{min}} \qquad \rightarrow \qquad X= X' (X_{max}-X_{min}) + X_{min}\)</span>$</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1339,22 +1383,18 @@ $<span class="math notranslate nohighlight">\( X' = \frac{X-X_{min}}{X_{max}-X_{
 </div>
 </div>
 </div>
-<p>Or by taking z-score:
-$<span class="math notranslate nohighlight">\( X'=\frac{X-E[X]}{\sigma_{X}}  \qquad \rightarrow \qquad X = X' \sigma_{X} + E[X]\)</span>$</p>
-<section id="results-prior-to-braden-scaling">
-<h2>Results prior to Braden-scaling<a class="headerlink" href="#results-prior-to-braden-scaling" title="Permalink to this headline">#</a></h2>
-<p>Recall that the best IQNx4 autoregressive results that I attained prior to trying the Braden scaling was the following (which was implemented in the Davidson cluster here: <code class="docutils literal notranslate"><span class="pre">/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/OCT_7/*.py</span></code> and copied to my repo <a class="reference external" href="https://github.com/AliAlkadhim/torchQN/tree/master/OCT_7">here</a>):</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_jupyter_image</span><span class="p">(</span><span class="s1">&#39;OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png&#39;</span><span class="p">,</span><span class="n">width</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_31_0.png" src="_images/Braden_Scaling_TrainEval_Mass_31_0.png" />
-</div>
-</div>
-<p>For a jet observable <span class="math notranslate nohighlight">\(\mathcal{O}\)</span> (or <span class="math notranslate nohighlight">\(\tau\)</span>), the data is first scaled according to:</p>
+<p>Or by taking z-score:</p>
+<div class="math notranslate nohighlight">
+\[ X'=z(X)=\frac{X-E[X]}{\sigma_{X}}  \qquad \rightarrow \qquad X = z^{-1}(X')= X' \sigma_{X} + E[X].\]</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="braden-scaling">
+<h1>Braden scaling<a class="headerlink" href="#braden-scaling" title="Permalink to this headline">#</a></h1>
+<p>In the IQN-scipost overleaf, we say the scaling is the following:</p>
+<div class="math notranslate nohighlight">
+\[\mathbb{T}(p_T) = z(\log p_T), \qquad \mathbb{T}(\eta) = z(\eta), \qquad \mathbb{T}(\phi) = z(\phi), \qquad \mathbb{T}(m) = z(\log (m + 2))\]</div>
+<div class="math notranslate nohighlight">
+\[ \mathbb{T}(\tau) = 6\tau - 3 \]</div>
+<p>Which means, for a jet observable <span class="math notranslate nohighlight">\(\mathcal{O}\)</span> (or quantile <span class="math notranslate nohighlight">\(\tau\)</span>), the Braden-scaling perscribes that the data is first scaled according to:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
@@ -1368,15 +1408,21 @@ $<span class="math notranslate nohighlight">\( X'=\frac{X-E[X]}{\sigma_{X}}  \qq
     \end{cases}
 \end{align}
 \end{split}\]</div>
-<p>Then the predicted target for a desired reco observable <span class="math notranslate nohighlight">\(\mathcal{O}\)</span> is chosen to be the following function</p>
+<p>We also say we use the following as targets</p>
 <div class="math notranslate nohighlight">
 \[
-    \mathbb{T}(O) = z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
+z\left(\frac{y_n + 10}{x_n + 10}\right), \qquad n = 1,\cdots,4,
+\label{eq:normalization}
+\]</div>
+<p>We mean that the predicted target for a desired reco observable <span class="math notranslate nohighlight">\(\mathcal{O}\)</span> is chosen to be the following function</p>
+<div class="math notranslate nohighlight">
+\[
+    \mathbb{T}(\mathcal{O}) = z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
 \]</div>
 <p>where for a random variable <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(z\)</span> is the standardization function (z-score):</p>
 <div class="math notranslate nohighlight">
 \[
-   x'= z (x) \equiv \frac{x-\bar{x}}{\sigma_{x}}.
+   x'= z (x) \equiv \frac{x-\bar{x}}{\sigma_{x}} \ .
 \]</div>
 <p>Such that its inverse is</p>
 <div class="math notranslate nohighlight">
@@ -1389,24 +1435,14 @@ $<span class="math notranslate nohighlight">\( X'=\frac{X-E[X]}{\sigma_{X}}  \qq
 \[
         f_{\text{IQN}} (\mathcal{O}) \approx  z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
 \]</div>
-<p>which needs to be de-scaled (when evaluated on the data that which has been scaled according to <span class="math notranslate nohighlight">\(\mathbb{T}(\text{evaluation data}) = z \left( \frac{\mathbb{L} (\text{data}^{\text{reco}}) +10 }{\mathbb{L}(\text{data}^{\text{gen}}) +10} \right) \)</span>
-)
-in order to copare with <span class="math notranslate nohighlight">\(\mathcal{O}\)</span> directly. The descaling for <span class="math notranslate nohighlight">\(\mathcal{O}=p_T\)</span> (as an example) would be:</p>
+<p>which needs to be de-scaled (when evaluated on the data that which has been scaled according to</p>
+<div class="math notranslate nohighlight">
+\[\mathbb{T}(\text{evaluation data}) = z \left( \frac{\mathbb{L} (\text{data}^{\text{reco}}) +10 }{\mathbb{L}(\text{data}^{\text{gen}}) +10} \right) \]</div>
+<p>in order to copare with <span class="math notranslate nohighlight">\(\mathcal{O}\)</span> directly.) The descaling for <span class="math notranslate nohighlight">\(\mathcal{O}=p_T\)</span> (as an example) would be:</p>
 <div class="math notranslate nohighlight">
 \[
     p_T^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (p_T^\text{gen})+10 \right] -10 \right]
 \]</div>
-</section>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="braden-scaling">
-<h1>Braden Scaling<a class="headerlink" href="#braden-scaling" title="Permalink to this headline">#</a></h1>
-<section id="scale-the-data-accoding-to-the-braden-kronheim-scaling">
-<h2>Scale the data accoding to the “Braden Kronheim scaling” :<a class="headerlink" href="#scale-the-data-accoding-to-the-braden-kronheim-scaling" title="Permalink to this headline">#</a></h2>
-<div class="math notranslate nohighlight">
-\[\mathbb{T}(p_T) = z(\log p_T), \qquad \mathbb{T}(\eta) = z(\eta), \qquad \mathbb{T}(\phi) = z(\phi), \qquad \mathbb{T}(m) = z(\log (m + 2))\]</div>
-<div class="math notranslate nohighlight">
-\[ \mathbb{T}(\tau) = 6\tau - 3 \]</div>
-</section>
 <hr class="docutils" />
 <section id="basically-a-standard-scaling-procedure-is-the-following-background">
 <h2>Basically a “standard scaling procedure” is the following (background):<a class="headerlink" href="#basically-a-standard-scaling-procedure-is-the-following-background" title="Permalink to this headline">#</a></h2>
@@ -1418,8 +1454,16 @@ $<span class="math notranslate nohighlight">\( X'=z(X)= \frac{X-E[X]}{\sigma_{X}
 <li><p>Train NN on transformed features <span class="math notranslate nohighlight">\(X_{train}'\)</span> (and target <span class="math notranslate nohighlight">\(y_{train}'\)</span>) (in train df, but validate on test set, which will not influence the weights of NN ( just used for observation that it doesnt overfit) )</p></li>
 <li><p>Once the training is done, <em>evaluate the NN on transformed features of the test set</em> <span class="math notranslate nohighlight">\(X_{test}'\)</span>, i.e. do <span class="math notranslate nohighlight">\(NN(X_{test}')\)</span>, which will result in a scaled prediction of the target <span class="math notranslate nohighlight">\(y_{pred}'\)</span></p></li>
 <li><p>Unscale the <span class="math notranslate nohighlight">\(y_{pred}'\)</span>, i.e. apply the inverse of the scaling operation, e.g.
-$<span class="math notranslate nohighlight">\( y_{pred}=z^{-1}(y_{pred}')= y_{pred}' \sigma_{y} + E[y]\)</span><span class="math notranslate nohighlight">\(,
-where \)</span>\sigma{y}<span class="math notranslate nohighlight">\( and \)</span>E[y]$ are attained from the test set <em>prior to training and scaling</em>.</p></li>
+$<span class="math notranslate nohighlight">\( y_{pred}=z^{-1}(y_{pred}')= y_{pred}' \sigma_{y} + E[y]\)</span>$,
+where</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\sigma{y}\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[E[y]\]</div>
+<p>are attained from the test set <em>prior to training and scaling</em>.</p>
+<ol class="simple">
 <li><p>Compare to <span class="math notranslate nohighlight">\(y\)</span> (the actual distribution you’re trying to estimate) one-to-one</p></li>
 </ol>
 <div class="cell docutils container">
@@ -1430,9 +1474,12 @@ where \)</span>\sigma{y}<span class="math notranslate nohighlight">\( and \)</sp
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_35_0.jpg" src="_images/Braden_Scaling_TrainEval_Mass_35_0.jpg" />
+<img alt="_images/Braden_Scaling_TrainEval_Mass_38_0.jpg" src="_images/Braden_Scaling_TrainEval_Mass_38_0.jpg" />
 </div>
 </div>
+</section>
+<section id="scale-the-data-accoding-to-the-braden-kronheim-scaling">
+<h2>Scale the data accoding to the “Braden Kronheim scaling” :<a class="headerlink" href="#scale-the-data-accoding-to-the-braden-kronheim-scaling" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">z</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
@@ -1672,7 +1719,7 @@ Reco_var:  RecoDataphi , 	 gen_var:  genDataphi
 Reco_var:  RecoDatam , 	 gen_var:  genDatam
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_43_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_43_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_47_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_47_1.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1691,7 +1738,7 @@ Reco_var:  RecoDatam , 	 gen_var:  genDatam
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_44_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_44_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_48_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_48_0.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1721,14 +1768,14 @@ Reco_var:  RecoDatam , 	 gen_var:  genDatam
 \[ \frac{\delta R}{\delta f}=0,\]</div>
 <p>where <span class="math notranslate nohighlight">\(L\)</span> is the loss function, <span class="math notranslate nohighlight">\(f\)</span> is the model (in this case IQN) (implicitly parameterized by potentially a  gazillion parameters), <span class="math notranslate nohighlight">\(y\)</span> is the target(s) that we want to estimate, <span class="math notranslate nohighlight">\(x\)</span> is the (set of) training features, <span class="math notranslate nohighlight">\(R\)</span> is the risk functional:</p>
 <div class="math notranslate nohighlight">
-\[ R[f] = \int \cdots \int \, p(t, \mathbf{x}) \, L(t, f(\mathbf{x}, \theta)) \, dt \, d\mathbf{x}\]</div>
+\[ R[f] = \int \cdots \int \, p(t, \mathbf{x}) \, L(f(\mathbf{x}, \theta), y) \, dy \, d\mathbf{x}\]</div>
 <p>So, for IQNs,</p>
 <div class="math notranslate nohighlight">
 \[\begin{split} L_{\text{IQN}}(f, y)=\left\{\begin{array}{ll}
 \tau(y-f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})) &amp; y \geq f(\boldsymbol{x}, \tau ; \boldsymbol{\theta}) \\
 (1-\tau)(f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})-y) &amp; y&lt;f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})
 \end{array},\right.\end{split}\]</div>
-<p>Means that what was done previously is that the risk functional, which is generally a functional of many models <span class="math notranslate nohighlight">\(f\)</span>, was a only a functional of a single model: <span class="math notranslate nohighlight">\(R[f_1,..., f_n] = f[f_1]\)</span>. Here we have 4 models</p>
+<p>Means that what was done previously is that the risk functional, which could be a functional of many models <span class="math notranslate nohighlight">\(f\)</span>, was a only a functional of a single model: <span class="math notranslate nohighlight">\(R[f_1,..., f_n] = f[f_1]\)</span>. Here we have 4 models</p>
 <div class="math notranslate nohighlight">
 \[R_{\text{IQN}x4} =R_{\text{IQN}}[f_m, f_{p_T}, f_\eta, f_\phi], \]</div>
 <p>and since we’re choosing the evaluation order:</p>
@@ -1740,14 +1787,15 @@ Reco_var:  RecoDatam , 	 gen_var:  genDatam
     &amp; \times p(p_T'|\mathbf{x}, m' )\nonumber\\
     &amp; \times p(\eta'| \mathbf{x}, m', p_T' )\nonumber\\
       &amp; \times p(\phi' |  \mathbf{x}, m', p_T', \eta' ) ,
-\end{align}\end{split}\]</div>
+\end{align}
+\end{split}\]</div>
 <div class="math notranslate nohighlight">
 \[\begin{split} \begin{align}
 R_{\text{IQN}x4} &amp;= \int L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathbf{y_m} \right) p(\mathbf{x_m, y_m})  d \mathbf{x_m} d \mathbf{y_m} \\
 &amp;\times \  ... \times \\ 
 &amp;\times \int L_\text{IQN} \left( f_\phi (\mathbf{x_\phi},\tau), \mathbf{y_\phi} \right) p(\mathbf{x_\phi, y_\phi})  d \mathbf{x_\phi} d \mathbf{y_\phi}
 \end{align},\end{split}\]</div>
-<p>where, again, each model <span class="math notranslate nohighlight">\(f_i\)</span> is also dependent on a set of parameters <span class="math notranslate nohighlight">\(\theta_i\)</span> (dropped for simplicity)</p>
+<p>where, again, each model <span class="math notranslate nohighlight">\(f_i\)</span> is also dependent on a set of parameters <span class="math notranslate nohighlight">\(\theta_i\)</span> (dropped for simplicity).</p>
 <p>Our risk functional is minimized for</p>
 <div class="math notranslate nohighlight">
 \[\frac{\delta R_{\text{IQN}x4} }{\delta f_m}=0\tag{5}\]</div>
@@ -1772,21 +1820,33 @@ R_{\text{IQN}x4} &amp;= \int L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathb
 <br></p>
 </div></blockquote>
 </div></blockquote>
-<p>Expand Eq (2) in Eq (7) and integrate wrt y to see that  <span class="math notranslate nohighlight">\(f(\mathbf{x},\mathbf{\tau})\)</span> is the quantile function for <span class="math notranslate nohighlight">\(p(\mathbf{y}|\mathbf{x})\)</span>, i.e. (I believe) that IQNx4 should work basically exactly.</p>
+<p>Expand Eq (2) in Eq (7) and integrate wrt y over the appropriate limits to see that  <span class="math notranslate nohighlight">\(f(\mathbf{x},\mathbf{\tau})\)</span> is the quantile function for <span class="math notranslate nohighlight">\(p(\mathbf{y}|\mathbf{x})\)</span>, i.e. (I believe) that IQNx4 should work basically exactly.</p>
 <div class="math notranslate nohighlight">
 \[R_{\text{IQN}x4} = [ L \left( f_m( \{ p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}, m^\text{reco} ) \]</div>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="train-mass">
 <h1>Train Mass<a class="headerlink" href="#train-mass" title="Permalink to this headline">#</a></h1>
-<p>for mass, <span class="math notranslate nohighlight">\(\mathbf{y_m}=m_{\text{reco}}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{x_m}=\{p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}\)</span>.</p>
+<p>for mass,</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{y_m}=m_{\text{reco}}\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{x_m}=\{p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}.\]</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_jupyter_image</span><span class="p">(</span><span class="s1">&#39;images/IQN_training_flowchart.png&#39;</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_jupyter_image</span><span class="p">(</span><span class="s1">&#39;images/IQN_training_flowchart.png&#39;</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_49_0.png" src="_images/Braden_Scaling_TrainEval_Mass_49_0.png" />
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_462494</span><span class="o">/</span><span class="mf">703560992.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">show_jupyter_image</span><span class="p">(</span><span class="s1">&#39;images/IQN_training_flowchart.png&#39;</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="ne">NameError</span>: name &#39;show_jupyter_image&#39; is not defined
+</pre></div>
+</div>
 </div>
 </div>
 <section id="batches-validation-losses-and-plotting-of-losses-functions">
@@ -2105,7 +2165,7 @@ no need to train_test_split since we already have the split dataframes
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_62_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_62_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_66_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_66_0.svg" /></div>
 </div>
 </section>
 <section id="training-and-running-of-training-functions">
@@ -2386,7 +2446,7 @@ evaluating m took  11.571345329284668 seconds
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_71_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_71_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_75_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_75_0.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2399,7 +2459,7 @@ evaluating m took  11.571345329284668 seconds
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_72_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_72_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_76_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_76_0.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2589,7 +2649,7 @@ evaluating m took  11.571345329284668 seconds
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_78_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_78_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_82_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_82_0.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2726,7 +2786,7 @@ evaluating m took  11.571345329284668 seconds
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_91_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_91_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_95_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_95_0.svg" /></div>
 </div>
 </section>
 </section>
@@ -2790,7 +2850,7 @@ no need to train_test_split since we already have the split dataframes
 1.9649797331536134 0.3264556967084843
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_95_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_95_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_99_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_99_1.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2830,7 +2890,7 @@ Iteration vs average loss
      19950	-784456.312500	-773300.125000	-690390.937500
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_96_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_96_1.svg" /><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>evaluating m took  21.789092540740967 seconds
+<img alt="_images/Braden_Scaling_TrainEval_Mass_100_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_100_1.svg" /><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>evaluating m took  21.789092540740967 seconds
 </pre></div>
 </div>
 </div>
@@ -2849,7 +2909,7 @@ Iteration vs average loss
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_97_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_97_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_101_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_101_0.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2883,7 +2943,7 @@ valid_t shape =  (10000,) valid_x shape =  (10000, 5)
 no need to train_test_split since we already have the split dataframes
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_98_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_98_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_102_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_102_1.svg" /></div>
 </div>
 <section id="evalute-model-and-save-evaluated-data">
 <h2>Evalute model and save evaluated data<a class="headerlink" href="#evalute-model-and-save-evaluated-data" title="Permalink to this headline">#</a></h2>
