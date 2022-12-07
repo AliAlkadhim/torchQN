@@ -421,6 +421,13 @@ title="Print to PDF"
     <a class="reference internal nav-link" href="#see-if-trainig-works-on-t-ratio">
      See if trainig works on T ratio
     </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#apparently-it-dosn-t-work-but-let-s-continue">
+       Apparently it dosn’t work, but let’s continue.
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -614,6 +621,13 @@ title="Print to PDF"
     <a class="reference internal nav-link" href="#see-if-trainig-works-on-t-ratio">
      See if trainig works on T ratio
     </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#apparently-it-dosn-t-work-but-let-s-continue">
+       Apparently it dosn’t work, but let’s continue.
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -2379,7 +2393,7 @@ no need to train_test_split since we already have the split dataframes
 <h2>Run training<a class="headerlink" href="#run-training" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span><span class="n">n_hidden</span><span class="o">=</span><span class="mi">5</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span><span class="n">n_hidden</span><span class="o">=</span><span class="mi">5</span><span class="c1">#a simple model should give reasonable results</span>
 <span class="n">NFEATURES</span><span class="o">=</span><span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="k">def</span> <span class="nf">load_untrained_model</span><span class="p">():</span>
     <span class="n">model</span><span class="o">=</span><span class="n">RegularizedRegressionModel</span><span class="p">(</span><span class="n">nfeatures</span><span class="o">=</span><span class="n">NFEATURES</span><span class="p">,</span> <span class="n">ntargets</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -2461,7 +2475,8 @@ evaluating m took  12.654462814331055 seconds
 <div class="cell_output docutils container">
 <img alt="_images/Braden_Scaling_TrainEval_Mass_76_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_76_0.svg" /></div>
 </div>
-<p>Apparently it dosn’t work, but let’s continue.</p>
+<section id="apparently-it-dosn-t-work-but-let-s-continue">
+<h3>Apparently it dosn’t work, but let’s continue.<a class="headerlink" href="#apparently-it-dosn-t-work-but-let-s-continue" title="Permalink to this headline">#</a></h3>
 <p>(we want to see a gaussian-like ratio centered around 0 as in the plots above.)</p>
 <p>Recall that <span class="math notranslate nohighlight">\( f_{\text{IQN}} \)</span> estimates:</p>
 <div class="math notranslate nohighlight">
@@ -2792,6 +2807,7 @@ evaluating m took  12.654462814331055 seconds
 <div class="cell_output docutils container">
 <img alt="_images/Braden_Scaling_TrainEval_Mass_95_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_95_0.svg" /></div>
 </div>
+</section>
 </section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="notebook-attempting-to-do-this-scaling-is-over-results-are-weird">

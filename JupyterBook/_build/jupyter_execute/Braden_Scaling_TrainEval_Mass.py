@@ -797,6 +797,7 @@ plt.legend();plt.show()
 # Expand Eq (2) in Eq (7) and integrate wrt y over the appropriate limits to see that  $f(\mathbf{x},\mathbf{\tau})$ is the quantile function for $p(\mathbf{y}|\mathbf{x})$, i.e. (I believe) that IQNx4 should work basically exactly.
 
 # $$R_{\text{IQN}x4} = [ L \left( f_m( \{ p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}, m^\text{reco} ) $$
+# 
 # # Train Mass
 # 
 # for mass, 
@@ -1245,7 +1246,7 @@ class RegularizedRegressionModel(nn.Module):
 # In[55]:
 
 
-n_layers=2;n_hidden=5
+n_layers=2;n_hidden=5#a simple model should give reasonable results
 NFEATURES=train_x.shape[1]
 def load_untrained_model():
     model=RegularizedRegressionModel(nfeatures=NFEATURES, ntargets=1,
@@ -1296,7 +1297,7 @@ p = pred.detach().numpy()
 plt.hist(p, label='predicted $T$ ratio');plt.legend();plt.show()
 
 
-# Apparently it dosn't work, but let's continue.
+# ### Apparently it dosn't work, but let's continue.
 # 
 # (we want to see a gaussian-like ratio centered around 0 as in the plots above.)
 # 
