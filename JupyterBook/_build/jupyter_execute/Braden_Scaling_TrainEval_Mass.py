@@ -1391,7 +1391,7 @@ z_inv_f[:5]
 
 # * Now 
 # 
-# $$\mathbb{L}(\mathcal{O^{\text{gen}}}) = L (m^{\text{gen}})$$
+# $$\mathbb{L}(\mathcal{O^{\text{gen}}}) = \mathbb{L} (m^{\text{gen}})$$
 # 
 
 # In[68]:
