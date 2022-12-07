@@ -2679,7 +2679,9 @@ evaluating m took  12.654462814331055 seconds
 \[
     m^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 \right]
 \]</div>
-<p>First, calculate <span class="math notranslate nohighlight">\(z^{-1} (f_{\text{IQN}} )\)</span></p>
+<ul class="simple">
+<li><p>First, calculate <span class="math notranslate nohighlight">\(z^{-1} (f_{\text{IQN}} )\)</span></p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">valid_t_ratio</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">valid_t_ratio</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
@@ -2709,6 +2711,9 @@ evaluating m took  12.654462814331055 seconds
 </div>
 </div>
 </div>
+<ul class="simple">
+<li><p>Now</p></li>
+</ul>
 <div class="math notranslate nohighlight">
 \[\mathbb{L}(\mathcal{O^{\text{gen}}}) = L (m^{\text{gen}})\]</div>
 <div class="cell docutils container">
@@ -2748,7 +2753,9 @@ evaluating m took  12.654462814331055 seconds
 </div>
 </div>
 </div>
-<p>“factor” <span class="math notranslate nohighlight">\( = z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 \)</span></p>
+<ul class="simple">
+<li><p>“factor” <span class="math notranslate nohighlight">\( = z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 \)</span></p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">factor</span> <span class="o">=</span> <span class="p">(</span><span class="n">z_inv_f</span> <span class="o">*</span> <span class="p">(</span><span class="n">L_obs</span>  <span class="o">+</span> <span class="mi">10</span><span class="p">)</span> <span class="p">)</span><span class="o">-</span><span class="mi">10</span>

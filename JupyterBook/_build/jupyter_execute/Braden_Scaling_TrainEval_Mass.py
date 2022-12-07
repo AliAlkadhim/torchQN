@@ -1369,7 +1369,7 @@ plt.hist(m_reco,label=r'$m_{gen}^{test \ data}$');plt.legend();plt.show()
 #     m^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 \right]
 # $$
 # 
-# First, calculate $z^{-1} (f_{\text{IQN}} )$
+# * First, calculate $z^{-1} (f_{\text{IQN}} )$
 
 # In[65]:
 
@@ -1384,6 +1384,7 @@ z_inv_f =z_inverse(xprime=p, mean=np.mean(valid_t_ratio), std=np.std(valid_t_rat
 z_inv_f[:5]
 
 
+# * Now 
 # 
 # $$\mathbb{L}(\mathcal{O^{\text{gen}}}) = L (m^{\text{gen}})$$
 # 
@@ -1407,7 +1408,7 @@ print(L_obs.shape, z_inv_f.shape)
 z_inv_f = z_inv_f.flatten();print(z_inv_f.shape)
 
 
-# "factor" $ = z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 $
+# * "factor" $ = z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 $
 
 # In[71]:
 
