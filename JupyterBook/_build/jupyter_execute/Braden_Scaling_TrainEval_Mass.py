@@ -426,6 +426,37 @@ raw_test_data.describe()#unscaled
 # $$ X'=z(X)=\frac{X-E[X]}{\sigma_{X}}  \qquad \rightarrow \qquad X = z^{-1}(X')= X' \sigma_{X} + E[X].$$
 # 
 
+# -----------
+# 
+# ## Basically a "standard scaling procedure" is the following (background):
+# 
+# 1. Split the data into train and test dataframes
+# 2. fit the scaler on each of the train and test sets independently, that is, get the mean and std, ( optionally and min and max or other quantities) of each feature (column) of each of the train and test dataframes, independently.
+# 3. transform each of the train and test sets independently. That is, use the means and stds of each column to transform a column $X$ into a column $X'$ e.g. according to 
+# $$ X'=z(X)= \frac{X-E[X]}{\sigma_{X}}$$
+# 4. Train NN on transformed features $X_{train}'$ (and target $y_{train}'$) (in train df, but validate on test set, which will not influence the weights of NN ( just used for observation that it doesnt overfit) )
+# 5. Once the training is done, *evaluate the NN on transformed features of the test set* $X_{test}'$, i.e. do $NN(X_{test}')$, which will result in a scaled prediction of the target $y_{pred}'$
+# 6. Unscale the $y_{pred}'$, i.e. apply the inverse of the scaling operation, e.g.
+# $$ y_{pred}=z^{-1}(y_{pred}')= y_{pred}' \sigma_{y} + E[y]$$,
+# where 
+# 
+# $$\sigma{y}$$
+# 
+# and 
+# 
+# $$E[y]$$
+# 
+# are attained from the test set *prior to training and scaling*.
+# 
+# 7. Compare to $y$ (the actual distribution you're trying to estimate) one-to-one
+
+# In[28]:
+
+
+use_svg_display()
+show_jupyter_image('images/scaling_forNN.jpg', width=2000,height=500)
+
+
 # # Braden scaling 
 # 
 # In the IQN-scipost overleaf, we say the scaling is the following:
@@ -494,37 +525,6 @@ raw_test_data.describe()#unscaled
 #     p_T^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (p_T^\text{gen})+10 \right] -10 \right]
 # $$
 # 
-
-# -----------
-# 
-# ## Basically a "standard scaling procedure" is the following (background):
-# 
-# 1. Split the data into train and test dataframes
-# 2. fit the scaler on each of the train and test sets independently, that is, get the mean and std, ( optionally and min and max or other quantities) of each feature (column) of each of the train and test dataframes, independently.
-# 3. transform each of the train and test sets independently. That is, use the means and stds of each column to transform a column $X$ into a column $X'$ e.g. according to 
-# $$ X'=z(X)= \frac{X-E[X]}{\sigma_{X}}$$
-# 4. Train NN on transformed features $X_{train}'$ (and target $y_{train}'$) (in train df, but validate on test set, which will not influence the weights of NN ( just used for observation that it doesnt overfit) )
-# 5. Once the training is done, *evaluate the NN on transformed features of the test set* $X_{test}'$, i.e. do $NN(X_{test}')$, which will result in a scaled prediction of the target $y_{pred}'$
-# 6. Unscale the $y_{pred}'$, i.e. apply the inverse of the scaling operation, e.g.
-# $$ y_{pred}=z^{-1}(y_{pred}')= y_{pred}' \sigma_{y} + E[y]$$,
-# where 
-# 
-# $$\sigma{y}$$
-# 
-# and 
-# 
-# $$E[y]$$
-# 
-# are attained from the test set *prior to training and scaling*.
-# 
-# 7. Compare to $y$ (the actual distribution you're trying to estimate) one-to-one
-
-# In[28]:
-
-
-use_svg_display()
-show_jupyter_image('images/scaling_forNN.jpg', width=2000,height=500)
-
 
 # 
 # ## Scale the data accoding to the "Braden Kronheim scaling" :

@@ -362,17 +362,19 @@ title="Print to PDF"
   <a class="reference internal nav-link" href="#scaling">
    Scaling
   </a>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#braden-scaling">
-   Braden scaling
-  </a>
   <ul class="visible nav section-nav flex-column">
    <li class="toc-h2 nav-item toc-entry">
     <a class="reference internal nav-link" href="#basically-a-standard-scaling-procedure-is-the-following-background">
      Basically a “standard scaling procedure” is the following (background):
     </a>
    </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#braden-scaling">
+   Braden scaling
+  </a>
+  <ul class="visible nav section-nav flex-column">
    <li class="toc-h2 nav-item toc-entry">
     <a class="reference internal nav-link" href="#scale-the-data-accoding-to-the-braden-kronheim-scaling">
      Scale the data accoding to the “Braden Kronheim scaling” :
@@ -553,17 +555,19 @@ title="Print to PDF"
   <a class="reference internal nav-link" href="#scaling">
    Scaling
   </a>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#braden-scaling">
-   Braden scaling
-  </a>
   <ul class="visible nav section-nav flex-column">
    <li class="toc-h2 nav-item toc-entry">
     <a class="reference internal nav-link" href="#basically-a-standard-scaling-procedure-is-the-following-background">
      Basically a “standard scaling procedure” is the following (background):
     </a>
    </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#braden-scaling">
+   Braden scaling
+  </a>
+  <ul class="visible nav section-nav flex-column">
    <li class="toc-h2 nav-item toc-entry">
     <a class="reference internal nav-link" href="#scale-the-data-accoding-to-the-braden-kronheim-scaling">
      Scale the data accoding to the “Braden Kronheim scaling” :
@@ -1385,6 +1389,41 @@ $<span class="math notranslate nohighlight">\( X' = \frac{X-X_{min}}{X_{max}-X_{
 <p>Or by taking z-score:</p>
 <div class="math notranslate nohighlight">
 \[ X'=z(X)=\frac{X-E[X]}{\sigma_{X}}  \qquad \rightarrow \qquad X = z^{-1}(X')= X' \sigma_{X} + E[X].\]</div>
+<hr class="docutils" />
+<section id="basically-a-standard-scaling-procedure-is-the-following-background">
+<h2>Basically a “standard scaling procedure” is the following (background):<a class="headerlink" href="#basically-a-standard-scaling-procedure-is-the-following-background" title="Permalink to this headline">#</a></h2>
+<ol class="simple">
+<li><p>Split the data into train and test dataframes</p></li>
+<li><p>fit the scaler on each of the train and test sets independently, that is, get the mean and std, ( optionally and min and max or other quantities) of each feature (column) of each of the train and test dataframes, independently.</p></li>
+<li><p>transform each of the train and test sets independently. That is, use the means and stds of each column to transform a column <span class="math notranslate nohighlight">\(X\)</span> into a column <span class="math notranslate nohighlight">\(X'\)</span> e.g. according to
+$<span class="math notranslate nohighlight">\( X'=z(X)= \frac{X-E[X]}{\sigma_{X}}\)</span>$</p></li>
+<li><p>Train NN on transformed features <span class="math notranslate nohighlight">\(X_{train}'\)</span> (and target <span class="math notranslate nohighlight">\(y_{train}'\)</span>) (in train df, but validate on test set, which will not influence the weights of NN ( just used for observation that it doesnt overfit) )</p></li>
+<li><p>Once the training is done, <em>evaluate the NN on transformed features of the test set</em> <span class="math notranslate nohighlight">\(X_{test}'\)</span>, i.e. do <span class="math notranslate nohighlight">\(NN(X_{test}')\)</span>, which will result in a scaled prediction of the target <span class="math notranslate nohighlight">\(y_{pred}'\)</span></p></li>
+<li><p>Unscale the <span class="math notranslate nohighlight">\(y_{pred}'\)</span>, i.e. apply the inverse of the scaling operation, e.g.
+$<span class="math notranslate nohighlight">\( y_{pred}=z^{-1}(y_{pred}')= y_{pred}' \sigma_{y} + E[y]\)</span>$,
+where</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\sigma{y}\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[E[y]\]</div>
+<p>are attained from the test set <em>prior to training and scaling</em>.</p>
+<ol class="simple">
+<li><p>Compare to <span class="math notranslate nohighlight">\(y\)</span> (the actual distribution you’re trying to estimate) one-to-one</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">use_svg_display</span><span class="p">()</span>
+<span class="n">show_jupyter_image</span><span class="p">(</span><span class="s1">&#39;images/scaling_forNN.jpg&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/Braden_Scaling_TrainEval_Mass_36_0.jpg" src="_images/Braden_Scaling_TrainEval_Mass_36_0.jpg" />
+</div>
+</div>
+</section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="braden-scaling">
 <h1>Braden scaling<a class="headerlink" href="#braden-scaling" title="Permalink to this headline">#</a></h1>
@@ -1442,41 +1481,6 @@ z\left(\frac{y_n + 10}{x_n + 10}\right), \qquad n = 1,\cdots,4,
 \[
     p_T^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (p_T^\text{gen})+10 \right] -10 \right]
 \]</div>
-<hr class="docutils" />
-<section id="basically-a-standard-scaling-procedure-is-the-following-background">
-<h2>Basically a “standard scaling procedure” is the following (background):<a class="headerlink" href="#basically-a-standard-scaling-procedure-is-the-following-background" title="Permalink to this headline">#</a></h2>
-<ol class="simple">
-<li><p>Split the data into train and test dataframes</p></li>
-<li><p>fit the scaler on each of the train and test sets independently, that is, get the mean and std, ( optionally and min and max or other quantities) of each feature (column) of each of the train and test dataframes, independently.</p></li>
-<li><p>transform each of the train and test sets independently. That is, use the means and stds of each column to transform a column <span class="math notranslate nohighlight">\(X\)</span> into a column <span class="math notranslate nohighlight">\(X'\)</span> e.g. according to
-$<span class="math notranslate nohighlight">\( X'=z(X)= \frac{X-E[X]}{\sigma_{X}}\)</span>$</p></li>
-<li><p>Train NN on transformed features <span class="math notranslate nohighlight">\(X_{train}'\)</span> (and target <span class="math notranslate nohighlight">\(y_{train}'\)</span>) (in train df, but validate on test set, which will not influence the weights of NN ( just used for observation that it doesnt overfit) )</p></li>
-<li><p>Once the training is done, <em>evaluate the NN on transformed features of the test set</em> <span class="math notranslate nohighlight">\(X_{test}'\)</span>, i.e. do <span class="math notranslate nohighlight">\(NN(X_{test}')\)</span>, which will result in a scaled prediction of the target <span class="math notranslate nohighlight">\(y_{pred}'\)</span></p></li>
-<li><p>Unscale the <span class="math notranslate nohighlight">\(y_{pred}'\)</span>, i.e. apply the inverse of the scaling operation, e.g.
-$<span class="math notranslate nohighlight">\( y_{pred}=z^{-1}(y_{pred}')= y_{pred}' \sigma_{y} + E[y]\)</span>$,
-where</p></li>
-</ol>
-<div class="math notranslate nohighlight">
-\[\sigma{y}\]</div>
-<p>and</p>
-<div class="math notranslate nohighlight">
-\[E[y]\]</div>
-<p>are attained from the test set <em>prior to training and scaling</em>.</p>
-<ol class="simple">
-<li><p>Compare to <span class="math notranslate nohighlight">\(y\)</span> (the actual distribution you’re trying to estimate) one-to-one</p></li>
-</ol>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">use_svg_display</span><span class="p">()</span>
-<span class="n">show_jupyter_image</span><span class="p">(</span><span class="s1">&#39;images/scaling_forNN.jpg&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_37_0.jpg" src="_images/Braden_Scaling_TrainEval_Mass_37_0.jpg" />
-</div>
-</div>
-</section>
 <section id="scale-the-data-accoding-to-the-braden-kronheim-scaling">
 <h2>Scale the data accoding to the “Braden Kronheim scaling” :<a class="headerlink" href="#scale-the-data-accoding-to-the-braden-kronheim-scaling" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
