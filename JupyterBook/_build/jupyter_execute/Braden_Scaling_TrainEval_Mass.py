@@ -470,7 +470,7 @@ show_jupyter_image('images/scaling_forNN.jpg', width=2000,height=500)
 # 
 # $$
 # \begin{align}
-#     \mathbb{L} (\mathcal{O}) &=
+#     \mathbb{L} (\mathcal{O} \mid \mathcal{O} \in X ) &=
 #     \begin{cases}
 #         z \left( \log{\mathcal{O}} \right), \qquad & \text{if } \mathcal{O}= p_T \\
 #         z \left(\mathcal{O} \right), \qquad & \text{if } \mathcal{O}=\eta \\
@@ -481,7 +481,7 @@ show_jupyter_image('images/scaling_forNN.jpg', width=2000,height=500)
 # \end{align}
 # $$
 # 
-# We also say we use the following as targets
+# Note that the equation above describes the scaling for the training features $X$. The targets, as we say in the paper, are chosen to be the following:
 # 
 # $$
 # z\left(\frac{y_n + 10}{x_n + 10}\right), \qquad n = 1,\cdots,4,

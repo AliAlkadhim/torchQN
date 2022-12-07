@@ -1436,7 +1436,7 @@ where</p></li>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-    \mathbb{L} (\mathcal{O}) &amp;=
+    \mathbb{L} (\mathcal{O} \mid \mathcal{O} \in X ) &amp;=
     \begin{cases}
         z \left( \log{\mathcal{O}} \right), \qquad &amp; \text{if } \mathcal{O}= p_T \\
         z \left(\mathcal{O} \right), \qquad &amp; \text{if } \mathcal{O}=\eta \\
@@ -1446,7 +1446,7 @@ where</p></li>
     \end{cases}
 \end{align}
 \end{split}\]</div>
-<p>We also say we use the following as targets</p>
+<p>Note that the equation above describes the scaling for the training features <span class="math notranslate nohighlight">\(X\)</span>. The targets, as we say in the paper, are chosen to be the following:</p>
 <div class="math notranslate nohighlight">
 \[
 z\left(\frac{y_n + 10}{x_n + 10}\right), \qquad n = 1,\cdots,4,
