@@ -1336,7 +1336,7 @@ recom_unsc_std=TEST_SCALE_DICT[target]['std']
 print(recom_unsc_mean,recom_unsc_std)
 
 
-# Get unscaled again, just to verify
+# Get unscaled dataframe again, just to verify
 
 # In[61]:
 
