@@ -612,6 +612,11 @@ def L_inverse(L_observable, label):
     return L_inverse_observable
 
 
+# $$
+#     \mathbb{T}(\mathcal{O}) = z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
+# $$
+# 
+
 # In[34]:
 
 
