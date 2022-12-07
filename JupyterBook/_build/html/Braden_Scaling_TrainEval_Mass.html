@@ -865,7 +865,7 @@ DATA directory also properly set, in /home/ali/Desktop/Pulled_Github_Repositorie
 </div>
 <div class="cell_output docutils container">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "5b179cf8df66487db9ca19a38e85d642", "version_major": 2, "version_minor": 0}
+{"model_id": "5b9de4a8cf6f435e860a9318307b5199", "version_major": 2, "version_minor": 0}
 </script></div>
 </div>
 <section id="set-arguments-and-configurations">
@@ -2140,10 +2140,10 @@ no need to train_test_split since we already have the split dataframes
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[-3.90372179e-16 -1.84741111e-17 -3.63797881e-17  1.85465865e-15
-  2.62900812e-17] [1. 1. 1. 1. 1.]
-[-1.68711267e-15  3.26849658e-18  1.05870868e-17 -4.27746727e-16
- -1.81898940e-17] [1. 1. 1. 1. 1.]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[ 3.06243919e-17 -1.56319402e-17 -2.39452902e-17  1.89004368e-17
+  2.23820962e-17] [1. 1. 1. 1. 1.]
+[ 1.57740487e-17  2.41584530e-18  9.59232693e-18  1.05160325e-17
+ -1.43529633e-17] [1. 1. 1. 1. 1.]
 </pre></div>
 </div>
 </div>
@@ -2417,14 +2417,14 @@ no need to train_test_split since we already have the split dataframes
     (4): Linear(in_features=5, out_features=1, bias=True)
   )
 )
-Training for 1000 iterations
+Training for 10000 iterations
 estimating RecoDatam
 
 Iteration vs average loss
  iteration	 train-set	 valid-set
-         0	  0.377153	  0.379933
-      9950	-37041968.000000	-37076608.000000	-27181304.000000
-evaluating m took  11.571345329284668 seconds
+         0	  0.561008	  0.559228
+      9950	-25893588.000000	-25892792.000000	-18983204.000000
+evaluating m took  12.654462814331055 seconds
 </pre></div>
 </div>
 </div>
@@ -2454,6 +2454,21 @@ evaluating m took  11.571345329284668 seconds
 <div class="cell_output docutils container">
 <img alt="_images/Braden_Scaling_TrainEval_Mass_76_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_76_0.svg" /></div>
 </div>
+<p>Apparently it dosn’t work, but let’s continue.</p>
+<p>(we want to see a gaussian-like ratio centered around 0 as in the plots above.)</p>
+<p>Recall that <span class="math notranslate nohighlight">\( f_{\text{IQN}} \)</span> estimates:</p>
+<div class="math notranslate nohighlight">
+\[
+        f_{\text{IQN}} (\mathcal{O}) =  z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
+\]</div>
+<p>So, to de-scale, (for our observable <span class="math notranslate nohighlight">\(\mathcal{O}=m\)</span> ),</p>
+<div class="math notranslate nohighlight">
+\[
+    m^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 \right]
+\]</div>
+<p>Note that <span class="math notranslate nohighlight">\(z^{-1} (f_{\text{IQN}} )\)</span> should use the mean and std of the ratio thing for the target</p>
+<div class="math notranslate nohighlight">
+\[z^{-1} (f_{\text{IQN}} ) = z^{-1}\left( y_{pred}, \text{mean}=\text{mean}(\mathbb{T}(\text{target_variable})), std=std (\mathbb{T}(\text{target_variable} ) \right)\]</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_finite</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
@@ -2465,12 +2480,6 @@ evaluating m took  11.571345329284668 seconds
 </div>
 </div>
 </div>
-<p>Apparently it dosn’t work, but let’s continue</p>
-<div class="math notranslate nohighlight">
-\[
-    m^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 \right]
-\]</div>
-<p>Note that <span class="math notranslate nohighlight">\(z^{-1} (f_{\text{IQN}} )\)</span> should use the mean and std of the ratio thing for the target <span class="math notranslate nohighlight">\(z^{-1} (f_{\text{IQN}} ) = z^{-1}\left( y_{pred}, \text{mean}=\text{mean}(T(\text{target_var})), std=std (T(\text{target_var} ) \right)\)</span></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">recom_unsc_mean</span><span class="o">=</span><span class="n">TEST_SCALE_DICT</span><span class="p">[</span><span class="n">target</span><span class="p">][</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span>
@@ -2488,8 +2497,7 @@ evaluating m took  11.571345329284668 seconds
 <p>Get unscaled again, just to verify</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SUBSAMPLE</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e5</span><span class="p">)</span><span class="c1">#subsample use for development - in production use whole dataset</span>
-<span class="n">raw_train_data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;train_data_10M_2.csv&#39;</span><span class="p">),</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">raw_train_data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;train_data_10M_2.csv&#39;</span><span class="p">),</span>
                       <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
                       <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span>
                       <span class="p">)</span>
@@ -2637,13 +2645,19 @@ evaluating m took  11.571345329284668 seconds
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m_reco</span> <span class="o">=</span> <span class="n">raw_test_data</span><span class="p">[</span><span class="s1">&#39;RecoDatam&#39;</span><span class="p">]</span>
 <span class="n">m_gen</span> <span class="o">=</span> <span class="n">raw_test_data</span><span class="p">[</span><span class="s1">&#39;genDatam&#39;</span><span class="p">]</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">m_reco</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">m_reco</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$m_</span><span class="si">{gen}</span><span class="s1">^{test \ data}$&#39;</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <img alt="_images/Braden_Scaling_TrainEval_Mass_82_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_82_0.svg" /></div>
 </div>
+<p>Apply the descaling formula for our observable</p>
+<div class="math notranslate nohighlight">
+\[
+    m^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 \right]
+\]</div>
+<p>First, calculate <span class="math notranslate nohighlight">\(z^{-1} (f_{\text{IQN}} )\)</span></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">valid_t_ratio</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">valid_t_ratio</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
@@ -2656,17 +2670,6 @@ evaluating m took  11.571345329284668 seconds
 </div>
 </div>
 </div>
-<p><span class="math notranslate nohighlight">\( f_{\text{IQN}} \)</span> estimates:</p>
-<div class="math notranslate nohighlight">
-\[
-        f_{\text{IQN}} (\mathcal{O}) =  z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
-\]</div>
-<p>Apply the descaling formula for our observable</p>
-<div class="math notranslate nohighlight">
-\[
-    m^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 \right]
-\]</div>
-<p>First, calculate <span class="math notranslate nohighlight">\(z^{-1} (f_{\text{IQN}} )\)</span></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z_inv_f</span> <span class="o">=</span><span class="n">z_inverse</span><span class="p">(</span><span class="n">xprime</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">valid_t_ratio</span><span class="p">),</span> <span class="n">std</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">valid_t_ratio</span><span class="p">))</span>
@@ -2675,16 +2678,17 @@ evaluating m took  11.571345329284668 seconds
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[-7.96927520e+07],
-       [ 2.92157520e+04],
-       [ 2.93783281e+04],
-       [-1.07533976e+08],
-       [-3.59152840e+07]], dtype=float32)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[-36455216.],
+       [ 18558738.],
+       [ 19250840.],
+       [-60801076.],
+       [-24907742.]], dtype=float32)
 </pre></div>
 </div>
 </div>
 </div>
-<p><span class="math notranslate nohighlight">\(\mathbb{L}(\mathcal{O^{\text{gen}}}) = L (m^{\text{gen}})\)</span></p>
+<div class="math notranslate nohighlight">
+\[\mathbb{L}(\mathcal{O^{\text{gen}}}) = L (m^{\text{gen}})\]</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">L_obs</span> <span class="o">=</span> <span class="n">L</span><span class="p">(</span><span class="n">orig_observable</span><span class="o">=</span><span class="n">m_gen</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
@@ -2731,8 +2735,8 @@ evaluating m took  11.571345329284668 seconds
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-9.61974716e+08,  3.52654624e+05,  3.59641251e+05, -1.32122860e+09,
-       -4.29968380e+08])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-4.40052522e+08,  2.24023331e+08,  2.35669925e+08, -7.47039438e+08,
+       -2.98188972e+08])
 </pre></div>
 </div>
 </div>
@@ -2754,7 +2758,7 @@ evaluating m took  11.571345329284668 seconds
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-2., inf, inf, ..., -2., -2., -2.])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-2., inf, inf, ..., -2., inf, -2.])
 </pre></div>
 </div>
 </div>
