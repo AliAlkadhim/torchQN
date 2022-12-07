@@ -440,7 +440,7 @@ raw_test_data.describe()#unscaled
 # $$ y_{pred}=z^{-1}(y_{pred}')= y_{pred}' \sigma_{y} + E[y]$$,
 # where 
 # 
-# $$\sigma{y}$$
+# $$\sigma_y$$
 # 
 # and 
 # 
