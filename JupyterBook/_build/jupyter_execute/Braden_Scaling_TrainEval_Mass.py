@@ -1389,8 +1389,12 @@ plt.hist(pT_pred.flatten());plt.show()
 # # Scaling Notebook Over (results are weird)
 # -------------------
 # 
+# 
+# Makes no sense to include my tuning codes or train for longer time/datasets or make it more user-friendly since results are so off. 
 
 # ----
+# 
+# Still some more experimentation below
 
 # In[152]:
 
