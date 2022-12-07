@@ -1789,7 +1789,7 @@ Reco_var:  RecoDatam , 	 gen_var:  genDatam
 \[ \frac{\delta R}{\delta f}=0,\]</div>
 <p>where <span class="math notranslate nohighlight">\(L\)</span> is the loss function, <span class="math notranslate nohighlight">\(f\)</span> is the model (in this case IQN) (implicitly parameterized by potentially a  gazillion parameters), <span class="math notranslate nohighlight">\(y\)</span> is the target(s) that we want to estimate, <span class="math notranslate nohighlight">\(x\)</span> is the (set of) training features, <span class="math notranslate nohighlight">\(R\)</span> is the risk functional:</p>
 <div class="math notranslate nohighlight">
-\[ R[f] = \int \cdots \int \, p(t, \mathbf{x}) \, L(f(\mathbf{x}, \theta), y) \, dy \, d\mathbf{x}\]</div>
+\[ R[f] = \int \cdots \int \, p(y, \mathbf{x}) \, L(f(\mathbf{x}, \theta), y) \, dy \, d\mathbf{x}\]</div>
 <p>So, for IQNs,</p>
 <div class="math notranslate nohighlight">
 \[\begin{split} L_{\text{IQN}}(f, y)=\left\{\begin{array}{ll}
