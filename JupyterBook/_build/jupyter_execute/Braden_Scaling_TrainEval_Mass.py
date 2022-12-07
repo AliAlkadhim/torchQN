@@ -1299,7 +1299,7 @@ plt.hist(p, label='predicted $T$ ratio');plt.legend();plt.show()
 
 # ### Apparently it dosn't work, but let's continue.
 # 
-# (we want to see a gaussian-like ratio centered around 0 as in the plots above.)
+# (the reason its not what we expect is because we want to see a gaussian-like ratio centered around 0 as in the plots above.)
 # 
 # Recall that $ f_{\text{IQN}} $ estimates:
 # 
