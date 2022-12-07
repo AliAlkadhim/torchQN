@@ -261,8 +261,6 @@ def get_model_params():
 
 # # Explore the Dataframe and preprocess
 
-# another flowchart for how IQN works autoregressively to get $p_T'$, etc
-
 # # Data
 
 # In[18]:
