@@ -162,7 +162,12 @@ def set_axes(ax, xlabel, ylabel=None, xmin=None, xmax=None, ymin=None, ymax=None
     plt.show()
 
 
+# <a name="Results_prior"></a>
+#  
+#  
 # # Results prior to Braden-scaling
+# 
+# 
 # 
 # Recall that the best IQNx4 autoregressive results that I attained prior to trying the Braden scaling was the following (which was implemented in the Davidson cluster here: `/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/OCT_7/*.py` and copied to my repo [here](https://github.com/AliAlkadhim/torchQN/tree/master/OCT_7) )
 # 
@@ -720,7 +725,7 @@ plt.legend();plt.show()
 # ------
 # # ML
 # 
-# Note that this ideas is very powerful and has the potential to replace the use of Delphes/GEANT for most people. According to the [previous paper](https://arxiv.org/pdf/2111.11415.pdf) this method already works for a single IQN.
+# Note that this ideas is very powerful and has the potential to replace the use of Delphes/GEANT for most people. According to the [previous paper](https://arxiv.org/pdf/2111.11415.pdf) this method already works for a single IQN, and we know it works reasonably well for autoregressive IQNx4, [as we said above](#Results_prior) .
 # 
 # It's important to remember "the master formula" of all of machine learning:
 # 
