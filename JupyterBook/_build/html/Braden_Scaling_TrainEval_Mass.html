@@ -721,10 +721,8 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>using torch version 1.11.0.post2
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>using (optional) optuna version 3.0.0
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>using torch version 1.9.0
+using (optional) optuna version 2.8.0
 </pre></div>
 </div>
 </div>
@@ -757,12 +755,8 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>BASE directory not properly set. Read repo README.    If you need a function from utils, use the decorator below, or add utils to sys.path
-
-    You can also do 
-    os.environ[&#39;IQN_BASE&#39;]=&lt;ABSOLUTE PATH FOR THE IQN REPO&gt;
-    or
-    os.environ[&#39;IQN_BASE&#39;]=os.getcwd()
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>BASE directoy properly set =  /home/ali/Desktop/Pulled_Github_Repositories/torchQN
+DATA directory also properly set, in /home/ali/Desktop/Pulled_Github_Repositories/IQN_HEP/Davidson/data
 </pre></div>
 </div>
 </div>
@@ -872,19 +866,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">show_jupyter_image</span><span class="p">(</span><span class="s1">&#39;OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png&#39;</span><span class="p">,</span><span class="n">width</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span>
-
-<span class="nn">Cell In [5], line 3,</span> in <span class="ni">show_jupyter_image</span><span class="nt">(image_filename, width, height)</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="k">def</span> <span class="nf">show_jupyter_image</span><span class="p">(</span><span class="n">image_filename</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">1300</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">300</span><span class="p">):</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span>     <span class="sd">&quot;&quot;&quot;Show a saved image directly in jupyter. Make sure image_filename is in your IQN_BASE !&quot;&quot;&quot;</span>
-<span class="ne">----&gt; </span><span class="mi">3</span>     <span class="n">display</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span><span class="n">image_filename</span><span class="p">),</span> <span class="n">width</span> <span class="o">=</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">height</span>  <span class="p">))</span>
-
-<span class="ne">NameError</span>: name &#39;IQN_BASE&#39; is not defined
-</pre></div>
-</div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_12_0.png" src="_images/Braden_Scaling_TrainEval_Mass_12_0.png" />
 </div>
 </div>
 <p>So we know IQNx4 works (but not perfect enough), but in this notebook we try the Braden scaling (first time trying this scaling) to see if we can do better.</p>
