@@ -486,7 +486,9 @@ show_jupyter_image('images/scaling_forNN.jpg', width=2000,height=500)
 # \end{align}
 # $$
 # 
-# Note that the equation above describes the scaling for the training features $X$. The targets, as we say in the paper, are chosen to be the following:
+# Note that the equation above describes the scaling for the training features $X$. The point of taking the log is 
+# 
+# The targets, as we say in the paper, are chosen to be the following:
 # 
 # $$
 # z\left(\frac{y_n + 10}{x_n + 10}\right), \qquad n = 1,\cdots,4,
@@ -735,12 +737,14 @@ plt.legend();plt.show()
 # 
 # $$ \frac{\delta R}{\delta f}=0,$$
 # 
-# where $L$ is the loss function, $f$ is the model (in this case IQN) (implicitly parameterized by potentially a  gazillion parameters), $y$ is the target(s) that we want to estimate, $x$ is the (set of) training features, $R$ is the risk functional:
+# where $L$ is the loss function, $f$ is the model (neural network/classifier/regressor, etc. In this case it's an IQN) (implicitly parameterized by potentially a  gazillion parameters), 
+# 
+# and $p(y|x)$ the PDF of targets $y$ that we want to estimate, given (set of) features $x$, $R$ is the risk functional (sometime called objective function or cost function):
 # 
 # $$ R[f] = \int \cdots \int \, p(y, \mathbf{x}) \, L(f(\mathbf{x}, \theta), y) \, dy \, d\mathbf{x}$$
 # 
 # 
-# So, for IQNs,
+# where the $R[f]$ is approximated by the normalized sum of the losses over the all the samples. So, for IQNs,
 # 
 # $$ L_{\text{IQN}}(f, y)=\left\{\begin{array}{ll}
 # \tau(y-f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})) & y \geq f(\boldsymbol{x}, \tau ; \boldsymbol{\theta}) \\
@@ -1281,6 +1285,41 @@ IQN = run(model=model,train_x=train_x, train_t=train_t_ratio,
 end=time.time()
 difference=end-start
 print('evaluating m took ',difference, 'seconds')
+
+
+# ## Save trained model (if its good, and if you haven't saved above) and load trained model (if you saved it)
+
+# In[4]:
+
+
+filename='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
+PATH = os.path.join(IQN_BASE, 'trained_models', filename)
+
+def save_model(model):
+    print(model)
+    torch.save(model.state_dict(), PATH)
+    print('\ntrained model dictionary saved in %s' % PATH)
+    
+def load_model(model):
+    # n_layers = int(BEST_PARAMS["n_layers"]) 
+    # hidden_size = int(BEST_PARAMS["hidden_size"])
+    # dropout = float(BEST_PARAMS["dropout"])
+    # optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
+    # learning_rate =  float(BEST_PARAMS["learning_rate"])
+    # batch_size = int(BEST_PARAMS["batch_size"])
+    model =  RegularizedRegressionModel(
+        nfeatures=train_x.shape[1], 
+        ntargets=1,
+        nlayers=n_layers, 
+        hidden_size=hidden_size, 
+        dropout=dropout
+        )
+    model.load_state_dict(torch.load(PATH) )
+    #OR
+    #model=torch.load(PATH)#BUT HERE IT WILL BE A DICT (CANT BE EVALUATED RIGHT AWAY) DISCOURAGED!
+    model.eval()
+    print(model)
+    return model
 
 
 # In[57]:

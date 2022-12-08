@@ -421,6 +421,11 @@ title="Print to PDF"
     <a class="reference internal nav-link" href="#see-if-trainig-works-on-t-ratio">
      See if trainig works on T ratio
     </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#save-trained-model-if-its-good-and-if-you-haven-t-saved-above-and-load-trained-model-if-you-saved-it">
+     Save trained model (if its good, and if you haven’t saved above) and load trained model (if you saved it)
+    </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h3 nav-item toc-entry">
       <a class="reference internal nav-link" href="#apparently-it-dosn-t-work-but-let-s-continue">
@@ -620,6 +625,11 @@ title="Print to PDF"
    <li class="toc-h2 nav-item toc-entry">
     <a class="reference internal nav-link" href="#see-if-trainig-works-on-t-ratio">
      See if trainig works on T ratio
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#save-trained-model-if-its-good-and-if-you-haven-t-saved-above-and-load-trained-model-if-you-saved-it">
+     Save trained model (if its good, and if you haven’t saved above) and load trained model (if you saved it)
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h3 nav-item toc-entry">
@@ -1479,7 +1489,8 @@ where</p></li>
     \end{cases}
 \end{align}
 \end{split}\]</div>
-<p>Note that the equation above describes the scaling for the training features <span class="math notranslate nohighlight">\(X\)</span>. The targets, as we say in the paper, are chosen to be the following:</p>
+<p>Note that the equation above describes the scaling for the training features <span class="math notranslate nohighlight">\(X\)</span>. The point of taking the log is</p>
+<p>The targets, as we say in the paper, are chosen to be the following:</p>
 <div class="math notranslate nohighlight">
 \[
 z\left(\frac{y_n + 10}{x_n + 10}\right), \qquad n = 1,\cdots,4,
@@ -1806,10 +1817,11 @@ Reco_var:  RecoDatam , 	 gen_var:  genDatam
 <p>or, equivalently,</p>
 <div class="math notranslate nohighlight">
 \[ \frac{\delta R}{\delta f}=0,\]</div>
-<p>where <span class="math notranslate nohighlight">\(L\)</span> is the loss function, <span class="math notranslate nohighlight">\(f\)</span> is the model (in this case IQN) (implicitly parameterized by potentially a  gazillion parameters), <span class="math notranslate nohighlight">\(y\)</span> is the target(s) that we want to estimate, <span class="math notranslate nohighlight">\(x\)</span> is the (set of) training features, <span class="math notranslate nohighlight">\(R\)</span> is the risk functional:</p>
+<p>where <span class="math notranslate nohighlight">\(L\)</span> is the loss function, <span class="math notranslate nohighlight">\(f\)</span> is the model (neural network/classifier/regressor, etc. In this case it’s an IQN) (implicitly parameterized by potentially a  gazillion parameters),</p>
+<p>and <span class="math notranslate nohighlight">\(p(y|x)\)</span> the PDF of targets <span class="math notranslate nohighlight">\(y\)</span> that we want to estimate, given (set of) features <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(R\)</span> is the risk functional (sometime called objective function or cost function):</p>
 <div class="math notranslate nohighlight">
 \[ R[f] = \int \cdots \int \, p(y, \mathbf{x}) \, L(f(\mathbf{x}, \theta), y) \, dy \, d\mathbf{x}\]</div>
-<p>So, for IQNs,</p>
+<p>where the <span class="math notranslate nohighlight">\(R[f]\)</span> is approximated by the normalized sum of the losses over the all the samples. So, for IQNs,</p>
 <div class="math notranslate nohighlight">
 \[\begin{split} L_{\text{IQN}}(f, y)=\left\{\begin{array}{ll}
 \tau(y-f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})) &amp; y \geq f(\boldsymbol{x}, \tau ; \boldsymbol{\theta}) \\
@@ -2469,6 +2481,43 @@ evaluating m took  12.654462814331055 seconds
 </div>
 </div>
 </div>
+</section>
+<section id="save-trained-model-if-its-good-and-if-you-haven-t-saved-above-and-load-trained-model-if-you-saved-it">
+<h2>Save trained model (if its good, and if you haven’t saved above) and load trained model (if you saved it)<a class="headerlink" href="#save-trained-model-if-its-good-and-if-you-haven-t-saved-above-and-load-trained-model-if-you-saved-it" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;Trained_IQNx4_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">K_iter.dict&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">n_iterations</span><span class="o">/</span><span class="mi">1000</span><span class="p">))</span> <span class="p">)</span>
+<span class="n">PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span> <span class="s1">&#39;trained_models&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">PATH</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">trained model dictionary saved in </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">PATH</span><span class="p">)</span>
+    
+<span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="c1"># n_layers = int(BEST_PARAMS[&quot;n_layers&quot;]) </span>
+    <span class="c1"># hidden_size = int(BEST_PARAMS[&quot;hidden_size&quot;])</span>
+    <span class="c1"># dropout = float(BEST_PARAMS[&quot;dropout&quot;])</span>
+    <span class="c1"># optimizer_name = BEST_PARAMS[&quot;optimizer_name&quot;].to_string().split()[1]</span>
+    <span class="c1"># learning_rate =  float(BEST_PARAMS[&quot;learning_rate&quot;])</span>
+    <span class="c1"># batch_size = int(BEST_PARAMS[&quot;batch_size&quot;])</span>
+    <span class="n">model</span> <span class="o">=</span>  <span class="n">RegularizedRegressionModel</span><span class="p">(</span>
+        <span class="n">nfeatures</span><span class="o">=</span><span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> 
+        <span class="n">ntargets</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">nlayers</span><span class="o">=</span><span class="n">n_layers</span><span class="p">,</span> 
+        <span class="n">hidden_size</span><span class="o">=</span><span class="n">hidden_size</span><span class="p">,</span> 
+        <span class="n">dropout</span><span class="o">=</span><span class="n">dropout</span>
+        <span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">PATH</span><span class="p">)</span> <span class="p">)</span>
+    <span class="c1">#OR</span>
+    <span class="c1">#model=torch.load(PATH)#BUT HERE IT WILL BE A DICT (CANT BE EVALUATED RIGHT AWAY) DISCOURAGED!</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">valid_t_ratio</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;ratio target&#39;</span><span class="p">);</span>
@@ -2479,7 +2528,7 @@ evaluating m took  12.654462814331055 seconds
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_75_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_75_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_77_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_77_0.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2492,7 +2541,7 @@ evaluating m took  12.654462814331055 seconds
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_76_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_76_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_78_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_78_0.svg" /></div>
 </div>
 <section id="apparently-it-dosn-t-work-but-let-s-continue">
 <h3>Apparently it dosn’t work, but let’s continue.<a class="headerlink" href="#apparently-it-dosn-t-work-but-let-s-continue" title="Permalink to this headline">#</a></h3>
@@ -2691,7 +2740,7 @@ evaluating m took  12.654462814331055 seconds
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_82_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_82_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_84_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_84_0.svg" /></div>
 </div>
 <p>Apply the descaling formula for our observable</p>
 <div class="math notranslate nohighlight">
@@ -2831,7 +2880,7 @@ evaluating m took  12.654462814331055 seconds
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_95_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_95_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_97_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_97_0.svg" /></div>
 </div>
 </section>
 </section>
@@ -2896,7 +2945,7 @@ no need to train_test_split since we already have the split dataframes
 1.9649797331536134 0.3264556967084843
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_99_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_99_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_101_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_101_1.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2936,7 +2985,7 @@ Iteration vs average loss
      19950	-784456.312500	-773300.125000	-690390.937500
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_100_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_100_1.svg" /><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>evaluating m took  21.789092540740967 seconds
+<img alt="_images/Braden_Scaling_TrainEval_Mass_102_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_102_1.svg" /><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>evaluating m took  21.789092540740967 seconds
 </pre></div>
 </div>
 </div>
@@ -2955,7 +3004,7 @@ Iteration vs average loss
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_101_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_101_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_103_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_103_0.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2989,7 +3038,7 @@ valid_t shape =  (10000,) valid_x shape =  (10000, 5)
 no need to train_test_split since we already have the split dataframes
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_102_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_102_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_104_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_104_1.svg" /></div>
 </div>
 <section id="evalute-model-and-save-evaluated-data">
 <h2>Evalute model and save evaluated data<a class="headerlink" href="#evalute-model-and-save-evaluated-data" title="Permalink to this headline">#</a></h2>
