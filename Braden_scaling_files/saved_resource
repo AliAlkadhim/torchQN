@@ -1,39 +1,0 @@
-
-var ftGUID_6027420="5451B71894CE07";
-var ftConfID_6027420="28700681";
-var ftParams_6027420="ftx=&fty=&ftadz=&ftscw=ebuy=26847352;esid=6522286;epid=321001088;ecid=162047244;eadv=8025626;eaid=515511559;erid=161602702;eexpid=;eexcid=;erv=1;eiid=CPXW7Lzk4PsCFU9qwQodiooFqQ;&ft_custom=8025626__26847352__6522286__162047244&ft_c1=321001088&ftOBA=1&ft_ifb=1&ft_domain=htmtopdf.herokuapp.com&ft_agentEnv=0&ft_referrer=https%3A%2F%2Fhtmtopdf.herokuapp.com%2F&ft_keyword=321001088&ft_section=46964522111507661120707712889226813848%7C%7C321001088&gdpr=&gdpr_consent=&us_privacy=${US_PRIVACY}&cachebuster=62541.560731194986";
-var ftKeyword_6027420="";
-var ftCustom_6027420="8025626__26847352__6522286__162047244";
-var ftSection_6027420="46964522111507661120707712889226813848||321001088";
-var ftSegment_6027420="";
-var ftSegmentList_6027420=[];
-var ftRuleMatch_6027420="00001000";
-var ftTimestamp_6027420="1670185481";
-var ftGeoC2_6027420="us";
-var ftGeoState_6027420="fl";
-var ftGeoCity_6027420="tallahassee";
-var ftISP_6027420="florida state university";
-var ftSpeed_6027420="broadband";
-var ftDMA_6027420="530";
-var ftLong_6027420="-84.3";
-var ftLat_6027420="30.44";
-var ftPostal_6027420="32306";
-var ftTimeZone_6027420="-500";
-var ftMobileCarrier_6027420="";
-var ftImp6027420 = {};
-ftImp6027420.privacy = "x";
-ftImp6027420.guidAge = "0";
-ftImp6027420.impID = "605074A8-9969-29B1-F3C2-521F523FB4F6";
-ftImp6027420.duid = "FT:5451B71894CE07";
-
-ftImp6027420.ft_tpplid = "";
-ftImp6027420.ft_c = {};
-ftImp6027420.ft_c.ft_c1 = "321001088";
-ftImp6027420.gdpr = "";
-ftImp6027420.gdpr_consent = "";
-ftImp6027420.gdpr_pd = "";
-ftImp6027420.oob_consent = "";
-ftImp6027420.gdprStoredConsent = "";
-ftImp6027420.us_privacy = "!!US_PRIVACY!";
-
-document.write('<scr'+'ipt src="https://cdn.flashtalking.com/xre/602/6027420/4106627/js/j-6027420-4106627.js" id="ftscript_m6027420" name="ftscript_m6027420"></scr'+'ipt>');

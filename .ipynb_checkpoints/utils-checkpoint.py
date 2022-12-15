@@ -299,3 +299,22 @@ class CNN_MODEL(nn.Module):
 # model = CNN_MODEL(n_feature=NFEATURES, n_hidden=N_HIDDEN, n_output=1, n_cnn_kernel=N_CNN_KERNEL)   # define the network    
 
 
+#####CONVERT env.yml to requirementes.txt
+
+# import ruamel.yaml
+# yaml = ruamel.yaml.YAML()
+# data = yaml.load(open('IQN_env.yml'))
+# requirements = []
+# for dep in data['dependencies']:
+#     if isinstance(dep, str):
+#         package, package_version, python_version = dep.split('=')
+#         if python_version == '0':
+#             continue
+#         requirements.append(package + '==' + package_version)
+#     elif isinstance(dep, dict):
+#         for preq in dep.get('pip', []):
+#             requirements.append(preq)
+
+# with open('requirements.txt', 'w') as fp:
+#     for requirement in requirements:
+#        print(requirement, file=fp)

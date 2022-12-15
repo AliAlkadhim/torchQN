@@ -299,3 +299,111 @@ class CNN_MODEL(nn.Module):
 # model = CNN_MODEL(n_feature=NFEATURES, n_hidden=N_HIDDEN, n_output=1, n_cnn_kernel=N_CNN_KERNEL)   # define the network    
 
 
+#####CONVERT env.yml to requirementes.txt
+
+# import ruamel.yaml
+# yaml = ruamel.yaml.YAML()
+# data = yaml.load(open('IQN_env.yml'))
+# requirements = []
+# for dep in data['dependencies']:
+#     if isinstance(dep, str):
+#         package, package_version, python_version = dep.split('=')
+#         if python_version == '0':
+#             continue
+#         requirements.append(package + '==' + package_version)
+#     elif isinstance(dep, dict):
+#         for preq in dep.get('pip', []):
+#             requirements.append(preq)
+
+# with open('requirements.txt', 'w') as fp:
+#     for requirement in requirements:
+#        print(requirement, file=fp)
+
+def show_jupyter_image(image_filename, width = 1300, height = 300):
+    """Show a saved image directly in jupyter. Make sure image_filename is in your IQN_BASE !"""
+    display(Image(os.path.join(IQN_BASE,image_filename), width = width, height = height  ))
+    
+    
+def use_svg_display():
+    """Use the svg format to display a plot in Jupyter (better quality)"""
+    from matplotlib_inline import backend_inline
+    backend_inline.set_matplotlib_formats('svg')
+
+def reset_plt_params():
+    """reset matplotlib parameters - often useful"""
+    use_svg_display()
+    mpl.rcParams.update(mpl.rcParamsDefault)
+
+def show_plot(legend=False):
+    use_svg_display()
+    plt.tight_layout();
+    plt.show()
+    if legend:
+        plt.legend(loc='best')
+        
+def set_figsize(get_axes=False,figsize=(7, 7)):
+    use_svg_display()
+    plt.rcParams['figure.figsize'] = figsize
+    if get_axes:
+        fig, ax = plt.subplots(1,1, figsize=figsize)
+        return fig, ax
+    
+def set_axes(ax, xlabel, ylabel=None, xmin=None, xmax=None, ymin=None, ymax=None, title=None):
+    """saves a lot of time in explicitly difining each axis, its title and labels: do them all in one go"""
+    use_svg_display()
+    ax.set_xlabel(xlabel,fontsize=font_axes)
+    if ylabel:
+        ax.set_ylabel(ylabel,fontsize=font_axes)
+    if xmin and xmax:
+        ax.set_xlim(xmin, xmax)
+    
+    if ax.get_title()  != '':
+        #if the axes (plot) does have a title (which is non-empty string), display it 
+        ax.set_title(title)
+    if ax.legend():
+        #if an axis has a legned label, display it
+        ax.legend(loc='best',fontsize=font_legend)
+    if ymin and ymax:
+        #sometimes we dont have ylimits since we do a lot of histograms, but if an axis has ylimits, set them
+        ax.set_ylim(ymin, ymax)
+    
+    try:
+        fig.show()
+    except Exception:
+        pass
+    plt.tight_layout()
+    plt.show()
+    
+def explore_data(df, title, scaled=False):
+    fig, ax = plt.subplots(1,5, figsize=(15,10) )
+    # df = df[['genDatapT', 'genDataeta', 'genDataphi', 'genDatam','RecoDatapT', 'RecoDataeta', 'RecoDataphi', 'RecoDatam']]
+    levels = ['RecoData', 'genData']
+    kinematics=['pT','eta','phi','m']
+    columns = [level+k for level in levels for k in kinematics]
+    print(columns)
+    columns = columns + ['tau']
+    print(columns)
+    df = df[columns]
+    
+    for k_i, k in enumerate(kinematics):
+        Reco_var = levels[0]+k
+        gen_var = levels[1]+k
+        print('Reco_var: ', Reco_var, ', \t gen_var: ', gen_var)
+        ax[k_i].hist(df[Reco_var], bins=100, label=Reco_var, alpha=0.35)
+        ax[k_i].hist(df[gen_var], bins=100, label=gen_var, alpha=0.35)
+        xmin, xmax = FIELDS[Reco_var]['xmin'], FIELDS[Reco_var]['xmax']
+        xlabel=FIELDS[Reco_var]['xlabel']
+        ax[k_i].set_xlim( (xmin, xmax) )
+        # set_axes(ax[k_i], xlabel=xlabel, ylabel='', xmin=xmin, xmax=xmax)
+        ax[k_i].set_xlabel(xlabel,fontsize=26)
+        
+        
+                  
+        if scaled:
+            ax[k_i].set_xlim(df[gen_var].min(),df[gen_var].max() )
+        
+        ax[k_i].legend(loc='best', fontsize=13)
+    ax[4].hist(df['tau'],bins=100, label=r'$\tau$')
+    ax[4].legend(loc='best', fontsize=13)
+    fig.suptitle(title, fontsize=30)
+    show_plot()
