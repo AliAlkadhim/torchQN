@@ -13,7 +13,7 @@
 # 
 # There is also a `requirements.txt` here so that it can be run on an interactive website, eg binder or people can `pip install` it.
 
-# In[10]:
+# In[1]:
 
 
 import numpy as np; import pandas as pd
@@ -49,7 +49,7 @@ import ipywidgets as wid;
 
 # ## Import utils, and set environemnt variables
 
-# In[11]:
+# In[2]:
 
 
 try:
@@ -73,7 +73,7 @@ except Exception:
     pass
 
 
-# In[12]:
+# In[3]:
 
 
 # os.environ['IQN_BASE']='/home/ali/Desktop/Pulled_Github_Repositories/torchQN'
@@ -82,7 +82,7 @@ except Exception:
 
 # ### A user is competent enought to do `source setup.sh` on a `setup.sh` script that comes in the repo, such as the next cell uncommented
 
-# In[13]:
+# In[4]:
 
 
 # %%writefile setup.sh
@@ -103,7 +103,7 @@ except Exception:
 
 # Plotting and image functions
 
-# In[14]:
+# In[5]:
 
 
 def show_jupyter_image(image_filename, width = 1300, height = 300):
@@ -172,7 +172,7 @@ def set_axes(ax, xlabel, ylabel=None, xmin=None, xmax=None, ymin=None, ymax=None
 # Recall that the best IQNx4 autoregressive results that I attained prior to trying the Braden scaling was the following (which was implemented in the Davidson cluster here: `/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/OCT_7/*.py` and copied to my repo [here](https://github.com/AliAlkadhim/torchQN/tree/master/OCT_7) )
 # 
 
-# In[15]:
+# In[6]:
 
 
 show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height = 200)
@@ -180,7 +180,7 @@ show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height =
 
 # So we know IQNx4 works (but not perfect enough), but in this notebook we try the Braden scaling (first time trying this scaling) to see if we can do better.
 
-# In[16]:
+# In[7]:
 
 
 # update fonts
@@ -204,7 +204,7 @@ wid.HTMLMath('$\LaTeX$')
 
 # ## Set arguments and configurations
 
-# In[17]:
+# In[8]:
 
 
 ################################### ARGUMENTS ###################################
@@ -268,14 +268,14 @@ def get_model_params():
 
 # # Data
 
-# In[18]:
+# In[9]:
 
 
 use_svg_display()
 show_jupyter_image('images/pythia_ppt_diagram.png', width=2000,height=500)
 
 
-# In[19]:
+# In[10]:
 
 
 ###############################################################################################
@@ -292,7 +292,7 @@ loss_y_label_dict ={'RecoDatapT':'$p_T^{reco}$',
 
 # Decide on an evaluation order 
 
-# In[20]:
+# In[11]:
 
 
 ################################### SET DATA CONFIGURATIONS ###################################
@@ -329,7 +329,7 @@ if ORDER=='m_First':
 
 # Load and explore raw (unscaled) dataframes
 
-# In[21]:
+# In[12]:
 
 
 all_variable_cols=['genDatapT', 'genDataeta', 'genDataphi', 'genDatam','RecoDatapT', 'RecoDataeta', 'RecoDataphi', 'RecoDatam']
@@ -346,7 +346,7 @@ raw_test_data=pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
                      )
 
 
-# In[22]:
+# In[13]:
 
 
 def explore_data(df, title, scaled=False):
@@ -384,27 +384,27 @@ def explore_data(df, title, scaled=False):
     show_plot()
 
 
-# In[23]:
+# In[14]:
 
 
 explore_data(df=raw_train_data, title='Unscaled Dataframe')
 
 
-# In[24]:
+# In[15]:
 
 
 print(raw_train_data.shape)
 raw_train_data.describe()#unscaled
 
 
-# In[25]:
+# In[16]:
 
 
 print(raw_test_data.shape)
 raw_test_data.describe()#unscaled
 
 
-# In[26]:
+# In[17]:
 
 
 # np.array(train_data['genDatapT'])
@@ -415,7 +415,7 @@ raw_test_data.describe()#unscaled
 # scaling (or standarization, normalization) is someimes done in the following way:
 # $$ X' = \frac{X-X_{min}}{X_{max}-X_{min}} \qquad \rightarrow \qquad X= X' (X_{max}-X_{min}) + X_{min}$$
 
-# In[27]:
+# In[18]:
 
 
 # def standarize(values):
@@ -455,7 +455,7 @@ raw_test_data.describe()#unscaled
 # 
 # 7. Compare to $y$ (the actual distribution you're trying to estimate) one-to-one
 
-# In[28]:
+# In[19]:
 
 
 use_svg_display()
@@ -537,7 +537,7 @@ show_jupyter_image('images/scaling_forNN.jpg', width=2000,height=500)
 # ## Scale the data accoding to the "Braden Kronheim scaling" :
 # 
 
-# In[29]:
+# In[20]:
 
 
 def z(x):
@@ -547,7 +547,7 @@ def z_inverse(xprime, x):
     return xprime * np.std(x) + np.mean(x)
 
 
-# In[30]:
+# In[21]:
 
 
 def get_scaling_info(df):
@@ -565,7 +565,7 @@ def get_scaling_info(df):
     return SCALE_DICT
 
 
-# In[31]:
+# In[22]:
 
 
 TRAIN_SCALE_DICT = get_scaling_info(raw_train_data);print(TRAIN_SCALE_DICT)
@@ -573,7 +573,7 @@ print('\n\n')
 TEST_SCALE_DICT = get_scaling_info(raw_test_data);print(TEST_SCALE_DICT)
 
 
-# In[32]:
+# In[23]:
 
 
 def L(orig_observable, label):
@@ -592,12 +592,13 @@ def L(orig_observable, label):
     if label=='phi':
         L_observable=orig_observable
     if label=='tau':
-        L_observable = (6*orig_observable) - 3
+        L_observable=orig_observable
+#         L_observable = (6*orig_observable) - 3
     
     return L_observable.to_numpy()
 
 
-# In[33]:
+# In[24]:
 
 
 def L_inverse(L_observable, label):
@@ -612,7 +613,8 @@ def L_inverse(L_observable, label):
         const=2
         L_inverse_observable = np.exp(L_observable) - const
     if label=='tau':
-        L_inverse_observable = (L_observable+3)/6
+        L_inverse_observable=L_observable
+        # L_inverse_observable = (L_observable+3)/6
         
     if not isinstance(L_inverse_observable, np.ndarray):
         L_inverse_observable = L_inverse_observable.to_numpy()
@@ -624,31 +626,31 @@ def L_inverse(L_observable, label):
 # $$
 # 
 
-# In[34]:
+# In[25]:
 
 
 def T(variable, scaled_df):
     if variable=='pT':
         L_pT_gen=scaled_df['genDatapT']
         L_pT_reco = scaled_df['RecoDatapT']
-        target = z( (L_pT_reco+10)/(L_pT_gen+10) )
+        target = (L_pT_reco+10)/(L_pT_gen+10) 
     if variable=='eta':
         L_eta_gen=scaled_df['genDataeta']
         L_eta_reco = scaled_df['RecoDataeta']
-        target = z( (L_eta_reco+10)/(L_eta_gen+10) )
+        target =  (L_eta_reco+10)/(L_eta_gen+10) 
     if variable=='phi':
         L_phi_gen=scaled_df['genDataphi']
         L_phi_reco = scaled_df['RecoDataphi']
-        target = z( (L_phi_reco+10)/(L_phi_gen+10) )
+        target =  (L_phi_reco+10)/(L_phi_gen+10) 
     if variable=='m':
         L_m_gen=scaled_df['genDatam']
         L_m_reco = scaled_df['RecoDatam']
-        target = z( (L_m_reco+10)/(L_m_gen+10) )
+        target =  (L_m_reco+10)/(L_m_gen+10) 
     
     return target
 
 
-# In[35]:
+# In[26]:
 
 
 def L_scale_df(df, title, save=False):
@@ -683,7 +685,7 @@ def L_scale_df(df, title, save=False):
     return scaled_df
 
 
-# In[36]:
+# In[27]:
 
 
 scaled_train_data = L_scale_df(raw_train_data, title='scaled_train_data_10M_2.csv',
@@ -695,7 +697,7 @@ scaled_test_data = L_scale_df(raw_test_data,  title='scaled_test_data_10M_2.csv'
 explore_data(df=scaled_train_data, title='Braden Kronheim-L-scaled Dataframe', scaled=True)
 
 
-# In[37]:
+# In[28]:
 
 
 labels = ['pT', 'eta','phi','m']
@@ -711,7 +713,7 @@ for label in labels:
 plt.legend();plt.show()
 
 
-# In[38]:
+# In[29]:
 
 
 # scaled_train_data = L_scale_df(train_data, title='scaled_train_data_10M_2.csv',
@@ -818,7 +820,7 @@ plt.legend();plt.show()
 # $$\mathbf{x_m}=\{p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}.$$
 # 
 
-# In[39]:
+# In[30]:
 
 
 show_jupyter_image('images/IQN_training_flowchart.png',width=3000,height=1000)
@@ -826,7 +828,7 @@ show_jupyter_image('images/IQN_training_flowchart.png',width=3000,height=1000)
 
 # ### Batches, validation, losses, and plotting of losses functions
 
-# In[40]:
+# In[31]:
 
 
 def get_batch(x, t, batch_size):
@@ -916,7 +918,7 @@ def plot_average_loss(traces, ftsize=18,save_loss_plots=False, show_loss_plots=T
         plt.show()
 
 
-# In[41]:
+# In[32]:
 
 
 target = 'RecoDatam'
@@ -960,7 +962,7 @@ print('\ntest set shape:  ', test_data_m.shape)
 
 # ### Get training and testing features and targets
 
-# In[42]:
+# In[33]:
 
 
 def split_t_x(df, target, input_features):
@@ -986,14 +988,14 @@ def normal_split_t_x(df, target, input_features):
     return t, x
 
 
-# In[43]:
+# In[34]:
 
 
 print(features)
 print('\n', target)
 
 
-# In[44]:
+# In[35]:
 
 
 print(f'spliting data for {target}')
@@ -1007,7 +1009,7 @@ print('valid_t shape = ',valid_t_ratio.shape , 'valid_x shape = ', valid_x.shape
 print('no need to train_test_split since we already have the split dataframes')
 
 
-# In[45]:
+# In[36]:
 
 
 print(valid_x.mean(axis=0), valid_x.std(axis=0))
@@ -1016,7 +1018,7 @@ print(train_x.mean(axis=0), train_x.std(axis=0))
 
 # we expect the targets to have mean 0 and variance=1, since theyre the only things standarized
 
-# In[46]:
+# In[37]:
 
 
 print(valid_t_ratio.mean(), valid_t_ratio.std())
@@ -1025,11 +1027,11 @@ print(train_t_ratio.mean(), train_t_ratio.std())
 
 # Aplly final $z$ to the train and test set features
 
-# In[51]:
+# In[38]:
 
 
 NFEATURES=train_x.shape[1]
-for i in range(NFEATURES):
+for i in range(NFEATURES-1):
     train_x[:,i] = z(train_x[:,i])
     valid_x[:,i] = z(valid_x[:,i])
     
@@ -1038,7 +1040,23 @@ print(valid_x.mean(axis=0), valid_x.std(axis=0))
 print(train_x.mean(axis=0), train_x.std(axis=0))
 
 
-# In[52]:
+# In[39]:
+
+
+train_x
+
+
+# In[40]:
+
+
+train_t_ratio = z(train_t_ratio) 
+valid_t_ratio= z(valid_t_ratio)
+
+print(valid_t_ratio.mean(), valid_t_ratio.std())
+print(train_t_ratio.mean(), train_t_ratio.std())
+
+
+# In[41]:
 
 
 for i in range(NFEATURES):
@@ -1047,9 +1065,15 @@ for i in range(NFEATURES):
 plt.show()
 
 
+# In[42]:
+
+
+train_x[:,-1].max()
+
+
 # ### Training and running-of-training functions
 
-# In[53]:
+# In[43]:
 
 
 n_iterations, n_layers, n_hidden, starting_learning_rate, dropout = get_model_params()
@@ -1078,7 +1102,7 @@ def train(model, optimizer, avloss, getbatch,
         
         # get a random sample (a batch) of data (as numpy arrays)
         batch_x, batch_t = getbatch(train_x, train_t, batch_size)
-        
+        batch_x[:,-1]=batch_x[:,-1] 
         # convert the numpy arrays batch_x and batch_t to tensor 
         # types. The PyTorch tensor type is the magic that permits 
         # automatic differentiation with respect to parameters. 
@@ -1210,7 +1234,7 @@ def run(model,
 
 # ### Define basic NN model
 
-# In[54]:
+# In[44]:
 
 
 class RegularizedRegressionModel(nn.Module):
@@ -1252,7 +1276,7 @@ class RegularizedRegressionModel(nn.Module):
 
 # ### Run training
 
-# In[55]:
+# In[45]:
 
 
 n_layers=2;n_hidden=5#a simple model should give reasonable results
@@ -1265,7 +1289,7 @@ def load_untrained_model():
 
 # ## See if trainig works on T ratio
 
-# In[56]:
+# In[46]:
 
 
 model=load_untrained_model()
@@ -1289,7 +1313,7 @@ print('evaluating m took ',difference, 'seconds')
 
 # ## Save trained model (if its good, and if you haven't saved above) and load trained model (if you saved it)
 
-# In[4]:
+# In[47]:
 
 
 filename='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
@@ -1322,7 +1346,7 @@ def load_model(model):
     return model
 
 
-# In[57]:
+# In[48]:
 
 
 plt.hist(valid_t_ratio, label='ratio target');
@@ -1331,7 +1355,7 @@ for i in range(NFEATURES):
 plt.legend();plt.show()
 
 
-# In[58]:
+# In[49]:
 
 
 IQN.eval()
@@ -1362,7 +1386,7 @@ plt.hist(p, label='predicted $T$ ratio');plt.legend();plt.show()
 # 
 # $$z^{-1} (f_{\text{IQN}} ) = z^{-1}\left( y_{pred}, \text{mean}=\text{mean}(\mathbb{T}(\text{target_variable})), std=std (\mathbb{T}(\text{target_variable} ) \right)$$
 
-# In[59]:
+# In[50]:
 
 
 def get_finite(values):
@@ -1372,7 +1396,7 @@ def z_inverse(xprime, mean, std):
     return xprime * std + mean
 
 
-# In[60]:
+# In[51]:
 
 
 recom_unsc_mean=TEST_SCALE_DICT[target]['mean']
@@ -1382,7 +1406,7 @@ print(recom_unsc_mean,recom_unsc_std)
 
 # Get unscaled dataframe again, just to verify
 
-# In[61]:
+# In[52]:
 
 
 raw_train_data=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
@@ -1397,7 +1421,7 @@ raw_test_data=pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
 raw_test_data.describe()
 
 
-# In[64]:
+# In[53]:
 
 
 m_reco = raw_test_data['RecoDatam']
@@ -1415,16 +1439,23 @@ plt.hist(m_reco,label=r'$m_{gen}^{test \ data}$');plt.legend();plt.show()
 # 
 # * First, calculate $z^{-1} (f_{\text{IQN}} )$
 
-# In[65]:
+# In[54]:
 
 
 print(valid_t_ratio.shape, valid_t_ratio[:5])
 
 
-# In[66]:
+# In[55]:
 
 
-z_inv_f =z_inverse(xprime=p, mean=np.mean(valid_t_ratio), std=np.std(valid_t_ratio))
+orig_ratio = T('m', scaled_df=train_data_m)
+orig_ratio[:5]
+
+
+# In[56]:
+
+
+z_inv_f =z_inverse(xprime=p, mean=np.mean(orig_ratio), std=np.std(orig_ratio))
 z_inv_f[:5]
 
 
@@ -1433,20 +1464,20 @@ z_inv_f[:5]
 # $$\mathbb{L}(\mathcal{O^{\text{gen}}}) = \mathbb{L} (m^{\text{gen}})$$
 # 
 
-# In[68]:
+# In[57]:
 
 
 L_obs = L(orig_observable=m_gen, label='m')
 L_obs[:5]
 
 
-# In[69]:
+# In[58]:
 
 
 print(L_obs.shape, z_inv_f.shape)
 
 
-# In[70]:
+# In[59]:
 
 
 z_inv_f = z_inv_f.flatten();print(z_inv_f.shape)
@@ -1454,37 +1485,31 @@ z_inv_f = z_inv_f.flatten();print(z_inv_f.shape)
 
 # * "factor" $ = z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 $
 
-# In[71]:
+# In[60]:
 
 
 factor = (z_inv_f * (L_obs  + 10) )-10
 factor[:5]
 
 
-# In[72]:
+# In[61]:
 
 
-pT_pred = L_inverse(L_observable=factor, label='m')
+m_pred = L_inverse(L_observable=factor, label='m')
 # pT_pred=get_finite(pT_pred)
 
 
-# In[73]:
+# In[62]:
 
 
-pT_pred
+m_pred
 
 
-# In[74]:
+# In[63]:
 
 
-pT_pred=get_finite(pT_pred)
-pT_pred
-
-
-# In[75]:
-
-
-plt.hist(pT_pred.flatten());plt.show()
+plt.hist(m_pred.flatten(),label='predicted',alpha=0.3);
+plt.hist(m_reco,label=r'$m_{gen}^{test \ data}$',alpha=0.3);plt.legend();plt.show()
 
 
 # # Notebook attempting to do this scaling is over (results are weird)
