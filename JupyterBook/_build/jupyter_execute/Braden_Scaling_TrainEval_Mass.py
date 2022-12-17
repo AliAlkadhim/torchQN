@@ -1326,7 +1326,18 @@ class RegularizedRegressionModel(nn.Module):
 # 
 # ## Hyperparameter Training Workflow
 
-# In[279]:
+# In[293]:
+
+
+def get_tuning_sample():
+    sample=int(100000)
+    # train_x_sample, train_t_ratio_sample, valid_x_sample, valid_t_ratio_sample
+    return train_x[:sample], train_t_ratio[:sample], valid_x[:sample], valid_t_ratio[:sample]
+train_x_sample, train_t_ratio_sample, valid_x_sample, valid_t_ratio_sample = get_tuning_sample()
+train_x_sample.shape
+
+
+# In[294]:
 
 
 class HyperTrainer():
@@ -1337,6 +1348,7 @@ class HyperTrainer():
         #self.device= device
         self.optimizer = optimizer
         self.batch_size=batch_size
+        self.n_iterations_tune=int(500)
 
         #the loss function returns the loss function. It is a static method so it doesn't need self
         # @staticmethod
@@ -1353,7 +1365,7 @@ class HyperTrainer():
 
         self.model.train()
         final_loss = 0
-        for iteration in range(n_iterations):
+        for iteration in range(self.n_iterations_tune):
             self.optimizer.zero_grad()
             batch_x, batch_t = get_batch(x, t,  self.batch_size)#x and t are train_x and train_t
 
@@ -1372,8 +1384,8 @@ class HyperTrainer():
 
         self.model.eval()
         final_loss = 0
-        for iteration in range(n_iterations):
-            batch_x, batch_t = get_features_training_batch(x, t,  self.batch_size)#x and t are train_x and train_t
+        for iteration in range(self.n_iterations_tune):
+            batch_x, batch_t = get_batch(x, t,  self.batch_size)#x and t are train_x and train_t
 
             # with torch.no_grad():            
             inputs=torch.from_numpy(batch_x).float()
@@ -1389,7 +1401,7 @@ def run_train(params, save_model=False):
     """For tuning the parameters"""
 
     model =  RegularizedRegressionModel(
-              nfeatures=train_x.shape[1], 
+              nfeatures=train_x_sample.shape[1], 
                 ntargets=1,
                 nlayers=params["nlayers"], 
                 hidden_size=params["hidden_size"],
@@ -1407,12 +1419,12 @@ def run_train(params, save_model=False):
     
     trainer=HyperTrainer(model, optimizer, batch_size=params["batch_size"])
     best_loss = np.inf
-    early_stopping_iter=10#stop after 10 iteractions of not improving loss
+    early_stopping_iter=20#stop after 10 iteractions of not improving loss
     early_stopping_coutner=0
 
     for epoch in range(EPOCHS):
-        train_loss = trainer.train(train_x, train_t_ratio)
-        valid_loss=trainer.evaluate(valid_x, valid_t_ratio)
+        train_loss = trainer.train(train_x_sample, train_t_ratio_sample)
+        valid_loss=trainer.evaluate(valid_x_sample, valid_t_ratio_sample)
 
         print(f"{epoch} \t {train_loss} \t {valid_loss}")
         if valid_loss<best_loss:
@@ -1428,12 +1440,12 @@ def run_train(params, save_model=False):
 
 def objective(trial):
     params = {
-      "nlayers": trial.suggest_int("nlayers",1,23),      
-      "hidden_size": trial.suggest_int("hidden_size", 2, 130),
+      "nlayers": trial.suggest_int("nlayers",1,6),      
+      "hidden_size": trial.suggest_int("hidden_size", 2, 64),
       "dropout": trial.suggest_float("dropout", 0.1,0.5),
       "optimizer_name" : trial.suggest_categorical("optimizer_name", ["Adam", "RMSprop"]),
       "learning_rate": trial.suggest_float("learning_rate", 1e-5, 1e-2),
-      "batch_size": trial.suggest_int("batch_size", 500, 10000)
+      "batch_size": trial.suggest_int("batch_size", 50, 10000)
 
     }
     # all_losses=[]
@@ -1443,15 +1455,16 @@ def objective(trial):
     return temp_loss
 
 def tune_hyperparameters():
-    print(r'Getting best hyperparameters for target {target}')
+    print(f'Getting best hyperparameters for target {target}')
     study=optuna.create_study(direction="minimize")
-    study.optimize(objective, n_trials=100)
+    study.optimize(objective, n_trials=1000)
     best_trial = study.best_trial
     print('best model parameters', best_trial.params)
 
     best_params=best_trial.params#this is a dictionary
-    mkdir('best_params')
-    filename=os.path.join(IQN_BASE,'best_params','best_params_Test_Trials.csv')
+    tuned_dir = os.path.join(QN_BASE,'best_params')
+    mkdir(tuned_dir)
+    filename=os.path.join(tuned_dir,'best_params_Test_Trials.csv')
     param_df=pd.DataFrame({
                             'n_layers':best_params["nlayers"], 
                             'hidden_size':best_params["hidden_size"], 
@@ -1465,7 +1478,7 @@ def tune_hyperparameters():
     param_df.to_csv(filename)   
 
 
-# In[ ]:
+# In[292]:
 
 
 tune_hyperparameters()
@@ -1473,11 +1486,26 @@ tune_hyperparameters()
 
 # ### Run training
 
+# In[ ]:
+
+
+# def get_model_params_tuned()
+BEST_PARAMS = pd.read_csv(os.path.join(IQN_BASE, 'best_params','best_params_Test_Trials.csv'))
+print(BEST_PARAMS)
+
+n_layers = int(BEST_PARAMS["n_layers"]) 
+hidden_size = int(BEST_PARAMS["hidden_size"])
+dropout = float(BEST_PARAMS["dropout"])
+optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
+learning_rate =  float(BEST_PARAMS["learning_rate"])
+batch_size = int(BEST_PARAMS["batch_size"])
+
+
 # In[238]:
 
 
 @debug
-def get_model_params():
+def get_model_params_simple():
     dropout=0.2
     n_layers = 2
     n_hidden=32

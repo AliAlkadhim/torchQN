@@ -2541,6 +2541,23 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
 <h2>Hyperparameter Training Workflow<a class="headerlink" href="#hyperparameter-training-workflow" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_tuning_sample</span><span class="p">():</span>
+    <span class="n">sample</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mi">100000</span><span class="p">)</span>
+    <span class="c1"># train_x_sample, train_t_ratio_sample, valid_x_sample, valid_t_ratio_sample</span>
+    <span class="k">return</span> <span class="n">train_x</span><span class="p">[:</span><span class="n">sample</span><span class="p">],</span> <span class="n">train_t_ratio</span><span class="p">[:</span><span class="n">sample</span><span class="p">],</span> <span class="n">valid_x</span><span class="p">[:</span><span class="n">sample</span><span class="p">],</span> <span class="n">valid_t_ratio</span><span class="p">[:</span><span class="n">sample</span><span class="p">]</span>
+<span class="n">train_x_sample</span><span class="p">,</span> <span class="n">train_t_ratio_sample</span><span class="p">,</span> <span class="n">valid_x_sample</span><span class="p">,</span> <span class="n">valid_t_ratio_sample</span> <span class="o">=</span> <span class="n">get_tuning_sample</span><span class="p">()</span>
+<span class="n">train_x_sample</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(100000, 5)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">HyperTrainer</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;loss, training and evaluation&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
@@ -2549,6 +2566,7 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
         <span class="c1">#self.device= device</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizer</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_iterations_tune</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
 
         <span class="c1">#the loss function returns the loss function. It is a static method so it doesn&#39;t need self</span>
         <span class="c1"># @staticmethod</span>
@@ -2565,7 +2583,7 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
 
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
         <span class="n">final_loss</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iterations</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_iterations_tune</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
             <span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_t</span> <span class="o">=</span> <span class="n">get_batch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span><span class="c1">#x and t are train_x and train_t</span>
 
@@ -2584,8 +2602,8 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
 
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
         <span class="n">final_loss</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iterations</span><span class="p">):</span>
-            <span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_t</span> <span class="o">=</span> <span class="n">get_features_training_batch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span><span class="c1">#x and t are train_x and train_t</span>
+        <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_iterations_tune</span><span class="p">):</span>
+            <span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_t</span> <span class="o">=</span> <span class="n">get_batch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span><span class="c1">#x and t are train_x and train_t</span>
 
             <span class="c1"># with torch.no_grad():            </span>
             <span class="n">inputs</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">batch_x</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
@@ -2601,7 +2619,7 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
     <span class="sd">&quot;&quot;&quot;For tuning the parameters&quot;&quot;&quot;</span>
 
     <span class="n">model</span> <span class="o">=</span>  <span class="n">RegularizedRegressionModel</span><span class="p">(</span>
-              <span class="n">nfeatures</span><span class="o">=</span><span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> 
+              <span class="n">nfeatures</span><span class="o">=</span><span class="n">train_x_sample</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> 
                 <span class="n">ntargets</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                 <span class="n">nlayers</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;nlayers&quot;</span><span class="p">],</span> 
                 <span class="n">hidden_size</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">],</span>
@@ -2619,12 +2637,12 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
     
     <span class="n">trainer</span><span class="o">=</span><span class="n">HyperTrainer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">])</span>
     <span class="n">best_loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-    <span class="n">early_stopping_iter</span><span class="o">=</span><span class="mi">10</span><span class="c1">#stop after 10 iteractions of not improving loss</span>
+    <span class="n">early_stopping_iter</span><span class="o">=</span><span class="mi">20</span><span class="c1">#stop after 10 iteractions of not improving loss</span>
     <span class="n">early_stopping_coutner</span><span class="o">=</span><span class="mi">0</span>
 
     <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">EPOCHS</span><span class="p">):</span>
-        <span class="n">train_loss</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_t_ratio</span><span class="p">)</span>
-        <span class="n">valid_loss</span><span class="o">=</span><span class="n">trainer</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">valid_x</span><span class="p">,</span> <span class="n">valid_t_ratio</span><span class="p">)</span>
+        <span class="n">train_loss</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">train_x_sample</span><span class="p">,</span> <span class="n">train_t_ratio_sample</span><span class="p">)</span>
+        <span class="n">valid_loss</span><span class="o">=</span><span class="n">trainer</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">valid_x_sample</span><span class="p">,</span> <span class="n">valid_t_ratio_sample</span><span class="p">)</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> </span><span class="si">{</span><span class="n">train_loss</span><span class="si">}</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> </span><span class="si">{</span><span class="n">valid_loss</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">valid_loss</span><span class="o">&lt;</span><span class="n">best_loss</span><span class="p">:</span>
@@ -2640,12 +2658,12 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
 
 <span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="n">trial</span><span class="p">):</span>
     <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
-      <span class="s2">&quot;nlayers&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;nlayers&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">23</span><span class="p">),</span>      
-      <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">130</span><span class="p">),</span>
+      <span class="s2">&quot;nlayers&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;nlayers&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span>      
+      <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span>
       <span class="s2">&quot;dropout&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s2">&quot;dropout&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
       <span class="s2">&quot;optimizer_name&quot;</span> <span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_categorical</span><span class="p">(</span><span class="s2">&quot;optimizer_name&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;Adam&quot;</span><span class="p">,</span> <span class="s2">&quot;RMSprop&quot;</span><span class="p">]),</span>
       <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">),</span>
-      <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;batch_size&quot;</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+      <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;batch_size&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
 
     <span class="p">}</span>
     <span class="c1"># all_losses=[]</span>
@@ -2655,15 +2673,16 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
     <span class="k">return</span> <span class="n">temp_loss</span>
 
 <span class="k">def</span> <span class="nf">tune_hyperparameters</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Getting best hyperparameters for target </span><span class="si">{target}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Getting best hyperparameters for target </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">study</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">create_study</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s2">&quot;minimize&quot;</span><span class="p">)</span>
-    <span class="n">study</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">study</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
     <span class="n">best_trial</span> <span class="o">=</span> <span class="n">study</span><span class="o">.</span><span class="n">best_trial</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;best model parameters&#39;</span><span class="p">,</span> <span class="n">best_trial</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
 
     <span class="n">best_params</span><span class="o">=</span><span class="n">best_trial</span><span class="o">.</span><span class="n">params</span><span class="c1">#this is a dictionary</span>
-    <span class="n">mkdir</span><span class="p">(</span><span class="s1">&#39;best_params&#39;</span><span class="p">)</span>
-    <span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span><span class="s1">&#39;best_params&#39;</span><span class="p">,</span><span class="s1">&#39;best_params_Test_Trials.csv&#39;</span><span class="p">)</span>
+    <span class="n">tuned_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">QN_BASE</span><span class="p">,</span><span class="s1">&#39;best_params&#39;</span><span class="p">)</span>
+    <span class="n">mkdir</span><span class="p">(</span><span class="n">tuned_dir</span><span class="p">)</span>
+    <span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tuned_dir</span><span class="p">,</span><span class="s1">&#39;best_params_Test_Trials.csv&#39;</span><span class="p">)</span>
     <span class="n">param_df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
                             <span class="s1">&#39;n_layers&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;nlayers&quot;</span><span class="p">],</span> 
                             <span class="s1">&#39;hidden_size&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">],</span> 
@@ -2686,7 +2705,289 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Getting best hyperparameters
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Getting best hyperparameters for target RecoDatam
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.22361083919480002 	 0.22437154022899605
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.2687179733283786 	 0.26739557730257935
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19894026402022025 	 0.1987885715694886
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.23935348788897196 	 0.2381529021937892
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19644167291204875 	 0.19577806422922675
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.3133509893852629 	 0.3105925294129472
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.24491037372619875 	 0.24385125633208982
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.30006828047926465 	 0.30106917534555705
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.2027835139521846 	 0.20046030513193241
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.2598116384864828 	 0.25799593601467175
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.3798155251020443 	 0.3787689358888272
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19205225311746502 	 0.19139680558382863
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.193058182614121 	 0.19269860911417783
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.213268910216591 	 0.21151258840673048
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19090260659820005 	 0.1913594540812578
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.2143557548119761 	 0.21348816102628912
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.1911433932759567 	 0.19099004171209788
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.21122766260443063 	 0.21087475427663632
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.22498625088615826 	 0.22494686063989608
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.18971126842498778 	 0.18994521328806876
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.20509548024052665 	 0.2047096545046026
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19136229540834473 	 0.19037279870042847
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19173190310432017 	 0.19116275050084358
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.20447976643680243 	 0.2039070987573234
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.22374570331061785 	 0.22346579599774108
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.1916818491821923 	 0.19087988915520251
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.18977283349633217 	 0.18983178323507308
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.20779943752497043 	 0.20626565719665918
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.36074712707882833 	 0.36056769410769146
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.22257711411783193 	 0.22261776462565017
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.23193910445049132 	 0.23136862643035777
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19025041478872298 	 0.18910471260547637
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19837652026921854 	 0.1973114174672927
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19884207066058612 	 0.199256436928622
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.1898626561164856 	 0.18890271335840225
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.283017796900735 	 0.2834854333703198
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19744557185629052 	 0.19642847940604552
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.21918098691966645 	 0.2177061565451847
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.2046093586772005 	 0.20517613403619686
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.1956420006211271 	 0.1951122057499345
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.3438472986437272 	 0.3442224879627642
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19588667249852154 	 0.19513111289555926
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19066275075736294 	 0.1903052161256951
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.2012668297136739 	 0.2006489767424636
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.1953744796842306 	 0.19537929661119266
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.18954975740448968 	 0.18996799168166695
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.21102669343879793 	 0.20991227047237676
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.2482373272470021 	 0.24725404728019207
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.20189487449547688 	 0.20123828730598392
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.21531266092576765 	 0.21562417335808276
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.25967127565809217 	 0.2600097782634678
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19035156876088147 	 0.19024191249206843
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.194394805370233 	 0.19480428448090187
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.1895792522728443 	 0.1895620172917843
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19450140243171427 	 0.19343016450512385
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.20199696615684865 	 0.20022962489667454
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.1904854041337967 	 0.18953350681066514
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_78917</span><span class="o">/</span><span class="mf">2169030322.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">tune_hyperparameters</span><span class="p">()</span>
+
+<span class="nn">/tmp/ipykernel_78917/2825535863.py</span> in <span class="ni">tune_hyperparameters</span><span class="nt">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">116</span>     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Getting best hyperparameters for target </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">117</span>     <span class="n">study</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">create_study</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s2">&quot;minimize&quot;</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">118</span>     <span class="n">study</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">119</span>     <span class="n">best_trial</span> <span class="o">=</span> <span class="n">study</span><span class="o">.</span><span class="n">best_trial</span>
+<span class="g g-Whitespace">    </span><span class="mi">120</span>     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;best model parameters&#39;</span><span class="p">,</span> <span class="n">best_trial</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/optuna/study.py</span> in <span class="ni">optimize</span><span class="nt">(self, func, n_trials, timeout, n_jobs, catch, callbacks, gc_after_trial, show_progress_bar)</span>
+<span class="g g-Whitespace">    </span><span class="mi">408</span>             <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">409</span>             <span class="n">gc_after_trial</span><span class="o">=</span><span class="n">gc_after_trial</span><span class="p">,</span>
+<span class="ne">--&gt; </span><span class="mi">410</span>             <span class="n">show_progress_bar</span><span class="o">=</span><span class="n">show_progress_bar</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">411</span>         <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">412</span> 
+
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/optuna/_optimize.py</span> in <span class="ni">_optimize</span><span class="nt">(study, func, n_trials, timeout, n_jobs, catch, callbacks, gc_after_trial, show_progress_bar)</span>
+<span class="g g-Whitespace">     </span><span class="mi">73</span>                 <span class="n">reseed_sampler_rng</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">74</span>                 <span class="n">time_start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="ne">---&gt; </span><span class="mi">75</span>                 <span class="n">progress_bar</span><span class="o">=</span><span class="n">progress_bar</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">76</span>             <span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">77</span>         <span class="k">else</span><span class="p">:</span>
+
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/optuna/_optimize.py</span> in <span class="ni">_optimize_sequential</span><span class="nt">(study, func, n_trials, timeout, catch, callbacks, gc_after_trial, reseed_sampler_rng, time_start, progress_bar)</span>
+<span class="g g-Whitespace">    </span><span class="mi">160</span> 
+<span class="g g-Whitespace">    </span><span class="mi">161</span>         <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">162</span>             <span class="n">trial</span> <span class="o">=</span> <span class="n">_run_trial</span><span class="p">(</span><span class="n">study</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">catch</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">163</span>         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">164</span>             <span class="k">raise</span>
+
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/optuna/_optimize.py</span> in <span class="ni">_run_trial</span><span class="nt">(study, func, catch)</span>
+<span class="g g-Whitespace">    </span><span class="mi">214</span> 
+<span class="g g-Whitespace">    </span><span class="mi">215</span>     <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">216</span>         <span class="n">value_or_values</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">trial</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">217</span>     <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">TrialPruned</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">218</span>         <span class="c1"># TODO(mamu): Handle multi-objective cases.</span>
+
+<span class="nn">/tmp/ipykernel_78917/2825535863.py</span> in <span class="ni">objective</span><span class="nt">(trial)</span>
+<span class="g g-Whitespace">    </span><span class="mi">109</span>     <span class="c1"># all_losses=[]</span>
+<span class="g g-Whitespace">    </span><span class="mi">110</span> 
+<span class="ne">--&gt; </span><span class="mi">111</span>     <span class="n">temp_loss</span> <span class="o">=</span> <span class="n">run_train</span><span class="p">(</span><span class="n">params</span><span class="p">,</span><span class="n">save_model</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">112</span>     <span class="c1"># all_losses.append(temp_loss)</span>
+<span class="g g-Whitespace">    </span><span class="mi">113</span>     <span class="k">return</span> <span class="n">temp_loss</span>
+
+<span class="nn">/tmp/ipykernel_78917/2825535863.py</span> in <span class="ni">run_train</span><span class="nt">(params, save_model)</span>
+<span class="g g-Whitespace">     </span><span class="mi">82</span> 
+<span class="g g-Whitespace">     </span><span class="mi">83</span>     <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">EPOCHS</span><span class="p">):</span>
+<span class="ne">---&gt; </span><span class="mi">84</span>         <span class="n">train_loss</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">train_x_sample</span><span class="p">,</span> <span class="n">train_t_ratio_sample</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">85</span>         <span class="n">valid_loss</span><span class="o">=</span><span class="n">trainer</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">valid_x_sample</span><span class="p">,</span> <span class="n">valid_t_ratio_sample</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">86</span> 
+
+<span class="nn">/tmp/ipykernel_78917/2825535863.py</span> in <span class="ni">train</span><span class="nt">(self, x, t)</span>
+<span class="g g-Whitespace">     </span><span class="mi">31</span>             <span class="n">inputs</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">batch_x</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">32</span>             <span class="n">targets</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">batch_t</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+<span class="ne">---&gt; </span><span class="mi">33</span>             <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">34</span>             <span class="n">loss</span> <span class="o">=</span> <span class="n">average_quantile_loss</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">35</span>             <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/torch/nn/modules/module.py</span> in <span class="ni">_call_impl</span><span class="nt">(self, *input, **kwargs)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1049</span>         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_backward_hooks</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_hooks</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_pre_hooks</span> <span class="ow">or</span> <span class="n">_global_backward_hooks</span>
+<span class="g g-Whitespace">   </span><span class="mi">1050</span>                 <span class="ow">or</span> <span class="n">_global_forward_hooks</span> <span class="ow">or</span> <span class="n">_global_forward_pre_hooks</span><span class="p">):</span>
+<span class="ne">-&gt; </span><span class="mi">1051</span>             <span class="k">return</span> <span class="n">forward_call</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1052</span>         <span class="c1"># Do not call functions when jit is used</span>
+<span class="g g-Whitespace">   </span><span class="mi">1053</span>         <span class="n">full_backward_hooks</span><span class="p">,</span> <span class="n">non_full_backward_hooks</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+
+<span class="nn">/tmp/ipykernel_78917/2614656371.py</span> in <span class="ni">forward</span><span class="nt">(self, x)</span>
+<span class="g g-Whitespace">     </span><span class="mi">34</span> 
+<span class="g g-Whitespace">     </span><span class="mi">35</span>     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="ne">---&gt; </span><span class="mi">36</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/torch/nn/modules/module.py</span> in <span class="ni">_call_impl</span><span class="nt">(self, *input, **kwargs)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1049</span>         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_backward_hooks</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_hooks</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_pre_hooks</span> <span class="ow">or</span> <span class="n">_global_backward_hooks</span>
+<span class="g g-Whitespace">   </span><span class="mi">1050</span>                 <span class="ow">or</span> <span class="n">_global_forward_hooks</span> <span class="ow">or</span> <span class="n">_global_forward_pre_hooks</span><span class="p">):</span>
+<span class="ne">-&gt; </span><span class="mi">1051</span>             <span class="k">return</span> <span class="n">forward_call</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1052</span>         <span class="c1"># Do not call functions when jit is used</span>
+<span class="g g-Whitespace">   </span><span class="mi">1053</span>         <span class="n">full_backward_hooks</span><span class="p">,</span> <span class="n">non_full_backward_hooks</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/torch/nn/modules/container.py</span> in <span class="ni">forward</span><span class="nt">(self, input)</span>
+<span class="g g-Whitespace">    </span><span class="mi">137</span>     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">138</span>         <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">139</span>             <span class="nb">input</span> <span class="o">=</span> <span class="n">module</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">140</span>         <span class="k">return</span> <span class="nb">input</span>
+<span class="g g-Whitespace">    </span><span class="mi">141</span> 
+
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/torch/nn/modules/module.py</span> in <span class="ni">_call_impl</span><span class="nt">(self, *input, **kwargs)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1049</span>         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_backward_hooks</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_hooks</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_pre_hooks</span> <span class="ow">or</span> <span class="n">_global_backward_hooks</span>
+<span class="g g-Whitespace">   </span><span class="mi">1050</span>                 <span class="ow">or</span> <span class="n">_global_forward_hooks</span> <span class="ow">or</span> <span class="n">_global_forward_pre_hooks</span><span class="p">):</span>
+<span class="ne">-&gt; </span><span class="mi">1051</span>             <span class="k">return</span> <span class="n">forward_call</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1052</span>         <span class="c1"># Do not call functions when jit is used</span>
+<span class="g g-Whitespace">   </span><span class="mi">1053</span>         <span class="n">full_backward_hooks</span><span class="p">,</span> <span class="n">non_full_backward_hooks</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/torch/nn/modules/dropout.py</span> in <span class="ni">forward</span><span class="nt">(self, input)</span>
+<span class="g g-Whitespace">     </span><span class="mi">56</span> 
+<span class="g g-Whitespace">     </span><span class="mi">57</span>     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="ne">---&gt; </span><span class="mi">58</span>         <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inplace</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">59</span> 
+<span class="g g-Whitespace">     </span><span class="mi">60</span> 
+
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/torch/nn/functional.py</span> in <span class="ni">dropout</span><span class="nt">(input, p, training, inplace)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1166</span>     <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1167</span>         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;dropout probability has to be between 0 and 1, &quot;</span> <span class="s2">&quot;but got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+<span class="ne">-&gt; </span><span class="mi">1168</span>     <span class="k">return</span> <span class="n">_VF</span><span class="o">.</span><span class="n">dropout_</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">training</span><span class="p">)</span> <span class="k">if</span> <span class="n">inplace</span> <span class="k">else</span> <span class="n">_VF</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">training</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1169</span> 
+<span class="g g-Whitespace">   </span><span class="mi">1170</span> 
+
+<span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
 </div>
 </div>
@@ -2695,8 +2996,24 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
 <h3>Run training<a class="headerlink" href="#run-training" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># def get_model_params_tuned()</span>
+<span class="n">BEST_PARAMS</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span> <span class="s1">&#39;best_params&#39;</span><span class="p">,</span><span class="s1">&#39;best_params_Test_Trials.csv&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">BEST_PARAMS</span><span class="p">)</span>
+
+<span class="n">n_layers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">BEST_PARAMS</span><span class="p">[</span><span class="s2">&quot;n_layers&quot;</span><span class="p">])</span> 
+<span class="n">hidden_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">BEST_PARAMS</span><span class="p">[</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">])</span>
+<span class="n">dropout</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">BEST_PARAMS</span><span class="p">[</span><span class="s2">&quot;dropout&quot;</span><span class="p">])</span>
+<span class="n">optimizer_name</span> <span class="o">=</span> <span class="n">BEST_PARAMS</span><span class="p">[</span><span class="s2">&quot;optimizer_name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">learning_rate</span> <span class="o">=</span>  <span class="nb">float</span><span class="p">(</span><span class="n">BEST_PARAMS</span><span class="p">[</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">])</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">BEST_PARAMS</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@debug</span>
-<span class="k">def</span> <span class="nf">get_model_params</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">get_model_params_simple</span><span class="p">():</span>
     <span class="n">dropout</span><span class="o">=</span><span class="mf">0.2</span>
     <span class="n">n_layers</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">n_hidden</span><span class="o">=</span><span class="mi">32</span>
@@ -2861,7 +3178,7 @@ trained model dictionary saved in /home/ali/Desktop/Pulled_Github_Repositories/t
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_86_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_86_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_88_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_88_0.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2886,7 +3203,7 @@ trained model dictionary saved in /home/ali/Desktop/Pulled_Github_Repositories/t
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>predicted ratio shape:  (1000000, 1)
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_87_2.svg" src="_images/Braden_Scaling_TrainEval_Mass_87_2.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_89_2.svg" src="_images/Braden_Scaling_TrainEval_Mass_89_2.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -3089,7 +3406,7 @@ trained model dictionary saved in /home/ali/Desktop/Pulled_Github_Repositories/t
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_94_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_94_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_96_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_96_0.svg" /></div>
 </div>
 <p>Apply the descaling formula for our observable</p>
 <div class="math notranslate nohighlight">
@@ -3235,7 +3552,7 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_107_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_107_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_109_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_109_0.svg" /></div>
 </div>
 <hr class="docutils" />
 <section id="paper-plotting">
@@ -3338,7 +3655,7 @@ norm_autoregressive 1000000
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_113_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_113_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_115_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_115_0.svg" /></div>
 </div>
 <hr class="docutils" />
 <hr class="docutils" />
