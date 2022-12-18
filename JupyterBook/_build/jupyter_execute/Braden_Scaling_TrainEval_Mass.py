@@ -1264,7 +1264,7 @@ train_x_sample, train_t_ratio_sample, valid_x_sample, valid_t_ratio_sample = get
 train_x_sample.shape
 
 
-# In[432]:
+# In[455]:
 
 
 class HyperTrainer():
@@ -1392,15 +1392,15 @@ def tune_hyperparameters():
     print(f'Getting best hyperparameters for target {target}')
     # study=optuna.create_study(direction="minimize")
     #choose a different sampling strategy (https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.CmaEsSampler.html#optuna.samplers.CmaEsSampler)
-    sampler=optuna.samplers.RandomSampler()
-    # sampler=False
+    # sampler=optuna.samplers.RandomSampler()
+    sampler=False
     if sampler:
         study=optuna.create_study(direction='minimize',
                                   pruner=optuna.pruners.MedianPruner(), sampler=sampler)
     else:
         study=optuna.create_study(direction='minimize',
-                                  pruner=optuna.pruners.Hyperband())
-    study.optimize(objective, n_trials=10)
+                                  pruner=optuna.pruners.HyperbandPruner())
+    study.optimize(objective, n_trials=5)
     best_trial = study.best_trial
     print('best model parameters', best_trial.params)
 
@@ -1420,12 +1420,26 @@ def tune_hyperparameters():
     )
 
     param_df.to_csv(filename)   
+    return study
 
 
-# In[433]:
+# In[456]:
 
 
-tune_hyperparameters()
+study= tune_hyperparameters()
+
+
+# In[463]:
+
+
+#make sure you have plotly installed
+optuna.visualization.plot_param_importances(study)
+
+
+# In[ ]:
+
+
+optuna.visualization.plot_parallel_coordinate(study)
 
 
 # In[413]:
