@@ -330,6 +330,11 @@ title="Print to PDF"
   </ul>
  </li>
  <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#helper-functions">
+   2. Helper Functions
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
   <a class="reference internal nav-link" href="#results-prior-to-braden-scaling">
    Results prior to Braden-scaling
   </a>
@@ -548,6 +553,11 @@ title="Print to PDF"
   </ul>
  </li>
  <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#helper-functions">
+   2. Helper Functions
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
   <a class="reference internal nav-link" href="#results-prior-to-braden-scaling">
    Results prior to Braden-scaling
   </a>
@@ -720,7 +730,9 @@ title="Print to PDF"
 <span class="c1">#use numba&#39;s just-in-time compiler to speed things up</span>
 <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">;</span> <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mp</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span><span class="p">;</span> 
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mp</span><span class="p">;</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;matplotlib version= &#39;</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span><span class="p">;</span> 
 <span class="c1">#reset matplotlib stle/parameters</span>
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
 <span class="c1">#reset matplotlib parameters to their defaults</span>
@@ -748,6 +760,7 @@ title="Print to PDF"
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>using torch version 1.9.0
+matplotlib version=  3.5.1
 using (optional) optuna version 2.8.0
 </pre></div>
 </div>
@@ -756,9 +769,61 @@ using (optional) optuna version 2.8.0
 </section>
 <section id="import-utils-and-set-environemnt-variables">
 <h2>Import utils, and set environemnt variables<a class="headerlink" href="#import-utils-and-set-environemnt-variables" title="Permalink to this headline">#</a></h2>
+<p>need to tune latest braden scaling hyperparameters on cluster.</p>
+<p>see if i can find/write a decorator to add the current cell to a file which will be run on cluster. I think %writefile <a class="reference external" href="http://file.py">file.py</a> could work, by adding the cell to another file…</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># &#39;IQN&#39; in </span>
+<span class="c1"># some_environment={}</span>
+<span class="c1"># some_environment.update(os.environ())</span>
+<span class="c1"># some_environment</span>
+<span class="c1"># &#39;DATA&#39; in list(os.environ)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># os.environ[&#39;IQN_BASE&#39;]=&#39;/home/ali/Desktop/Pulled_Github_Repositories/torchQN&#39;</span>
+<span class="c1"># os.environ[&#39;DATA_DIR&#39;]=&#39;/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/data&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="a-user-is-competent-enought-to-do-source-setup-sh-on-a-setup-sh-script-that-comes-in-the-repo-such-as-the-next-cell-uncommented">
+<h3>A user is competent enought to do <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">setup.sh</span></code> on a <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script that comes in the repo, such as the next cell uncommented<a class="headerlink" href="#a-user-is-competent-enought-to-do-source-setup-sh-on-a-setup-sh-script-that-comes-in-the-repo-such-as-the-next-cell-uncommented" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#!/bin/bash
+export IQN_BASE= $pwd #/home/ali/Desktop/Pulled_Github_Repositories/torchQN
+
+#DAVIDSON
+export DATA_DIR=&#39;/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/data&#39;
+#LOCAL
+export DATA_DIR=&#39;/home/ali/Desktop/Pulled_Github_Repositories/IQN_HEP/Davidson/data&#39;
+echo DATA DIR
+ls -l $DATA_DIR
+#ln -s $DATA_DIR $IQN_BASE, if you want
+#conda create env -n torch_env -f torch_env.yml
+conda activate torch_env
+mkdir -p ${IQN_BASE}/images/loss_plots ${IQN_BASE}/trained_models  ${IQN_BASE}/hyperparameters ${IQN_BASE}/predicted_data
+tree $IQN_BASE
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Overwriting setup.sh
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># env = {}</span>
+<span class="c1"># env.update(os.environ)</span>
+<span class="c1"># env.update(source(os.environ[&quot;IQN_BASE&quot;])) </span>
+
+<span class="k">try</span><span class="p">:</span>
     <span class="n">IQN_BASE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;IQN_BASE&#39;</span><span class="p">]</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;BASE directoy properly set = &#39;</span><span class="p">,</span> <span class="n">IQN_BASE</span><span class="p">)</span>
     <span class="n">utils_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span> <span class="s1">&#39;utils&#39;</span><span class="p">)</span>
@@ -781,48 +846,16 @@ using (optional) optuna version 2.8.0
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>BASE directoy properly set =  /home/ali/Desktop/Pulled_Github_Repositories/torchQN
-
-BASE directory not properly set. Read repo README.    If you need a function from utils, use the decorator below, or add utils to sys.path
-
-    You can also do 
-    os.environ[&#39;IQN_BASE&#39;]=&lt;ABSOLUTE PATH FOR THE IQN REPO&gt;
-    or
-    os.environ[&#39;IQN_BASE&#39;]=os.getcwd()
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># os.environ[&#39;IQN_BASE&#39;]=&#39;/home/ali/Desktop/Pulled_Github_Repositories/torchQN&#39;</span>
-<span class="c1"># os.environ[&#39;DATA_DIR&#39;]=&#39;/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/data&#39;</span>
-</pre></div>
-</div>
-</div>
-</div>
-<section id="a-user-is-competent-enought-to-do-source-setup-sh-on-a-setup-sh-script-that-comes-in-the-repo-such-as-the-next-cell-uncommented">
-<h3>A user is competent enought to do <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">setup.sh</span></code> on a <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script that comes in the repo, such as the next cell uncommented<a class="headerlink" href="#a-user-is-competent-enought-to-do-source-setup-sh-on-a-setup-sh-script-that-comes-in-the-repo-such-as-the-next-cell-uncommented" title="Permalink to this headline">#</a></h3>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># %%writefile setup.sh</span>
-<span class="c1"># #!/bin/bash</span>
-<span class="c1"># export IQN_BASE=/home/ali/Desktop/Pulled_Github_Repositories/torchQN</span>
-<span class="c1"># #DAVIDSON</span>
-<span class="c1"># #export DATA_DIR=&#39;/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/data&#39;</span>
-<span class="c1"># #LOCAL</span>
-<span class="c1"># export DATA_DIR=&#39;/home/ali/Desktop/Pulled_Github_Repositories/IQN_HEP/Davidson/data&#39;</span>
-<span class="c1"># echo &#39;DATA DIR&#39;</span>
-<span class="c1"># ls -l $DATA_DIR</span>
-<span class="c1"># #ln -s $DATA_DIR $IQN_BASE, if you want</span>
-<span class="c1"># #conda create env -n torch_env -f torch_env.yml</span>
-<span class="c1"># #conda activate torch_env</span>
-<span class="c1"># mkdir -p ${IQN_BASE}/images/loss_plots ${IQN_BASE}/trained_models  ${IQN_BASE}/hyperparameters ${IQN_BASE}/predicted_data</span>
-<span class="c1"># tree $IQN_BASE</span>
-</pre></div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="helper-functions">
+<h1>2. Helper Functions<a class="headerlink" href="#helper-functions" title="Permalink to this headline">#</a></h1>
 <p>Plotting and image functions</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -905,21 +938,32 @@ BASE directory not properly set. Read repo README.    If you need a function fro
         <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">_func</span>
 
-<span class="k">def</span> <span class="nf">timer</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print the runtime of the decorated function&quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">functools</span>
-    <span class="kn">import</span> <span class="nn">time</span>
-    <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">wrapper_timer</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;training IQN to estimate </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>    <span class="c1"># 1</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>      <span class="c1"># 2</span>
-        <span class="n">run_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>    <span class="c1"># 3</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;training target </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2"> using </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2"> in </span><span class="si">{</span><span class="n">run_time</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> secs&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">value</span>
-    <span class="k">return</span> <span class="n">wrapper_timer</span>
 
+<span class="k">def</span> <span class="nf">time_type_of_func</span><span class="p">(</span><span class="n">tuning_or_training</span><span class="p">,</span> <span class="n">_func</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">timer</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print the runtime of the decorated function&quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">functools</span>
+        <span class="kn">import</span> <span class="nn">time</span>
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper_timer</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">tuning_or_training</span><span class="o">==</span><span class="s1">&#39;training&#39;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;training IQN to estimate </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">tuning_or_training</span><span class="o">==</span><span class="s1">&#39;tuning&#39;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;tuning IQN hyperparameters to estimate </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>    
+            <span class="n">value</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>      
+            <span class="n">run_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>    
+            <span class="k">if</span> <span class="n">tuning_or_training</span><span class="o">==</span><span class="s1">&#39;training&#39;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;training target </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2"> using </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2"> in </span><span class="si">{</span><span class="n">run_time</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> secs&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">tuning_or_training</span><span class="o">==</span><span class="s1">&#39;tuning&#39;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tuning IQN hyperparameters for </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2"> using </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2"> in </span><span class="si">{</span><span class="n">run_time</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> secs&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="n">wrapper_timer</span>
+    <span class="k">if</span> <span class="n">_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">timer</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">timer</span><span class="p">(</span><span class="n">_func</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Print the function signature and return value&quot;&quot;&quot;</span>
@@ -934,13 +978,46 @@ BASE directory not properly set. Read repo README.    If you need a function fro
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2"> returned </span><span class="si">{</span><span class="n">values</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>           
         <span class="k">return</span> <span class="n">values</span>
     <span class="k">return</span> <span class="n">wrapper_debug</span>
+
+
+<span class="kn">from</span> <span class="nn">IPython.core.magic</span> <span class="kn">import</span> <span class="n">register_cell_magic</span>
+
+<span class="nd">@register_cell_magic</span>
+<span class="k">def</span> <span class="nf">write_and_run</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;write the current cell to a file (or append it with -a argument) as well as execute it</span>
+<span class="sd">    use with %%write_and_run at the top of a given cell&quot;&quot;&quot;</span>
+    <span class="n">argz</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="n">argz</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;w&#39;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">argz</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">argz</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-a&#39;</span><span class="p">:</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;a&#39;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+    <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="n">run_cell</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@time_type_of_func</span><span class="p">(</span><span class="n">tuning_or_training</span><span class="o">=</span><span class="s1">&#39;training&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">waster_time</span><span class="p">():</span>
+    <span class="n">r</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">500</span><span class="p">):</span>
+        <span class="n">r</span><span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+<span class="n">waster_time</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>training IQN to estimate m
+training target m using &#39;waster_time&#39; in 0.0006 secs
 </pre></div>
 </div>
 </div>
 </div>
 <p><a name="Results_prior"></a></p>
-</section>
-</section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="results-prior-to-braden-scaling">
 <h1>Results prior to Braden-scaling<a class="headerlink" href="#results-prior-to-braden-scaling" title="Permalink to this headline">#</a></h1>
@@ -952,7 +1029,7 @@ BASE directory not properly set. Read repo README.    If you need a function fro
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_12_0.png" src="_images/Braden_Scaling_TrainEval_Mass_12_0.png" />
+<img alt="_images/Braden_Scaling_TrainEval_Mass_15_0.png" src="_images/Braden_Scaling_TrainEval_Mass_15_0.png" />
 </div>
 </div>
 <p>So we know IQNx4 works (but not perfect enough), but in this notebook we try the Braden scaling (first time trying this scaling) to see if we can do better.</p>
@@ -980,14 +1057,15 @@ BASE directory not properly set. Read repo README.    If you need a function fro
 </div>
 <div class="cell_output docutils container">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "ceccf3b88b444e649b6ea5ee7152ab3f", "version_major": 2, "version_minor": 0}
+{"model_id": "dff0e4b56e15433ca77a7b055dd8441e", "version_major": 2, "version_minor": 0}
 </script></div>
 </div>
 <section id="set-arguments-and-configurations">
 <h2>Set arguments and configurations<a class="headerlink" href="#set-arguments-and-configurations" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">################################### ARGUMENTS ###################################</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># add_to_cluster()</span>
+<span class="c1">################################### ARGUMENTS ###################################</span>
 <span class="n">parser</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;train for different targets&#39;</span><span class="p">)</span>
 <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--N&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;size of the dataset you want to use. </span>
 <span class="s1">                    Options are 10M and 100K and 10M_2, the default is 10M_2&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;10M_2&#39;</span><span class="p">)</span>
@@ -1020,7 +1098,40 @@ BASE directory not properly set. Read repo README.    If you need a function fro
 <span class="k">else</span><span class="p">:</span>
     <span class="n">SUBSAMPLE</span><span class="o">=</span><span class="kc">None</span>
     
-<span class="k">if</span> <span class="n">JUPYTER</span><span class="p">:</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.rcsetup.interactive_bk<span class="o">?</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Red">Type:</span>        list
+<span class=" -Color -Color-Red">String form:</span> [&#39;GTK3Agg&#39;, &#39;GTK3Cairo&#39;, &#39;GTK4Agg&#39;, &#39;GTK4Cairo&#39;, &#39;MacOSX&#39;, &#39;nbAgg&#39;, &#39;QtAgg&#39;, &#39;QtCairo&#39;, &#39;Qt5Agg&#39;, &#39;Qt5Cairo&#39;, &#39;TkAgg&#39;, &#39;TkCairo&#39;, &#39;WebAgg&#39;, &#39;WX&#39;, &#39;WXAgg&#39;, &#39;WXCairo&#39;]
+<span class=" -Color -Color-Red">Length:</span>      16
+<span class=" -Color -Color-Red">Docstring:</span>  
+Built-in mutable sequence.
+
+If no argument is given, the constructor creates a new empty list.
+The argument must be an iterable if specified.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">JUPYTER</span><span class="p">:</span>
+    <span class="c1"># print(plt.rcsetup.interactive_bk )</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;interactive? &#39;</span><span class="p">,</span> <span class="n">mpl</span><span class="o">.</span><span class="n">is_interactive</span><span class="p">())</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="p">[])</span>
     <span class="n">N</span> <span class="o">=</span> <span class="s1">&#39;10M_2&#39;</span>
     <span class="n">n_iterations</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e4</span><span class="p">)</span>
@@ -1039,6 +1150,11 @@ BASE directory not properly set. Read repo README.    If you need a function fro
     <span class="n">show_loss_plots</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">show_loss_plots</span>
     <span class="n">save_model</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">save_model</span>
     <span class="n">save_loss_plots</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">save_loss_plots</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
 </pre></div>
 </div>
 </div>
@@ -1061,7 +1177,7 @@ BASE directory not properly set. Read repo README.    If you need a function fro
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_20_0.png" src="_images/Braden_Scaling_TrainEval_Mass_20_0.png" />
+<img alt="_images/Braden_Scaling_TrainEval_Mass_25_0.png" src="_images/Braden_Scaling_TrainEval_Mass_25_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1075,6 +1191,11 @@ BASE directory not properly set. Read repo README.    If you need a function fro
                     <span class="s1">&#39;RecoDataeta&#39;</span><span class="p">:</span><span class="s1">&#39;$\eta^</span><span class="si">{reco}</span><span class="s1">$&#39;</span><span class="p">,</span> 
                     <span class="s1">&#39;RecoDataphi&#39;</span><span class="p">:</span><span class="s1">&#39;$\phi^</span><span class="si">{reco}</span><span class="s1">$&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;RecoDatam&#39;</span><span class="p">:</span><span class="s1">&#39;$m^</span><span class="si">{reco}</span><span class="s1">$&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
 </pre></div>
 </div>
 </div>
@@ -1123,6 +1244,11 @@ BASE directory not properly set. Read repo README.    If you need a function fro
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
+</pre></div>
+</div>
+</div>
 </div>
 <p>Load and explore raw (unscaled) dataframes</p>
 <div class="cell docutils container">
@@ -1144,7 +1270,7 @@ BASE directory not properly set. Read repo README.    If you need a function fro
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SUBSAMPLE = None
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
 </pre></div>
 </div>
 </div>
@@ -1187,6 +1313,11 @@ BASE directory not properly set. Read repo README.    If you need a function fro
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1203,7 +1334,7 @@ Reco_var:  RecoDataphi , 	 gen_var:  genDataphi
 Reco_var:  RecoDatam , 	 gen_var:  genDatam
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_28_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_28_1.svg" /><img alt="_images/Braden_Scaling_TrainEval_Mass_28_2.svg" src="_images/Braden_Scaling_TrainEval_Mass_28_2.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_33_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_33_1.svg" /><img alt="_images/Braden_Scaling_TrainEval_Mass_33_2.svg" src="_images/Braden_Scaling_TrainEval_Mass_33_2.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1545,7 +1676,7 @@ where</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_36_0.jpg" src="_images/Braden_Scaling_TrainEval_Mass_36_0.jpg" />
+<img alt="_images/Braden_Scaling_TrainEval_Mass_41_0.jpg" src="_images/Braden_Scaling_TrainEval_Mass_41_0.jpg" />
 </div>
 </div>
 </section>
@@ -1621,6 +1752,11 @@ z\left(\frac{y_n + 10}{x_n + 10}\right), \qquad n = 1,\cdots,4,
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1637,6 +1773,11 @@ z\left(\frac{y_n + 10}{x_n + 10}\right), \qquad n = 1,\cdots,4,
         <span class="n">SCALE_DICT</span><span class="p">[</span><span class="n">feature</span><span class="p">][</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">feature_values</span><span class="p">)</span>
         <span class="n">SCALE_DICT</span><span class="p">[</span><span class="n">feature</span><span class="p">][</span><span class="s1">&#39;std&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">feature_values</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">SCALE_DICT</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
 </pre></div>
 </div>
 </div>
@@ -1684,6 +1825,11 @@ z\left(\frac{y_n + 10}{x_n + 10}\right), \qquad n = 1,\cdots,4,
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1705,6 +1851,11 @@ z\left(\frac{y_n + 10}{x_n + 10}\right), \qquad n = 1,\cdots,4,
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">L_inverse_observable</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="n">L_inverse_observable</span> <span class="o">=</span> <span class="n">L_inverse_observable</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">L_inverse_observable</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
 </pre></div>
 </div>
 </div>
@@ -1734,6 +1885,11 @@ z\left(\frac{y_n + 10}{x_n + 10}\right), \qquad n = 1,\cdots,4,
         <span class="n">target</span> <span class="o">=</span>  <span class="p">(</span><span class="n">L_m_reco</span><span class="o">+</span><span class="mi">10</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">L_m_gen</span><span class="o">+</span><span class="mi">10</span><span class="p">)</span> 
     
     <span class="k">return</span> <span class="n">target</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
 </pre></div>
 </div>
 </div>
@@ -1773,6 +1929,11 @@ z\left(\frac{y_n + 10}{x_n + 10}\right), \qquad n = 1,\cdots,4,
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1787,66 +1948,10 @@ z\left(\frac{y_n + 10}{x_n + 10}\right), \qquad n = 1,\cdots,4,
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>          genDatapT    RecoDatapT    genDataeta   RecoDataeta    genDataphi  \
-count  8.000000e+06  8.000000e+06  8.000000e+06  8.000000e+06  8.000000e+06   
-mean   3.421245e+00  3.412002e+00 -1.781882e-03 -1.789886e-03 -3.830903e-04   
-std    3.348063e-01  3.804798e-01  2.204310e+00  2.197969e+00  1.813825e+00   
-min    2.995732e+00  2.437457e+00 -5.227320e+00 -5.006930e+00 -3.141590e+00   
-25%    3.168285e+00  3.156336e+00 -1.654600e+00 -1.651130e+00 -1.571320e+00   
-50%    3.346474e+00  3.366927e+00 -2.726765e-03 -3.001240e-03  6.159285e-05   
-75%    3.591181e+00  3.624294e+00  1.651250e+00  1.647990e+00  1.570300e+00   
-max    6.733142e+00  6.703041e+00  5.188200e+00  5.005230e+00  3.141590e+00   
-
-        RecoDataphi      genDatam     RecoDatam           tau  
-count  8.000000e+06  8.000000e+06  8.000000e+06  8.000000e+06  
-mean  -4.719170e-04  2.150564e+00  1.967802e+00  4.999153e-01  
-std    1.814474e+00  2.880059e-01  3.271235e-01  2.886730e-01  
-min   -3.480195e+00  6.927950e-01  6.931040e-01  5.075658e-08  
-25%   -1.571500e+00  1.962371e+00  1.758816e+00  2.498142e-01  
-50%   -4.192835e-05  2.144482e+00  1.963023e+00  4.999874e-01  
-75%    1.570142e+00  2.330413e+00  2.171810e+00  7.500011e-01  
-max    3.482885e+00  4.729545e+00  4.753357e+00  9.999999e-01  
-
-
-
-            genDatapT      RecoDatapT      genDataeta     RecoDataeta  \
-count  1000000.000000  1000000.000000  1000000.000000  1000000.000000   
-mean         3.420882        3.412147        0.002822        0.002815   
-std          0.334051        0.379574        2.202514        2.196167   
-min          2.995732        2.440197       -5.159990       -4.999270   
-25%          3.167969        3.156549       -1.648685       -1.644865   
-50%          3.346231        3.367048        0.000701        0.001701   
-75%          3.591675        3.626037        1.654850        1.651652   
-max          6.316704        6.246308        5.143080        5.005660   
-
-           genDataphi     RecoDataphi        genDatam       RecoDatam  \
-count  1000000.000000  1000000.000000  1000000.000000  1000000.000000   
-mean        -0.000512       -0.000550        2.150071        1.967908   
-std          1.814159        1.814699        0.287706        0.326501   
-min         -3.141590       -3.477685        0.692864        0.693117   
-25%         -1.571470       -1.571400        1.961780        1.758928   
-50%         -0.001251       -0.000872        2.143930        1.962890   
-75%          1.571060        1.570125        2.329985        2.171973   
-max          3.141590        3.478095        4.370456        4.356084   
-
-                tau  
-count  1.000000e+06  
-mean   4.997935e-01  
-std    2.888304e-01  
-min    2.595965e-07  
-25%    2.496069e-01  
-50%    4.996784e-01  
-75%    7.503565e-01  
-max    9.999998e-01  
-[&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;]
-[&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;, &#39;tau&#39;]
-Reco_var:  RecoDatapT , 	 gen_var:  genDatapT
-Reco_var:  RecoDataeta , 	 gen_var:  genDataeta
-Reco_var:  RecoDataphi , 	 gen_var:  genDataphi
-Reco_var:  RecoDatam , 	 gen_var:  genDatam
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_47_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_47_1.svg" /></div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1862,7 +1967,7 @@ Reco_var:  RecoDatam , 	 gen_var:  genDatam
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_48_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_48_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_53_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_53_1.svg" /></div>
 </div>
 <hr class="docutils" />
 </section>
@@ -1950,7 +2055,7 @@ R_{\text{IQN}x4} &amp;= \int L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathb
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_52_0.png" src="_images/Braden_Scaling_TrainEval_Mass_52_0.png" />
+<img alt="_images/Braden_Scaling_TrainEval_Mass_57_0.png" src="_images/Braden_Scaling_TrainEval_Mass_57_0.png" />
 </div>
 </div>
 <section id="batches-validation-losses-and-plotting-of-losses-functions">
@@ -2036,6 +2141,11 @@ R_{\text{IQN}x4} &amp;= \int L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathb
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2080,41 +2190,7 @@ R_{\text{IQN}x4} &amp;= \int L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathb
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>USING NEW DATASET
-
-TRAINING FEATURES
-    genDatapT  RecoDatapT  genDataeta  RecoDataeta  genDataphi  RecoDataphi  \
-0   3.382531    3.463020    0.828187     0.817082    2.902130     2.919510   
-1   3.191270    3.308764   -1.163510    -1.151020    0.636469     0.652153   
-2   3.191270    3.308764   -1.163510    -1.151020    0.636469     0.652153   
-3   3.191270    3.308764   -1.163510    -1.151020    0.636469     0.652153   
-4   3.004211    3.187005    1.844410     1.837910   -0.186685    -0.160621   
-
-   genDatam  RecoDatam       tau  
-0  1.579696   1.525158  0.361310  
-1  2.058837   1.995432  0.126899  
-2  2.058837   1.995432  0.962307  
-3  2.058837   1.995432  0.457282  
-4  2.040038   1.886115  0.840862  
-
-TESTING FEATURES
-    genDatapT  RecoDatapT  genDataeta  RecoDataeta  genDataphi  RecoDataphi  \
-0   3.775316    3.791603    0.824891     0.824645    -1.26949     -1.26117   
-1   3.775316    3.791603    0.824891     0.824645    -1.26949     -1.26117   
-2   3.258685    3.313277    3.529970     3.590390     1.55495      1.52062   
-3   3.349708    3.522816   -1.159650    -1.139940     1.82602      1.76254   
-4   3.090315    3.149058    2.747660     2.775790     2.03085      2.10209   
-
-   genDatam  RecoDatam       tau  
-0  2.071044   2.054470  0.250046  
-1  2.071044   2.054470  0.847493  
-2  2.242060   1.918984  0.851995  
-3  2.286615   2.204338  0.052378  
-4  1.971738   1.805105  0.542549  
-
-train set shape: (8000000, 9)
-
-test set shape:   (1000000, 9)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
 </pre></div>
 </div>
 </div>
@@ -2141,18 +2217,21 @@ test set shape:   (1000000, 9)
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Features = &#39;</span><span class="p">,</span> <span class="n">features</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> target = &#39;</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;, &#39;tau&#39;]
-
- RecoDatam
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
 </pre></div>
 </div>
 </div>
@@ -2172,20 +2251,7 @@ test set shape:   (1000000, 9)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>spliting data for RecoDatam
-train_t shape =  (8000000,) train_x shape =  (8000000, 5)
-
- Training features:
-
-[[ 3.38253091  0.828187    2.90213     1.57969597  0.36130954]
- [ 3.19127027 -1.16351     0.636469    2.05883697  0.12689925]
- [ 3.19127027 -1.16351     0.636469    2.05883697  0.96230681]
- ...
- [ 3.72374454 -2.23358    -2.81921     2.21849454  0.08421659]
- [ 3.56850964 -1.12318     0.356494    2.08765398  0.05535172]
- [ 3.27935361 -1.09427    -1.49334     1.83323565  0.07489863]]
-valid_t shape =  (8000000,) valid_x shape =  (1000000, 5)
-no need to train_test_split since we already have the split dataframes
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Appending to Tune_mass.py
 </pre></div>
 </div>
 </div>
@@ -2198,10 +2264,13 @@ no need to train_test_split since we already have the split dataframes
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[ 3.42088240e+00  2.82176673e-03 -5.11682032e-04  2.15007070e+00
-  4.99793517e-01] [0.33405087 2.20251322 1.81415838 0.28770612 0.28883029]
-[ 3.42124491e+00 -1.78188172e-03 -3.83090331e-04  2.15056416e+00
-  4.99915289e-01] [0.33480629 2.20430976 1.81382516 0.28800584 0.28867295]
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_57596</span><span class="o">/</span><span class="mf">193910160.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="nb">print</span><span class="p">(</span><span class="n">valid_x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">valid_x</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="nb">print</span><span class="p">(</span><span class="n">train_x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">train_x</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+
+<span class="ne">NameError</span>: name &#39;valid_x&#39; is not defined
 </pre></div>
 </div>
 </div>
@@ -2297,7 +2366,11 @@ no need to train_test_split since we already have the split dataframes
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NFEATURES</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">autoscale_on</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NFEATURES</span><span class="p">):</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">train_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.35</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;training features post-z score: X&#39;=z(L(X))&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -2305,7 +2378,19 @@ no need to train_test_split since we already have the split dataframes
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_69_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_69_0.svg" /></div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_57596</span><span class="o">/</span><span class="mf">1170638535.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="ne">----&gt; </span><span class="mi">5</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NFEATURES</span><span class="p">):</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">train_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.35</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span>     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;training features post-z score: X&#39;=z(L(X))&quot;</span><span class="p">)</span>
+
+<span class="ne">NameError</span>: name &#39;NFEATURES&#39; is not defined
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2659,11 +2744,11 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
 <span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="n">trial</span><span class="p">):</span>
     <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
       <span class="s2">&quot;nlayers&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;nlayers&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span>      
-      <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span>
+      <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
       <span class="s2">&quot;dropout&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s2">&quot;dropout&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
       <span class="s2">&quot;optimizer_name&quot;</span> <span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_categorical</span><span class="p">(</span><span class="s2">&quot;optimizer_name&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;Adam&quot;</span><span class="p">,</span> <span class="s2">&quot;RMSprop&quot;</span><span class="p">]),</span>
-      <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">),</span>
-      <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;batch_size&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+      <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">),</span>
+      <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;batch_size&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">40000</span><span class="p">)</span>
 
     <span class="p">}</span>
     <span class="c1"># all_losses=[]</span>
@@ -2706,288 +2791,6 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Getting best hyperparameters for target RecoDatam
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.22361083919480002 	 0.22437154022899605
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.2687179733283786 	 0.26739557730257935
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19894026402022025 	 0.1987885715694886
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.23935348788897196 	 0.2381529021937892
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19644167291204875 	 0.19577806422922675
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.3133509893852629 	 0.3105925294129472
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.24491037372619875 	 0.24385125633208982
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.30006828047926465 	 0.30106917534555705
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.2027835139521846 	 0.20046030513193241
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.2598116384864828 	 0.25799593601467175
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.3798155251020443 	 0.3787689358888272
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19205225311746502 	 0.19139680558382863
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.193058182614121 	 0.19269860911417783
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.213268910216591 	 0.21151258840673048
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19090260659820005 	 0.1913594540812578
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.2143557548119761 	 0.21348816102628912
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.1911433932759567 	 0.19099004171209788
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.21122766260443063 	 0.21087475427663632
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.22498625088615826 	 0.22494686063989608
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.18971126842498778 	 0.18994521328806876
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.20509548024052665 	 0.2047096545046026
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19136229540834473 	 0.19037279870042847
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19173190310432017 	 0.19116275050084358
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.20447976643680243 	 0.2039070987573234
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.22374570331061785 	 0.22346579599774108
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.1916818491821923 	 0.19087988915520251
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.18977283349633217 	 0.18983178323507308
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.20779943752497043 	 0.20626565719665918
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.36074712707882833 	 0.36056769410769146
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.22257711411783193 	 0.22261776462565017
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.23193910445049132 	 0.23136862643035777
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19025041478872298 	 0.18910471260547637
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19837652026921854 	 0.1973114174672927
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19884207066058612 	 0.199256436928622
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.1898626561164856 	 0.18890271335840225
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.283017796900735 	 0.2834854333703198
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19744557185629052 	 0.19642847940604552
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.21918098691966645 	 0.2177061565451847
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.2046093586772005 	 0.20517613403619686
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.1956420006211271 	 0.1951122057499345
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.3438472986437272 	 0.3442224879627642
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19588667249852154 	 0.19513111289555926
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19066275075736294 	 0.1903052161256951
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.2012668297136739 	 0.2006489767424636
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.1953744796842306 	 0.19537929661119266
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.18954975740448968 	 0.18996799168166695
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.21102669343879793 	 0.20991227047237676
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.2482373272470021 	 0.24725404728019207
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.20189487449547688 	 0.20123828730598392
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.21531266092576765 	 0.21562417335808276
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.25967127565809217 	 0.2600097782634678
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19035156876088147 	 0.19024191249206843
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.194394805370233 	 0.19480428448090187
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.1895792522728443 	 0.1895620172917843
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.19450140243171427 	 0.19343016450512385
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.20199696615684865 	 0.20022962489667454
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.1904854041337967 	 0.18953350681066514
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_78917</span><span class="o">/</span><span class="mf">2169030322.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">tune_hyperparameters</span><span class="p">()</span>
-
-<span class="nn">/tmp/ipykernel_78917/2825535863.py</span> in <span class="ni">tune_hyperparameters</span><span class="nt">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">116</span>     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Getting best hyperparameters for target </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">117</span>     <span class="n">study</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">create_study</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s2">&quot;minimize&quot;</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">118</span>     <span class="n">study</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">119</span>     <span class="n">best_trial</span> <span class="o">=</span> <span class="n">study</span><span class="o">.</span><span class="n">best_trial</span>
-<span class="g g-Whitespace">    </span><span class="mi">120</span>     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;best model parameters&#39;</span><span class="p">,</span> <span class="n">best_trial</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
-
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/optuna/study.py</span> in <span class="ni">optimize</span><span class="nt">(self, func, n_trials, timeout, n_jobs, catch, callbacks, gc_after_trial, show_progress_bar)</span>
-<span class="g g-Whitespace">    </span><span class="mi">408</span>             <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">409</span>             <span class="n">gc_after_trial</span><span class="o">=</span><span class="n">gc_after_trial</span><span class="p">,</span>
-<span class="ne">--&gt; </span><span class="mi">410</span>             <span class="n">show_progress_bar</span><span class="o">=</span><span class="n">show_progress_bar</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">411</span>         <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">412</span> 
-
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/optuna/_optimize.py</span> in <span class="ni">_optimize</span><span class="nt">(study, func, n_trials, timeout, n_jobs, catch, callbacks, gc_after_trial, show_progress_bar)</span>
-<span class="g g-Whitespace">     </span><span class="mi">73</span>                 <span class="n">reseed_sampler_rng</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">74</span>                 <span class="n">time_start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="ne">---&gt; </span><span class="mi">75</span>                 <span class="n">progress_bar</span><span class="o">=</span><span class="n">progress_bar</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">76</span>             <span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">77</span>         <span class="k">else</span><span class="p">:</span>
-
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/optuna/_optimize.py</span> in <span class="ni">_optimize_sequential</span><span class="nt">(study, func, n_trials, timeout, catch, callbacks, gc_after_trial, reseed_sampler_rng, time_start, progress_bar)</span>
-<span class="g g-Whitespace">    </span><span class="mi">160</span> 
-<span class="g g-Whitespace">    </span><span class="mi">161</span>         <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">162</span>             <span class="n">trial</span> <span class="o">=</span> <span class="n">_run_trial</span><span class="p">(</span><span class="n">study</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">catch</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">163</span>         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">164</span>             <span class="k">raise</span>
-
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/optuna/_optimize.py</span> in <span class="ni">_run_trial</span><span class="nt">(study, func, catch)</span>
-<span class="g g-Whitespace">    </span><span class="mi">214</span> 
-<span class="g g-Whitespace">    </span><span class="mi">215</span>     <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">216</span>         <span class="n">value_or_values</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">trial</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">217</span>     <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">TrialPruned</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">218</span>         <span class="c1"># TODO(mamu): Handle multi-objective cases.</span>
-
-<span class="nn">/tmp/ipykernel_78917/2825535863.py</span> in <span class="ni">objective</span><span class="nt">(trial)</span>
-<span class="g g-Whitespace">    </span><span class="mi">109</span>     <span class="c1"># all_losses=[]</span>
-<span class="g g-Whitespace">    </span><span class="mi">110</span> 
-<span class="ne">--&gt; </span><span class="mi">111</span>     <span class="n">temp_loss</span> <span class="o">=</span> <span class="n">run_train</span><span class="p">(</span><span class="n">params</span><span class="p">,</span><span class="n">save_model</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">112</span>     <span class="c1"># all_losses.append(temp_loss)</span>
-<span class="g g-Whitespace">    </span><span class="mi">113</span>     <span class="k">return</span> <span class="n">temp_loss</span>
-
-<span class="nn">/tmp/ipykernel_78917/2825535863.py</span> in <span class="ni">run_train</span><span class="nt">(params, save_model)</span>
-<span class="g g-Whitespace">     </span><span class="mi">82</span> 
-<span class="g g-Whitespace">     </span><span class="mi">83</span>     <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">EPOCHS</span><span class="p">):</span>
-<span class="ne">---&gt; </span><span class="mi">84</span>         <span class="n">train_loss</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">train_x_sample</span><span class="p">,</span> <span class="n">train_t_ratio_sample</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">85</span>         <span class="n">valid_loss</span><span class="o">=</span><span class="n">trainer</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">valid_x_sample</span><span class="p">,</span> <span class="n">valid_t_ratio_sample</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">86</span> 
-
-<span class="nn">/tmp/ipykernel_78917/2825535863.py</span> in <span class="ni">train</span><span class="nt">(self, x, t)</span>
-<span class="g g-Whitespace">     </span><span class="mi">31</span>             <span class="n">inputs</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">batch_x</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
-<span class="g g-Whitespace">     </span><span class="mi">32</span>             <span class="n">targets</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">batch_t</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
-<span class="ne">---&gt; </span><span class="mi">33</span>             <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">34</span>             <span class="n">loss</span> <span class="o">=</span> <span class="n">average_quantile_loss</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">35</span>             <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
-
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/torch/nn/modules/module.py</span> in <span class="ni">_call_impl</span><span class="nt">(self, *input, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1049</span>         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_backward_hooks</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_hooks</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_pre_hooks</span> <span class="ow">or</span> <span class="n">_global_backward_hooks</span>
-<span class="g g-Whitespace">   </span><span class="mi">1050</span>                 <span class="ow">or</span> <span class="n">_global_forward_hooks</span> <span class="ow">or</span> <span class="n">_global_forward_pre_hooks</span><span class="p">):</span>
-<span class="ne">-&gt; </span><span class="mi">1051</span>             <span class="k">return</span> <span class="n">forward_call</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1052</span>         <span class="c1"># Do not call functions when jit is used</span>
-<span class="g g-Whitespace">   </span><span class="mi">1053</span>         <span class="n">full_backward_hooks</span><span class="p">,</span> <span class="n">non_full_backward_hooks</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
-
-<span class="nn">/tmp/ipykernel_78917/2614656371.py</span> in <span class="ni">forward</span><span class="nt">(self, x)</span>
-<span class="g g-Whitespace">     </span><span class="mi">34</span> 
-<span class="g g-Whitespace">     </span><span class="mi">35</span>     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-<span class="ne">---&gt; </span><span class="mi">36</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/torch/nn/modules/module.py</span> in <span class="ni">_call_impl</span><span class="nt">(self, *input, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1049</span>         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_backward_hooks</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_hooks</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_pre_hooks</span> <span class="ow">or</span> <span class="n">_global_backward_hooks</span>
-<span class="g g-Whitespace">   </span><span class="mi">1050</span>                 <span class="ow">or</span> <span class="n">_global_forward_hooks</span> <span class="ow">or</span> <span class="n">_global_forward_pre_hooks</span><span class="p">):</span>
-<span class="ne">-&gt; </span><span class="mi">1051</span>             <span class="k">return</span> <span class="n">forward_call</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1052</span>         <span class="c1"># Do not call functions when jit is used</span>
-<span class="g g-Whitespace">   </span><span class="mi">1053</span>         <span class="n">full_backward_hooks</span><span class="p">,</span> <span class="n">non_full_backward_hooks</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
-
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/torch/nn/modules/container.py</span> in <span class="ni">forward</span><span class="nt">(self, input)</span>
-<span class="g g-Whitespace">    </span><span class="mi">137</span>     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">138</span>         <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">139</span>             <span class="nb">input</span> <span class="o">=</span> <span class="n">module</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">140</span>         <span class="k">return</span> <span class="nb">input</span>
-<span class="g g-Whitespace">    </span><span class="mi">141</span> 
-
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/torch/nn/modules/module.py</span> in <span class="ni">_call_impl</span><span class="nt">(self, *input, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1049</span>         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_backward_hooks</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_hooks</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_pre_hooks</span> <span class="ow">or</span> <span class="n">_global_backward_hooks</span>
-<span class="g g-Whitespace">   </span><span class="mi">1050</span>                 <span class="ow">or</span> <span class="n">_global_forward_hooks</span> <span class="ow">or</span> <span class="n">_global_forward_pre_hooks</span><span class="p">):</span>
-<span class="ne">-&gt; </span><span class="mi">1051</span>             <span class="k">return</span> <span class="n">forward_call</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1052</span>         <span class="c1"># Do not call functions when jit is used</span>
-<span class="g g-Whitespace">   </span><span class="mi">1053</span>         <span class="n">full_backward_hooks</span><span class="p">,</span> <span class="n">non_full_backward_hooks</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
-
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/torch/nn/modules/dropout.py</span> in <span class="ni">forward</span><span class="nt">(self, input)</span>
-<span class="g g-Whitespace">     </span><span class="mi">56</span> 
-<span class="g g-Whitespace">     </span><span class="mi">57</span>     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="ne">---&gt; </span><span class="mi">58</span>         <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inplace</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">59</span> 
-<span class="g g-Whitespace">     </span><span class="mi">60</span> 
-
-<span class="nn">~/anaconda3/lib/python3.7/site-packages/torch/nn/functional.py</span> in <span class="ni">dropout</span><span class="nt">(input, p, training, inplace)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1166</span>     <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1167</span>         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;dropout probability has to be between 0 and 1, &quot;</span> <span class="s2">&quot;but got </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
-<span class="ne">-&gt; </span><span class="mi">1168</span>     <span class="k">return</span> <span class="n">_VF</span><span class="o">.</span><span class="n">dropout_</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">training</span><span class="p">)</span> <span class="k">if</span> <span class="n">inplace</span> <span class="k">else</span> <span class="n">_VF</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">training</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1169</span> 
-<span class="g g-Whitespace">   </span><span class="mi">1170</span> 
-
-<span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
 </div>
 </div>
@@ -3178,7 +2981,7 @@ trained model dictionary saved in /home/ali/Desktop/Pulled_Github_Repositories/t
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_88_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_88_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_93_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_93_0.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -3203,7 +3006,7 @@ trained model dictionary saved in /home/ali/Desktop/Pulled_Github_Repositories/t
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>predicted ratio shape:  (1000000, 1)
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_89_2.svg" src="_images/Braden_Scaling_TrainEval_Mass_89_2.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_94_2.svg" src="_images/Braden_Scaling_TrainEval_Mass_94_2.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -3406,7 +3209,7 @@ trained model dictionary saved in /home/ali/Desktop/Pulled_Github_Repositories/t
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_96_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_96_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_101_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_101_0.svg" /></div>
 </div>
 <p>Apply the descaling formula for our observable</p>
 <div class="math notranslate nohighlight">
@@ -3552,7 +3355,7 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_109_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_109_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_114_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_114_0.svg" /></div>
 </div>
 <hr class="docutils" />
 <section id="paper-plotting">
@@ -3655,7 +3458,7 @@ norm_autoregressive 1000000
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_115_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_115_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_120_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_120_0.svg" /></div>
 </div>
 <hr class="docutils" />
 <hr class="docutils" />

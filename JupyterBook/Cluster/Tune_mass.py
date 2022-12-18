@@ -1,21 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# # Braden-Scaling IQNx4: 1.Mass (UNDER CONSTRUCTION!)
-
-# # Do `source setup.sh` before trying to run this notebook!
-# 
-# 
-
-# ## External Imports
-# 
-# If you don't have some of these packages installed, you can also use the conda environment that has all of the packages by doing `conda env create -f IQN_env.yml && conda activate IQN_env`
-# 
-# There is also a `requirements.txt` here so that it can be run on an interactive website, eg binder or people can `pip install` it.
-
-# In[78]:
-
-
 import numpy as np; import pandas as pd
 import scipy as sp; import scipy.stats as st
 import torch; import torch.nn as nn; print(f"using torch version {torch.__version__}")
@@ -48,54 +30,21 @@ import time
 # import sympy as sy
 import ipywidgets as wid; 
 
+# %%writefile setup.sh
+# #!/bin/bash
+# export IQN_BASE= $pwd #/home/ali/Desktop/Pulled_Github_Repositories/torchQN
 
-# ## Import utils, and set environemnt variables
-
-# need to tune latest braden scaling hyperparameters on cluster.
-# 
-# see if i can find/write a decorator to add the current cell to a file which will be run on cluster. I think %writefile file.py could work, by adding the cell to another file... 
-# 
-
-# In[50]:
-
-
-# 'IQN' in 
-# some_environment={}
-# some_environment.update(os.environ())
-# some_environment
-# 'DATA' in list(os.environ)
-
-
-# In[51]:
-
-
-# os.environ['IQN_BASE']='/home/ali/Desktop/Pulled_Github_Repositories/torchQN'
-# os.environ['DATA_DIR']='/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/data'
-
-
-# ### A user is competent enought to do `source setup.sh` on a `setup.sh` script that comes in the repo, such as the next cell uncommented
-
-# In[52]:
-
-
-#!/bin/bash
-export IQN_BASE= $pwd #/home/ali/Desktop/Pulled_Github_Repositories/torchQN
-
-#DAVIDSON
-export DATA_DIR='/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/data'
-#LOCAL
-export DATA_DIR='/home/ali/Desktop/Pulled_Github_Repositories/IQN_HEP/Davidson/data'
-echo DATA DIR
-ls -l $DATA_DIR
-#ln -s $DATA_DIR $IQN_BASE, if you want
-#conda create env -n torch_env -f torch_env.yml
-conda activate torch_env
-mkdir -p ${IQN_BASE}/images/loss_plots ${IQN_BASE}/trained_models  ${IQN_BASE}/hyperparameters ${IQN_BASE}/predicted_data
-tree $IQN_BASE
-
-
-# In[54]:
-
+# #DAVIDSON
+# export DATA_DIR='/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/data'
+# #LOCAL
+# export DATA_DIR='/home/ali/Desktop/Pulled_Github_Repositories/IQN_HEP/Davidson/data'
+# echo DATA DIR
+# ls -l $DATA_DIR
+# #ln -s $DATA_DIR $IQN_BASE, if you want
+# #conda create env -n torch_env -f torch_env.yml
+# conda activate torch_env
+# mkdir -p ${IQN_BASE}/images/loss_plots ${IQN_BASE}/trained_models  ${IQN_BASE}/hyperparameters ${IQN_BASE}/predicted_data
+# tree $IQN_BASE
 
 # env = {}
 # env.update(os.environ)
@@ -120,14 +69,6 @@ except Exception:
     or
     os.environ['IQN_BASE']=os.getcwd()""")
     pass
-
-
-# # 2. Helper Functions
-# 
-# Plotting and image functions
-
-# In[84]:
-
 
 def show_jupyter_image(image_filename, width = 1300, height = 300):
     """Show a saved image directly in jupyter. Make sure image_filename is in your IQN_BASE !"""
@@ -208,32 +149,21 @@ def SourceIQN(func):
         func(*args, env=env)
     return _func
 
+def timer(func):
+    """Print the runtime of the decorated function"""
+    import functools
+    import time
+    @functools.wraps(func)
+    def wrapper_timer(*args, **kwargs):
+        print(f'training IQN to estimate {target}')
+        start_time = time.perf_counter()    # 1
+        value = func(*args, **kwargs)
+        end_time = time.perf_counter()      # 2
+        run_time = end_time - start_time    # 3
+        print(f"training target {target} using {func.__name__!r} in {run_time:.4f} secs")
+        return value
+    return wrapper_timer
 
-def time_type_of_func(tuning_or_training, _func=None):
-    def timer(func):
-        """Print the runtime of the decorated function"""
-        import functools
-        import time
-        @functools.wraps(func)
-        def wrapper_timer(*args, **kwargs):
-            if tuning_or_training=='training':
-                print(f'training IQN to estimate {target}')
-            elif tuning_or_training=='tuning':
-                print(f'tuning IQN hyperparameters to estimate {target}')
-            start_time = time.perf_counter()    
-            value = func(*args, **kwargs)
-            end_time = time.perf_counter()      
-            run_time = end_time - start_time    
-            if tuning_or_training=='training':
-                print(f"training target {target} using {func.__name__!r} in {run_time:.4f} secs")
-            elif tuning_or_training=='tuning':
-                print(f"tuning IQN hyperparameters for {target} using {func.__name__!r} in {run_time:.4f} secs")
-            return value
-        return wrapper_timer
-    if _func is None:
-        return timer
-    else:
-        return timer(_func)
 
 def debug(func):
     """Print the function signature and return value"""
@@ -264,40 +194,8 @@ def write_and_run(line, cell):
     with open(file, mode) as f:
         f.write(cell)
     get_ipython().run_cell(cell)
-
-
-# In[85]:
-
-
-@time_type_of_func(tuning_or_training='training')
-def waster_time():
-    r=0
-    for i in range(500):
-        r+= np.exp(i)
-
-waster_time()
-
-
-# <a name="Results_prior"></a>
-#  
-#  
-# # Results prior to Braden-scaling
-# 
-# 
-# 
-# Recall that the best IQNx4 autoregressive results that I attained prior to trying the Braden scaling was the following (which was implemented in the Davidson cluster here: `/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/OCT_7/*.py` and copied to my repo [here](https://github.com/AliAlkadhim/torchQN/tree/master/OCT_7) )
-# 
-
-# In[56]:
-
-
-show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height = 200)
-
-
-# So we know IQNx4 works (but not perfect enough), but in this notebook we try the Braden scaling (first time trying this scaling) to see if we can do better.
-
-# In[79]:
-
+    
+    
 
 # update fonts
 FONTSIZE = 14
@@ -317,10 +215,6 @@ rnd  = np.random.RandomState(seed)
 #sometimes jupyter doesnt initialize MathJax automatically for latex, so do this:
 wid.HTMLMath('$\LaTeX$')
 
-
-# ## Set arguments and configurations
-
-# In[58]:
 
 
 # add_to_cluster()
@@ -357,17 +251,7 @@ if use_subsample:
 else:
     SUBSAMPLE=None
     
-
-
-# In[59]:
-
-
-get_ipython().run_line_magic('pinfo', 'plt.rcsetup.interactive_bk')
-
-
-# In[60]:
-
-
+    
 if JUPYTER:
     # print(plt.rcsetup.interactive_bk )
     plt.ion()
@@ -390,41 +274,6 @@ else:
     show_loss_plots=args.show_loss_plots
     save_model=args.save_model
     save_loss_plots=args.save_loss_plots
-
-
-# ### Import the numpy data, convert to dataframe and save (if you haven't saved the dataframes)
-
-# # Explore the Dataframe and preprocess
-
-# # Data
-
-# In[10]:
-
-
-use_svg_display()
-show_jupyter_image('images/pythia_ppt_diagram.png', width=2000,height=500)
-
-
-# In[61]:
-
-
-###############################################################################################
-y_label_dict ={'RecoDatapT':'$p(p_T)$'+' [ GeV'+'$^{-1} $'+']',
-                    'RecoDataeta':'$p(\eta)$', 'RecoDataphi':'$p(\phi)$',
-                    'RecoDatam':'$p(m)$'+' [ GeV'+'$^{-1} $'+']'}
-
-loss_y_label_dict ={'RecoDatapT':'$p_T^{reco}$',
-                    'RecoDataeta':'$\eta^{reco}$', 
-                    'RecoDataphi':'$\phi^{reco}$',
-                    'RecoDatam':'$m^{reco}$'}
-
-
-# <!-- For Davidson team, please read try to all the code/comments before asking me questions! -->
-
-# Decide on an evaluation order 
-
-# In[62]:
-
 
 ################################### SET DATA CONFIGURATIONS ###################################
 X       = ['genDatapT', 'genDataeta', 'genDataphi', 'genDatam', 'tau']
@@ -464,13 +313,8 @@ if ORDER=='m_First':
                                'xmin'  : -3.2, 
                                'xmax'  :3.2}
               }
-
-
-# Load and explore raw (unscaled) dataframes
-
-# In[63]:
-
-
+    
+    
 all_variable_cols=['genDatapT', 'genDataeta', 'genDataphi', 'genDatam','RecoDatapT', 'RecoDataeta', 'RecoDataphi', 'RecoDatam']
 all_cols=['genDatapT', 'genDataeta', 'genDataphi', 'genDatam','RecoDatapT', 'RecoDataeta', 'RecoDataphi', 'RecoDatam', 'tau']
 ################################### Load unscaled dataframes ###################################
@@ -484,9 +328,6 @@ raw_test_data=pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
                       usecols=all_cols,
                      nrows=SUBSAMPLE
                      )
-
-
-# In[64]:
 
 
 def explore_data(df, title, scaled=False):
@@ -522,200 +363,13 @@ def explore_data(df, title, scaled=False):
     ax[4].legend(loc='best', fontsize=13)
     fig.suptitle(title, fontsize=30)
     show_plot()
-
-
-# In[206]:
-
-
-explore_data(df=raw_train_data, title='Unscaled Dataframe')
-
-
-# In[207]:
-
-
-print(raw_train_data.shape)
-raw_train_data.describe()#unscaled
-
-
-# In[208]:
-
-
-print(raw_test_data.shape)
-raw_test_data.describe()#unscaled
-
-
-# In[209]:
-
-
-# np.array(train_data['genDatapT'])
-
-
-# # Scaling
-# 
-# scaling (or standarization, normalization) is someimes done in the following way:
-# $$ X' = \frac{X-X_{min}}{X_{max}-X_{min}} \qquad \rightarrow \qquad X= X' (X_{max}-X_{min}) + X_{min}$$
-
-# In[210]:
-
-
-# def standarize(values):
-#     expected_min, expected_max = values.min(), values.max()
-#     scale_factor = expected_max - expected_min
-#     offset = expected_min
-#     standarized_values = (values - offset)/scale_factor 
-#     return standarized_values
-
-
-# Or by taking z-score:
-# 
-# $$ X'=z(X)=\frac{X-E[X]}{\sigma_{X}}  \qquad \rightarrow \qquad X = z^{-1}(X')= X' \sigma_{X} + E[X].$$
-# 
-
-# -----------
-# 
-# ## Basically a "standard scaling procedure" is the following (background):
-# 
-# 1. Split the data into train and test dataframes
-# 2. fit the scaler on each of the train and test sets independently, that is, get the mean and std, ( optionally and min and max or other quantities) of each feature (column) of each of the train and test dataframes, independently.
-# 3. transform each of the train and test sets independently. That is, use the means and stds of each column to transform a column $X$ into a column $X'$ e.g. according to 
-# $$ X'=z(X)= \frac{X-E[X]}{\sigma_{X}}$$
-# 4. Train NN on transformed features $X_{train}'$ (and target $y_{train}'$) (in train df, but validate on test set, which will not influence the weights of NN ( just used for observation that it doesnt overfit) )
-# 5. Once the training is done, *evaluate the NN on transformed features of the test set* $X_{test}'$, i.e. do $NN(X_{test}')$, which will result in a scaled prediction of the target $y_{pred}'$
-# 6. Unscale the $y_{pred}'$, i.e. apply the inverse of the scaling operation, e.g.
-# $$ y_{pred}=z^{-1}(y_{pred}')= y_{pred}' \sigma_{y} + E[y]$$,
-# where 
-# 
-# $$\sigma_y$$
-# 
-# and 
-# 
-# $$E[y]$$
-# 
-# are attained from the test set *prior to training and scaling*.
-# 
-# 7. Compare to $y$ (the actual distribution you're trying to estimate) one-to-one
-
-# In[211]:
-
-
-use_svg_display()
-show_jupyter_image('images/scaling_forNN.jpg', width=2000,height=500)
-
-
-# # Braden scaling 
-# 
-# In the IQN-scipost overleaf, we say the scaling is the following:
-# 
-# $$\mathbb{T}(p_T) = z(\log p_T), \qquad \mathbb{T}(\eta) = z(\eta), \qquad \mathbb{T}(\phi) = z(\phi), \qquad \mathbb{T}(m) = z(\log (m + 2))$$ 
-# 
-# $$ \mathbb{T}(\tau) = 6\tau - 3 $$
-# 
-# 
-# Which means, for a jet observable $\mathcal{O}$ (or quantile $\tau$), the Braden-scaling perscribes that the data is first scaled according to:
-# 
-# $$
-# \begin{align}
-#     \mathbb{L} (\mathcal{O} \mid \mathcal{O} \in X ) &=
-#     \begin{cases}
-#         z \left( \log{\mathcal{O}} \right), \qquad & \text{if } \mathcal{O}= p_T \\
-#         z \left(\mathcal{O} \right), \qquad & \text{if } \mathcal{O}=\eta \\
-#         z \left( \log (\mathcal{O} + 2) \right), \qquad & \text{if } \mathcal{O}=m \\
-#         z \left( \mathcal{O} \right), \qquad & \text{if } \mathcal{O}=\phi \\
-#         z \left( 6 \mathcal{O} -3 \right), \qquad & \text{if } \mathcal{O}=\tau
-#     \end{cases}
-# \end{align}
-# $$
-# 
-# Note that the equation above describes the scaling for the training features $X$. The point of taking the log is 
-# 
-# The targets, as we say in the paper, are chosen to be the following:
-# 
-# $$
-# z\left(\frac{y_n + 10}{x_n + 10}\right), \qquad n = 1,\cdots,4,
-# \label{eq:normalization}
-# $$
-# 
-# We mean that the predicted target for a desired reco observable $\mathcal{O}$ is chosen to be the following function
-# 
-# $$
-#     \mathbb{T}(\mathcal{O} \mid \mathcal{O} \in y) = z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
-# $$
-# 
-# where for a random variable $x$, $z$ is the standardization function (z-score):
-# 
-# $$
-#    x'= z (x) \equiv \frac{x-\bar{x}}{\sigma_{x}} \ .
-# $$
-# 
-# Such that its inverse is 
-# 
-# $$ z^{-1}(x') = x' \ \sigma_x + \bar{x} $$
-# 
-# If we do this on the data, after training, the NN $f_{\text{IQN}}$ will not estimate the observable, 
-# 
-# $$\mathcal{O}^{\text{predicted}} \ne \mathcal{O}^{\text{reco}}$$
-# 
-# but will instead estimate 
-# 
-# $$
-#         f_{\text{IQN}} (\mathcal{O}) \approx  z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
-# $$
-# 
-# which needs to be de-scaled (when evaluated on the data that which has been scaled according to 
-# 
-# $$\mathbb{T}(\text{evaluation data}) = z \left( \frac{\mathbb{L} (\text{data}^{\text{reco}}) +10 }{\mathbb{L}(\text{data}^{\text{gen}}) +10} \right) $$
-# 
-# 
-# in order to copare with $\mathcal{O}$ directly.) The descaling for $\mathcal{O}=p_T$ (as an example) would be:
-# 
-# $$
-#     p_T^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (p_T^\text{gen})+10 \right] -10 \right]
-# $$
-# 
-
-# -------------
-# 
-# # Scale the data accoding to the "Braden Kronheim scaling" :
-# 
-
-# In[65]:
-
-
+    
+    
 def z(x):
     eps=1e-20
     return (x - np.mean(x))/(np.std(x)+ eps)
 def z_inverse(xprime, x):
     return xprime * np.std(x) + np.mean(x)
-
-
-# In[66]:
-
-
-def get_scaling_info(df):
-    """args: df is train or eval df.
-    returns: dictionary with mean of std of each feature (column) in the df"""
-    features=['genDatapT', 'genDataeta', 'genDataphi', 'genDatam',
-              'RecoDatapT', 'RecoDataeta', 'RecoDataphi', 'RecoDatam', 'tau']
-    SCALE_DICT = dict.fromkeys(features)
-    for i in range(8):
-        feature = features[i]
-        feature_values = np.array(df[feature])
-        SCALE_DICT[feature]={}
-        SCALE_DICT[feature]['mean'] = np.mean(feature_values)
-        SCALE_DICT[feature]['std'] = np.std(feature_values)
-    return SCALE_DICT
-
-
-# In[214]:
-
-
-TRAIN_SCALE_DICT = get_scaling_info(raw_train_data);print(TRAIN_SCALE_DICT)
-print('\n\n')
-TEST_SCALE_DICT = get_scaling_info(raw_test_data);print(TEST_SCALE_DICT)
-
-
-# In[67]:
-
 
 def L(orig_observable, label):
     eps=1e-20
@@ -739,8 +393,6 @@ def L(orig_observable, label):
     return L_observable.to_numpy()
 
 
-# In[68]:
-
 
 def L_inverse(L_observable, label):
     eps=1e-20
@@ -762,14 +414,6 @@ def L_inverse(L_observable, label):
     return L_inverse_observable
 
 
-# $$
-#     \mathbb{T}(\mathcal{O}) = z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
-# $$
-# 
-
-# In[69]:
-
-
 def T(variable, scaled_df):
     if variable=='pT':
         L_pT_gen=scaled_df['genDatapT']
@@ -789,10 +433,6 @@ def T(variable, scaled_df):
         target =  (L_m_reco+10)/(L_m_gen+10) 
     
     return target
-
-
-# In[70]:
-
 
 def L_scale_df(df, title, save=False):
     #scale
@@ -826,9 +466,6 @@ def L_scale_df(df, title, save=False):
     return scaled_df
 
 
-# In[71]:
-
-
 scaled_train_data = L_scale_df(raw_train_data, title='scaled_train_data_10M_2.csv',
                              save=True)
 print('\n\n')
@@ -837,8 +474,6 @@ scaled_test_data = L_scale_df(raw_test_data,  title='scaled_test_data_10M_2.csv'
 
 explore_data(df=scaled_train_data, title='Braden Kronheim-L-scaled Dataframe', scaled=True)
 
-
-# In[220]:
 
 
 labels = ['pT', 'eta','phi','m']
@@ -849,112 +484,6 @@ for label in labels:
     ax.hist(target, label = '$T($' +label+ '$)$', alpha=0.4 )
     set_axes(ax=ax, xlabel='T', title='Predicted ratio targets')
 plt.show()
-
-
-# ---------
-# ------
-# # ML
-# 
-# Note that this ideas is very powerful and has the potential to replace the use of Delphes/GEANT for most people. According to the [previous paper](https://arxiv.org/pdf/2111.11415.pdf) this method already works for a single IQN, and we know it works reasonably well for autoregressive IQNx4, [as we said above](#Results_prior) .
-# 
-# It's important to remember "the master formula" of all of machine learning:
-# 
-# $$\int \frac{\partial L}{\partial f} p(y|x) dy  = 0 \tag{1}$$
-# 
-# or, equivalently, 
-# 
-# $$ \frac{\delta R}{\delta f}=0,$$
-# 
-# where $L$ is the loss function, $f$ is the model (neural network/classifier/regressor, etc. In this case it's an IQN) (implicitly parameterized by potentially a  gazillion parameters), 
-# 
-# and $p(y|x)$ the PDF of targets $y$ that we want to estimate, given (set of) features $x$, $R$ is the risk functional (sometime called objective function or cost function):
-# 
-# $$ R[f] = \int \cdots \int \, p(y, \mathbf{x}) \, L(f(\mathbf{x}, \theta), y) \, dy \, d\mathbf{x}$$
-# 
-# 
-# where the $R[f]$ is approximated by the normalized sum of the losses over the all the samples. So, for IQNs,
-# 
-# $$ L_{\text{IQN}}(f, y)=\left\{\begin{array}{ll}
-# \tau(y-f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})) & y \geq f(\boldsymbol{x}, \tau ; \boldsymbol{\theta}) \\
-# (1-\tau)(f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})-y) & y<f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})
-# \end{array},\right.$$
-# 
-# Means that what was done previously is that the risk functional, which could be a functional of many models $f$, was a only a functional of a single model: $R[f_1,..., f_n] = R[f_1]$. Here we have 4 models 
-# 
-# $$R_{\text{IQN}x4} =R_{\text{IQN}}[f_m, f_{p_T}, f_\eta, f_\phi], $$ 
-# 
-# and since we're choosing the evaluation order:
-# 
-# $$
-# \begin{align}
-#     p(\mathbf{y} | \mathbf{x}) & = 
-#     p(m'|\mathbf{x} )\nonumber\\
-#     & \times p(p_T'|\mathbf{x}, m' )\nonumber\\
-#     & \times p(\eta'| \mathbf{x}, m', p_T' )\nonumber\\
-#       & \times p(\phi' |  \mathbf{x}, m', p_T', \eta' ) ,
-# \end{align}
-# $$
-# 
-# 
-# 
-# $$ \begin{align}
-# R_{\text{IQN}x4} &= \int L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathbf{y_m} \right) p(\mathbf{x_m, y_m})  d \mathbf{x_m} d \mathbf{y_m} \\
-# &\times \  ... \times \\ 
-# &\times \int L_\text{IQN} \left( f_\phi (\mathbf{x_\phi},\tau), \mathbf{y_\phi} \right) p(\mathbf{x_\phi, y_\phi})  d \mathbf{x_\phi} d \mathbf{y_\phi}
-# \end{align}$$
-# 
-# where, again, each model $f_i$ is also dependent on a set of parameters $\theta_i$ (dropped for simplicity).
-
-# Our risk functional is minimized for
-# 
-# $$\frac{\delta R_{\text{IQN}x4} }{\delta f_m}=0\tag{5}$$
-# 
-# (which is basically what's done in the training process to get $f_m^{*}$ whose weights/parameters minimize the loss). Suppose we factorize the risk as
-# 
-# $$ R_{\text{IQN}x4}  = R_{\text{IQN}}^m \ R_{\text{IQN}}^{p_T}  \ R_{\text{IQN}}^\eta \ R_{\text{IQN}}^\phi \tag{6},$$ 
-# 
-# then, by Eq (4),
-# 
-# $$R_{\text{IQN}}^m \equiv \int L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathbf{y_m} \right) p(\mathbf{x_m, y_m,\tau})  d \mathbf{x_m} d \mathbf{y_m} d \mathbf{\tau},
-# $$
-# and by Eq (5)
-# 
-# $$\int d \mathbf{x_m} d \mathbf{y_m} d \mathbf{\tau} \ p(\mathbf{x_m, y_m,\tau})   \ \frac{ \delta L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathbf{y_m} \right) }{\delta f_m} = 0$$
-# 
-# 
-# and by Eq (2)
-# 
-# $$
-# \int d \mathbf{x_m} d \mathbf{y_m} d \mathbf{\tau} \ p(\mathbf{x_m, y_m,\tau})   \ \frac{ \delta L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathbf{y_m} \right) }{\delta f_m} = 0 \tag{7}
-# $$
-# 
-# >> ...
-# <br>
-# 
-# Expand Eq (2) in Eq (7) and integrate wrt y over the appropriate limits to see that  $f(\mathbf{x},\mathbf{\tau})$ is the quantile function for $p(\mathbf{y}|\mathbf{x})$, i.e. (I believe) that IQNx4 should work basically exactly.
-
-# $$R_{\text{IQN}x4} = [ L \left( f_m( \{ p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}, m^\text{reco} ) $$
-# 
-# # Train Mass
-# 
-# for mass, 
-# 
-# $$\mathbf{y_m}=m_{\text{reco}}$$
-# 
-# and 
-# 
-# $$\mathbf{x_m}=\{p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}.$$
-# 
-
-# In[221]:
-
-
-show_jupyter_image('images/IQN_training_flowchart.png',width=3000,height=1000)
-
-
-# ### Batches, validation, losses, and plotting of losses functions
-
-# In[72]:
 
 
 def get_batch(x, t, batch_size):
@@ -1033,11 +562,8 @@ def plot_average_loss(traces, ftsize=18,save_loss_plots=False, show_loss_plots=T
         print('\nloss curve saved in %s' % PATH)
     if show_loss_plots:
         show_plot()
-
-
-# In[73]:
-
-
+        
+        
 target = 'RecoDatam'
 source  = FIELDS[target]
 features= source['inputs']
@@ -1077,11 +603,6 @@ print('\ntest set shape:  ', test_data_m.shape)
 # print('validation set shape:', valid_data.shape)
 
 
-# # Get training and testing features and targets
-
-# In[74]:
-
-
 def split_t_x(df, target, input_features):
     """ Get teh target as the ratio, according to the T equation"""
     
@@ -1097,15 +618,9 @@ def split_t_x(df, target, input_features):
     return np.array(t), x
 
 
-# In[75]:
-
 
 print('Features = ', features)
 print('\n target = ', target)
-
-
-# In[76]:
-
 
 print(f'spliting data for {target}')
 train_t_ratio, train_x = split_t_x(df= train_data_m, target = target, input_features=features)
@@ -1117,39 +632,6 @@ print('valid_t shape = ',valid_t_ratio.shape , 'valid_x shape = ', valid_x.shape
 
 print('no need to train_test_split since we already have the split dataframes')
 
-
-# In[77]:
-
-
-print(valid_x.mean(axis=0), valid_x.std(axis=0))
-print(train_x.mean(axis=0), train_x.std(axis=0))
-
-
-# we expect the targets to have mean 0 and variance=1, since theyre the only things standarized
-
-# In[228]:
-
-
-print(valid_t_ratio.mean(), valid_t_ratio.std())
-print(train_t_ratio.mean(), train_t_ratio.std())
-
-
-# ### Aplly final $z$ to the train and test set features, but run it only once! (generator)
-
-# In[229]:
-
-
-def z__scale_targets(train_t_ratio, valid_t_ratio):
-    print('##########################################\n')
-    print('BEFORE SCALING')
-    
-    #yield train_t_ratio, valid_t_ratio
-    
-
-
-# In[230]:
-
-
 NFEATURES=train_x.shape[1]
 for i in range(NFEATURES-1):
     train_x[:,i] = z(train_x[:,i])
@@ -1160,26 +642,11 @@ print(valid_x.mean(axis=0), valid_x.std(axis=0))
 print(train_x.mean(axis=0), train_x.std(axis=0))
 
 
-# In[231]:
-
-
-train_x
-
-
-# ### Apply $z$ to targets before training
-
-# In[232]:
-
-
 train_t_ratio = z(train_t_ratio) 
 valid_t_ratio= z(valid_t_ratio)
 
 print(valid_t_ratio.mean(), valid_t_ratio.std())
 print(train_t_ratio.mean(), train_t_ratio.std())
-
-
-# In[18]:
-
 
 fig = plt.figure(figsize=(5, 4))
 ax = fig.add_subplot(autoscale_on=False)
@@ -1189,18 +656,6 @@ for i in range(NFEATURES):
     plt.hist(train_x[:,i], alpha=0.35)
     plt.title("training features post-z score: X'=z(L(X))")
 plt.show()
-
-
-# In[234]:
-
-
-train_x[:,-1].max()
-
-
-# ### Training and running-of-training functions
-
-# In[247]:
-
 
 n_iterations, n_layers, n_hidden, starting_learning_rate, dropout = get_model_params()
 BATCHSIZE=1000
@@ -1358,11 +813,6 @@ def run(model,
     return  model
 
 
-# ### Define basic NN model
-
-# In[236]:
-
-
 class RegularizedRegressionModel(nn.Module):
     #inherit from the super class
     def __init__(self, nfeatures, ntargets, nlayers, hidden_size, dropout):
@@ -1399,25 +849,14 @@ class RegularizedRegressionModel(nn.Module):
     
     def forward(self, x):
         return self.model(x)
-
-
-# --------
-# -------
-# 
-# ## Hyperparameter Training Workflow
-
-# In[293]:
-
-
+    
+    
 def get_tuning_sample():
     sample=int(100000)
     # train_x_sample, train_t_ratio_sample, valid_x_sample, valid_t_ratio_sample
     return train_x[:sample], train_t_ratio[:sample], valid_x[:sample], valid_t_ratio[:sample]
 train_x_sample, train_t_ratio_sample, valid_x_sample, valid_t_ratio_sample = get_tuning_sample()
 train_x_sample.shape
-
-
-# In[295]:
 
 
 class HyperTrainer():
@@ -1556,21 +995,15 @@ def tune_hyperparameters():
     )
 
     param_df.to_csv(filename)   
-
-
-# In[ ]:
-
+    
 
 tune_hyperparameters()
 
 
-# ### Run training
-
-# In[ ]:
 
 
 # def get_model_params_tuned()
-BEST_PARAMS = pd.read_csv(os.path.join(IQN_BASE, 'best_params','best_params_Test_Trials.csv'))
+BEST_PARAMS = pd.read_csv(os.path.join(IQN_BASE, 'best_params','MASS_best_params_Test_Trial.csv'))
 print(BEST_PARAMS)
 
 n_layers = int(BEST_PARAMS["n_layers"]) 
@@ -1579,530 +1012,4 @@ dropout = float(BEST_PARAMS["dropout"])
 optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
 learning_rate =  float(BEST_PARAMS["learning_rate"])
 batch_size = int(BEST_PARAMS["batch_size"])
-
-
-# In[238]:
-
-
-@debug
-def get_model_params_simple():
-    dropout=0.2
-    n_layers = 2
-    n_hidden=32
-    starting_learning_rate=1e-3
-    print('n_iterations, n_layers, n_hidden, starting_learning_rate, dropout')
-    return n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
-
-get_model_params()
-
-
-# In[241]:
-
-
-NFEATURES=train_x.shape[1]
-
-def load_untrained_model():
-    model=RegularizedRegressionModel(nfeatures=NFEATURES, ntargets=1,
-                               nlayers=n_layers, hidden_size=n_hidden, dropout=dropout)
-    print(model)
-    return model
-
-
-# ## See if trainig works on T ratio
-
-# In[243]:
-
-
-model=load_untrained_model()
-
-
-
-IQN_trace=([], [], [], [])
-traces_step = 200
-traces_window=traces_step
-n_iterations=100000
-IQN = run(model=model,train_x=train_x, train_t=train_t_ratio, 
-        valid_x=valid_x, valid_t=valid_t_ratio, traces=IQN_trace, n_batch=1000, 
-        n_iterations=n_iterations, traces_step=traces_step, traces_window=traces_window,
-        save_model=False)
-
-
-
-# ## Save trained model (if its good, and if you haven't saved above) and load trained model (if you saved it)
-
-# In[251]:
-
-
-filename='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
-trained_models_path='trained_models'
-mkdir(trained_models_path)
-PATH = os.path.join(IQN_BASE,trained_models_path , filename)
-
-@debug
-def save_model(model):
-    print(model)
-    torch.save(model.state_dict(), PATH)
-    print('\ntrained model dictionary saved in %s' % PATH)
-
-@debug
-def load_model(model):
-    # n_layers = int(BEST_PARAMS["n_layers"]) 
-    # hidden_size = int(BEST_PARAMS["hidden_size"])
-    # dropout = float(BEST_PARAMS["dropout"])
-    # optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
-    # learning_rate =  float(BEST_PARAMS["learning_rate"])
-    # batch_size = int(BEST_PARAMS["batch_size"])
-    model =  RegularizedRegressionModel(
-        nfeatures=train_x.shape[1], 
-        ntargets=1,
-        nlayers=n_layers, 
-        hidden_size=hidden_size, 
-        dropout=dropout
-        )
-    model.load_state_dict(torch.load(PATH) )
-    #OR
-    #model=torch.load(PATH)#BUT HERE IT WILL BE A DICT (CANT BE EVALUATED RIGHT AWAY) DISCOURAGED!
-    model.eval()
-    print(model)
-    return model
-
-
-# In[252]:
-
-
-save_model(IQN)
-
-
-# In[253]:
-
-
-plt.hist(valid_t_ratio, label='ratio target');
-for i in range(NFEATURES):
-    plt.hist(valid_x[:,i], label =f"feature {i}", alpha=0.35)
-plt.legend();plt.show()
-
-
-# In[254]:
-
-
-def simple_eval(model):
-    model.eval()
-    valid_x_tensor=torch.from_numpy(valid_x).float()
-    pred = IQN(valid_x_tensor)
-    p = pred.detach().numpy()
-    fig, ax = plt.subplots(1,1)
-    label=FIELDS[target]['ylabel']
-    ax.hist(p, label=f'Predicted ratio for {label}')
-    set_axes(ax, xlabel='predicted $T$')
-    print('predicted ratio shape: ', p.shape)
-    return p
-    
-p = simple_eval(IQN)
-plt.show()
-
-
-# In[255]:
-
-
-# IQN.eval()
-# valid_x_tensor=torch.from_numpy(valid_x).float()
-# pred = IQN(valid_x_tensor)
-# p = pred.detach().numpy()
-# plt.hist(p, label='predicted $T$ ratio');plt.legend();plt.show()
-
-
-# $$
-#         f_{\text{IQN}} (\mathcal{O}) =  z \left( \frac{\mathbb{L} (\mathcal{O}^{\text{reco}}) +10 }{\mathbb{L}(\mathcal{O}^{\text{gen}}) +10} \right),
-# $$
-# 
-# 
-# So, to de-scale, (for our observable $\mathcal{O}=m$ ),
-# 
-# $$
-#     m^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 \right]
-# $$
-# 
-# Note that $z^{-1} (f_{\text{IQN}} )$ should use the mean and std of the ratio thing for the target 
-# 
-# $$z^{-1} (f_{\text{IQN}} ) = z^{-1}\left( y_{pred}, \text{mean}=\text{mean}(\mathbb{T}(\text{target_variable})), std=std (\mathbb{T}(\text{target_variable} ) \right)$$
-
-# In[256]:
-
-
-def z_inverse(xprime, mean, std):
-    return xprime * std + mean
-
-
-# In[257]:
-
-
-recom_unsc_mean=TEST_SCALE_DICT[target]['mean']
-recom_unsc_std=TEST_SCALE_DICT[target]['std']
-print(recom_unsc_mean,recom_unsc_std)
-
-
-# Get unscaled dataframe again, just to verify
-
-# In[258]:
-
-
-raw_train_data=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
-                      usecols=all_cols,
-                      nrows=SUBSAMPLE
-                      )
-
-raw_test_data=pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
-                      usecols=all_cols,
-                     nrows=SUBSAMPLE
-                     )
-raw_test_data.describe()
-
-
-# In[259]:
-
-
-m_reco = raw_test_data['RecoDatam']
-m_gen = raw_test_data['genDatam']
-plt.hist(m_reco,label=r'$m_{gen}^{test \ data}$');plt.legend();plt.show()
-
-
-# 
-# 
-# Apply the descaling formula for our observable
-# 
-# $$
-#     m^{\text{predicted}} = \mathbb{L}^{-1} \left[ z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 \right]
-# $$
-# 
-# * First, calculate $z^{-1} (f_{\text{IQN}} )$
-
-# In[260]:
-
-
-print(valid_t_ratio.shape, valid_t_ratio[:5])
-
-
-# In[261]:
-
-
-orig_ratio = T('m', scaled_df=train_data_m)
-orig_ratio[:5]
-
-
-# In[262]:
-
-
-z_inv_f =z_inverse(xprime=p, mean=np.mean(orig_ratio), std=np.std(orig_ratio))
-z_inv_f[:5]
-
-
-# * Now 
-# 
-# $$\mathbb{L}(\mathcal{O^{\text{gen}}}) = \mathbb{L} (m^{\text{gen}})$$
-# 
-
-# In[263]:
-
-
-L_obs = L(orig_observable=m_gen, label='m')
-L_obs[:5]
-
-
-# In[264]:
-
-
-print(L_obs.shape, z_inv_f.shape)
-
-
-# In[265]:
-
-
-z_inv_f = z_inv_f.flatten();print(z_inv_f.shape)
-
-
-# * "factor" $ = z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 $
-
-# In[266]:
-
-
-factor = (z_inv_f * (L_obs  + 10) )-10
-factor[:5]
-
-
-# In[267]:
-
-
-m_pred = L_inverse(L_observable=factor, label='m')
-# pT_pred=get_finite(pT_pred)
-
-
-# In[268]:
-
-
-m_pred
-
-
-# In[269]:
-
-
-plt.hist(m_pred.flatten(),label='predicted',alpha=0.3);
-plt.hist(m_reco,label=r'$m_{reco}^{test \ data}$',alpha=0.3);
-
-plt.legend();plt.show()
-
-
-# ------------------
-# ### Paper plotting
-
-# In[270]:
-
-
-range_=[0,25]
-bins=50
-data=raw_train_data
-YLIM=(0.8,1.2)
-data = data[['RecoDatapT','RecoDataeta','RecoDataphi','RecoDatam']]
-data.columns = ['realpT','realeta','realphi','realm']
-REAL_DIST=data['realm']
-norm_data=data.shape[0]
-AUTOREGRESSIVE_DIST = m_pred
-norm_IQN=AUTOREGRESSIVE_DIST.shape[0]
-norm_autoregressive=AUTOREGRESSIVE_DIST.shape[0]
-norm_IQN=norm_autoregressive
-print('norm_data',norm_data,'\nnorm IQN',norm_IQN,'\nnorm_autoregressive', norm_autoregressive)
-
-
-# In[271]:
-
-
-def get_hist(label):
-    """label could be "pT", "eta", "phi", "m"
-    """
-    predicted_label_counts, label_edges = np.histogram(JETS_DICT['Predicted_RecoData'+label]['dist'], 
-    range=JETS_DICT['Predicted_RecoData'+label]['range'], bins=bins)
-    real_label_counts, _ = np.histogram(JETS_DICT['Real_RecoData'+label]['dist'], 
-    range=JETS_DICT['Real_RecoData'+label]['range'], bins=bins)
-    label_edges = label_edges[1:]/2+label_edges[:-1]/2
-
-    return real_label_counts, predicted_label_counts, label_edges
-
-def get_hist_simple(label):
-    predicted_label_counts, label_edges = np.histogram(m_pred , range=range_, bins=bins)
-    real_label_counts, _ = np.histogram(REAL_DIST, range=range_, bins=bins)
-    label_edges = label_edges[1:]/2+label_edges[:-1]/2
-    return real_label_counts, predicted_label_counts, label_edges
-
-
-# In[272]:
-
-
-real_label_counts_m, predicted_label_counts_m, label_edges_m = get_hist_simple('m')
-
-
-# In[273]:
-
-
-def plot_one_m():
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(3.5*3/2.5,3.8), gridspec_kw={'height_ratios': [2,0.5]})
-    ax1.step(label_edges_m, real_label_counts_m/norm_data, where="mid", color="k", linewidth=0.5)# step real_count_pt
-    ax1.step(label_edges_m, predicted_label_counts_m/norm_IQN, where="mid", color="#D7301F", linewidth=0.5)# step predicted_count_pt
-    ax1.scatter(label_edges_m, real_label_counts_m/norm_data, label="reco",  color="k",facecolors='none', marker="o", s=5, linewidth=0.5)
-    ax1.scatter(label_edges_m,predicted_label_counts_m/norm_IQN, label="predicted sbatch 1", color="#D7301F", marker="x", s=5, linewidth=0.5)
-    ax1.set_xlim(range_)
-    ax1.set_ylim(0, max(predicted_label_counts_m/norm_IQN)*1.1)
-    ax1.set_ylabel("counts")
-    ax1.set_xticklabels([])
-    ax1.legend(loc='upper right')
-
-    ratio=(predicted_label_counts_m/norm_IQN)/(real_label_counts_m/norm_data)
-    ax2.scatter(label_edges_m, ratio, color="r", marker="x", s=5, linewidth=0.5)#PREDICTED (IQN)/Reco (Data)
-    ax2.scatter(label_edges_m, ratio/ratio, color="k", marker="o",facecolors="none", s=5, linewidth=0.5)
-    ax2.set_xlim(range_)
-    # ax2.set_xlabel(labels[3])
-    ax2.set_ylabel(r"$\frac{\textnormal{predicted}}{\textnormal{reco}}$")
-    ax2.set_ylim((YLIM))
-    ax2.set_xlim(range_)
-    plt.tight_layout()
-    fig.subplots_adjust(wspace=0.5, hspace=0.2)
-    fig.subplots_adjust(wspace=0.0, hspace=0.1)
-    # plt.savefig(DIR+'AUTOREGRESSIVE_m_TUNEND_MLP_OCT_18.pdf')
-    #   plt.savefig('images/all_m_g2r.pdf')
-    plt.show(); 
-    # fig.show()
-
-    plt.axis('off')
-    plt.gca().set_position([0, 0, 1, 1])
-
-
-# In[274]:
-
-
-plot_one_m()
-
-
-# -------------
-# -------------
-# -------------
-# 
-
-# In[137]:
-
-
-if target== 'RecoDatapT':
-    label= '$p_T$ [GeV]'
-    x_min, x_max = 20, 60
-elif target== 'RecoDataeta':
-    label = '$\eta$'
-    x_min, x_max = -5.4, 5.4
-elif target =='RecoDataphi':
-    label='$\phi$'
-    x_min, x_max = -3.4, 3.4
-elif target == 'RecoDatam':
-    label = ' $m$ [GeV]'
-    x_min, x_max = 0, 18
-
-
-    
-def evaluate_model(dnn, target, src,
-               fgsize=(6, 6), 
-               ftsize=20,save_image=False, save_pred=False,
-               show_plot=True):
-    eval_data=pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'))
-    ev_features=X
-    #['genDatapT', 'genDataeta', 'genDataphi', 'genDatam','tau']
-    
-    eval_data=eval_data[ev_features]
-    
-    print('EVALUATION DATA OLD INDEX\n', eval_data.head())
-
-    
-
-                            
-    dnn.eval()
-    y = dnn(eval_data)
-    eval_data['RecoDatam']=y
-    new_cols= ['RecoDatam'] + X
-    eval_data=eval_data.reindex(columns=new_cols)
-    print('EVALUATION DATA NEW INDEX\n', eval_data.head())
-
-    eval_data.to_csv('AUTOREGRESSIVE_m_Prime.csv')
-
-
-    if save_pred:
-        pred_df = pd.DataFrame({T+'_predicted':y})
-        pred_df.to_csv('predicted_data/dataset2/'+T+'_predicted_MLP_iter_5000000.csv')
-        
-    if save_image or show_plot:
-        gfile ='fig_model_%s.png' % target
-        xbins = 100
-        xmin  = src['xmin']
-        xmax  = src['xmax']
-        xlabel= src['xlabel']
-        xstep = (xmax - xmin)/xbins
-
-        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=fgsize)
-        
-        ax.set_xlim(xmin, xmax)
-        ax.set_xlabel(xlabel, fontsize=ftsize)
-        ax.set_xlabel('reco jet '+label, fontsize=ftsize)
-        ax.set_ylabel(y_label_dict[target], fontsize=ftsize)
-
-        ax.hist(train_data['RecoDatam'], 
-                bins=xbins, 
-                range=(xmin, xmax), 
-                alpha=0.3, 
-                color='blue', 
-                density=True, 
-                label='simulation')
-        ax.hist(y, 
-                bins=xbins, 
-                range=(xmin, xmax), 
-                alpha=0.3, 
-                color='red', 
-                density=True, 
-                label='$y^\prime$')
-        ax.grid()
-        ax.legend()
-        
-        
-        if save_image:
-            plt.savefig('images/'+T+'IQN_Consecutive_'+N+'.png')
-            print('images/'+T+'IQN_Consecutive_'+N+'.png')
-        if show_plot:
-            plt.tight_layout()
-            plt.show()
-##########
-################################################CNN
-
-
-
-
-
-
-
-def main():
-    start=time.time()
-    print('estimating mass\n')
-    model =  utils.RegularizedRegressionModel(nfeatures=train_x.shape[1], ntargets=1,nlayers=n_layers, hidden_size=n_hidden)
-    traces = ([], [], [], [])
-    dnn = run(model, scalers, target, train_x, train_t, valid_x, valid_t, traces)
-    evaluate_model( dnn, target, source)
-
-
-
-if __name__ == "__main__":
-    main()
-
-
-
-# # Plot predicted vs real reco (in our paper's format)
-
-# In[ ]:
-
-
-
-
-
-# # Train $p_T$ using saved variables above
-
-# In[ ]:
-
-
-
-
-
-# Evaluate $p_T$ and save predicted distribution
-
-# In[ ]:
-
-
-
-
-
-# Plot reco $p_T$ and  predicted reco $p_T$ marginal densities
-
-# In[155]:
-
-
-# show_jupyter_image('screenshot.png')
-
-
-# <!-- > I guess it works now -->
-
-# commented new ideas below
-
-# <!-- ### Ideas for a future paper
-# 
-# me and Harrison would like to use this method for on-the-fly stochastic folding of events in MC generators (potentially even including CMSSW formats like [nanoaod](https://github.com/cms-nanoAOD/nanoAOD-tools), such as in Madminer (but using IQN as opposed to Delphes for detector simulation) for any observable. This also beings the possibility of using LFI methods for much better inference on models (such as SMEFT) using any observable post-detector simulation. If you're interested in helping out on this, me and Harrison would like to do most of the code/ideas, but your occasional ideas/input would be incredibly valuable! -->
-
-# In[181]:
-
-
-
-
-
-# In[ ]:
-
-
-
 
