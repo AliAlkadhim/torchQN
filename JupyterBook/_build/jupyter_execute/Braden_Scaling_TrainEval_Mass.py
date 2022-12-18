@@ -1264,7 +1264,7 @@ train_x_sample, train_t_ratio_sample, valid_x_sample, valid_t_ratio_sample = get
 train_x_sample.shape
 
 
-# In[340]:
+# In[432]:
 
 
 class HyperTrainer():
@@ -1275,7 +1275,7 @@ class HyperTrainer():
         #self.device= device
         self.optimizer = optimizer
         self.batch_size=batch_size
-        self.n_iterations_tune=int(500)
+        self.n_iterations_tune=int(50)
 
         #the loss function returns the loss function. It is a static method so it doesn't need self
         # @staticmethod
@@ -1342,11 +1342,12 @@ def run_train(params, save_model=False):
     
     # optimizer = torch.optim.Adam(model.parameters(), lr=params["learning_rate"]) 
     
-    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate)
+    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), 
+                            lr=learning_rate, momentum = params["momentum"])
     
     trainer=HyperTrainer(model, optimizer, batch_size=params["batch_size"])
     best_loss = np.inf
-    early_stopping_iter=20#stop after 10 iteractions of not improving loss
+    early_stopping_iter=10#stop after 10 iteractions of not improving loss
     early_stopping_coutner=0
 
     for epoch in range(EPOCHS):
@@ -1367,22 +1368,38 @@ def run_train(params, save_model=False):
 
 def objective(trial):
     params = {
-      "nlayers": trial.suggest_int("nlayers",1,6),      
-      "hidden_size": trial.suggest_int("hidden_size", 1, 16),
-      "dropout": trial.suggest_float("dropout", 0.0,0.5),
-      "optimizer_name" : trial.suggest_categorical("optimizer_name", ["Adam", "RMSprop"]),
-      "learning_rate": trial.suggest_float("learning_rate", 1e-6, 1e-2),
-      "batch_size": trial.suggest_int("batch_size", 500, 3000)
+          "nlayers": trial.suggest_int("nlayers",1,6),      
+          "hidden_size": trial.suggest_int("hidden_size", 1, 16),
+          "dropout": trial.suggest_float("dropout", 0.0,0.5),
+          "optimizer_name" : trial.suggest_categorical("optimizer_name", ["RMSprop", "SGD"]),
+          "momentum": trial.suggest_float("momentum", 0.0,0.9),
+          "learning_rate": trial.suggest_float("learning_rate", 1e-6, 1e-2),
+          "batch_size": trial.suggest_int("batch_size", 500, 3000)
 
-    }
+        }
+    
+    for step in range(10):
 
-    temp_loss = run_train(params,save_model=False)
-
+        temp_loss = run_train(params,save_model=False)
+        trial.report(temp_loss, step)
+        #activate pruning (early stopping)
+        if trial.should_prune():
+            raise optuna.TrialPruned()
+    
     return temp_loss
 
 def tune_hyperparameters():
     print(f'Getting best hyperparameters for target {target}')
-    study=optuna.create_study(direction="minimize")
+    # study=optuna.create_study(direction="minimize")
+    #choose a different sampling strategy (https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.CmaEsSampler.html#optuna.samplers.CmaEsSampler)
+    sampler=optuna.samplers.RandomSampler()
+    # sampler=False
+    if sampler:
+        study=optuna.create_study(direction='minimize',
+                                  pruner=optuna.pruners.MedianPruner(), sampler=sampler)
+    else:
+        study=optuna.create_study(direction='minimize',
+                                  pruner=optuna.pruners.Hyperband())
     study.optimize(objective, n_trials=10)
     best_trial = study.best_trial
     print('best model parameters', best_trial.params)
@@ -1397,26 +1414,27 @@ def tune_hyperparameters():
                             'dropout':best_params["dropout"],
                             'optimizer_name':best_params["optimizer_name"],
                             'learning_rate': best_params["learning_rate"], 
-                            'batch_size':best_params["batch_size"] },
+                            'batch_size':best_params["batch_size"],
+                            'momentum':best_params["momentum"]},
                                     index=[0]
     )
 
     param_df.to_csv(filename)   
 
 
-# In[341]:
+# In[433]:
 
 
 tune_hyperparameters()
 
 
-# In[342]:
+# In[413]:
 
 
 # BEST_PARAMS = {'nlayers': 6, 'hidden_size': 2, 'dropout': 0.40716885971031636, 'optimizer_name': 'Adam', 'learning_rate': 0.005215585403055171, 'batch_size': 1983}
 
 
-# In[343]:
+# In[434]:
 
 
 # def get_model_params_tuned()
@@ -1437,7 +1455,7 @@ print(type(optimizer_name))
 optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
 
 
-# In[344]:
+# In[435]:
 
 
 NFEATURES=train_x.shape[1]
@@ -1451,22 +1469,23 @@ def load_untrained_model():
 model=load_untrained_model()
 
 
-# In[345]:
+# In[436]:
 
 
 # optimizer_name =  'Adam'
 best_learning_rate =  float(BEST_PARAMS["learning_rate"])
-best_optimizer_temp = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate)
+momentum=float(BEST_PARAMS["momentum"])
+best_optimizer_temp = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate,momentum=momentum)
 batch_size = int(BEST_PARAMS["batch_size"])
 
 
-# In[346]:
+# In[437]:
 
 
 best_optimizer_temp
 
 
-# In[347]:
+# In[439]:
 
 
 @debug
@@ -1478,12 +1497,12 @@ def get_model_params_simple():
     print('n_iterations, n_layers, n_hidden, starting_learning_rate, dropout')
     return n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
 
-get_model_params()
+get_model_params_simple()
 
 
 # ### Run training
 
-# In[348]:
+# In[440]:
 
 
 # BATCHSIZE=10000
@@ -1591,7 +1610,7 @@ def run(model,
     #add weight decay
     L2=1e-3
     # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=L2)
-    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate)
+    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate, momentum=momentum)
     
     #starting at 10^-3	    
     traces = train(model, optimizer, 
@@ -1646,11 +1665,11 @@ def run(model,
 
 # ## See if trainig works on T ratio
 
-# In[349]:
+# In[442]:
 
 
 IQN_trace=([], [], [], [])
-traces_step = 400
+traces_step = 800
 traces_window=traces_step
 n_iterations=10000
 IQN = run(model=model,train_x=train_x, train_t=train_t_ratio, 
@@ -1662,7 +1681,7 @@ IQN = run(model=model,train_x=train_x, train_t=train_t_ratio,
 
 # ## Save trained model (if its good, and if you haven't saved above) and load trained model (if you saved it)
 
-# In[350]:
+# In[443]:
 
 
 filename='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
@@ -1699,19 +1718,19 @@ def load_model(PATH):
     return model
 
 
-# In[351]:
+# In[444]:
 
 
 save_model(IQN)
 
 
-# In[352]:
+# In[445]:
 
 
 IQN
 
 
-# In[353]:
+# In[446]:
 
 
 plt.hist(valid_t_ratio, label='post-z ratio target');
@@ -1720,7 +1739,7 @@ for i in range(NFEATURES):
 plt.legend();plt.show()
 
 
-# In[355]:
+# In[447]:
 
 
 def simple_eval(model):
@@ -1743,7 +1762,7 @@ p = simple_eval(IQN)
 plt.show()
 
 
-# In[356]:
+# In[397]:
 
 
 # IQN.eval()
@@ -1768,14 +1787,14 @@ plt.show()
 # 
 # $$z^{-1} (f_{\text{IQN}} ) = z^{-1}\left( y_{pred}, \text{mean}=\text{mean}(\mathbb{T}(\text{target_variable})), std=std (\mathbb{T}(\text{target_variable} ) \right)$$
 
-# In[357]:
+# In[398]:
 
 
 def z_inverse(xprime, mean, std):
     return xprime * std + mean
 
 
-# In[358]:
+# In[399]:
 
 
 recom_unsc_mean=TEST_SCALE_DICT[target]['mean']
@@ -1785,7 +1804,7 @@ print(recom_unsc_mean,recom_unsc_std)
 
 # Get unscaled dataframe again, just to verify
 
-# In[238]:
+# In[400]:
 
 
 raw_train_data=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
@@ -1818,20 +1837,20 @@ plt.hist(m_reco,label=r'$m_{gen}^{test \ data}$');plt.legend();plt.show()
 # 
 # * First, calculate $z^{-1} (f_{\text{IQN}} )$
 
-# In[359]:
+# In[401]:
 
 
 print(valid_t_ratio.shape, valid_t_ratio[:5])
 
 
-# In[360]:
+# In[402]:
 
 
 orig_ratio = T('m', scaled_df=train_data_m)
 orig_ratio[:5]
 
 
-# In[361]:
+# In[403]:
 
 
 z_inv_f =z_inverse(xprime=p, mean=np.mean(orig_ratio), std=np.std(orig_ratio))
@@ -1843,20 +1862,20 @@ z_inv_f[:5]
 # $$\mathbb{L}(\mathcal{O^{\text{gen}}}) = \mathbb{L} (m^{\text{gen}})$$
 # 
 
-# In[362]:
+# In[404]:
 
 
 L_obs = L(orig_observable=m_gen, label='m')
 L_obs[:5]
 
 
-# In[363]:
+# In[405]:
 
 
 print(L_obs.shape, z_inv_f.shape)
 
 
-# In[364]:
+# In[406]:
 
 
 z_inv_f = z_inv_f.flatten();print(z_inv_f.shape)
@@ -1864,27 +1883,27 @@ z_inv_f = z_inv_f.flatten();print(z_inv_f.shape)
 
 # * "factor" $ = z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 $
 
-# In[365]:
+# In[407]:
 
 
 factor = (z_inv_f * (L_obs  + 10) )-10
 factor[:5]
 
 
-# In[366]:
+# In[408]:
 
 
 m_pred = L_inverse(L_observable=factor, label='m')
 # pT_pred=get_finite(pT_pred)
 
 
-# In[367]:
+# In[409]:
 
 
 m_pred
 
 
-# In[368]:
+# In[410]:
 
 
 plt.hist(m_pred.flatten(),label='predicted',alpha=0.3);
