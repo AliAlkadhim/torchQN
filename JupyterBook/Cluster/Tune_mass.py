@@ -149,20 +149,31 @@ def SourceIQN(func):
         func(*args, env=env)
     return _func
 
-def timer(func):
-    """Print the runtime of the decorated function"""
-    import functools
-    import time
-    @functools.wraps(func)
-    def wrapper_timer(*args, **kwargs):
-        print(f'training IQN to estimate {target}')
-        start_time = time.perf_counter()    # 1
-        value = func(*args, **kwargs)
-        end_time = time.perf_counter()      # 2
-        run_time = end_time - start_time    # 3
-        print(f"training target {target} using {func.__name__!r} in {run_time:.4f} secs")
-        return value
-    return wrapper_timer
+def time_type_of_func(tuning_or_training, _func=None):
+    def timer(func):
+        """Print the runtime of the decorated function"""
+        import functools
+        import time
+        @functools.wraps(func)
+        def wrapper_timer(*args, **kwargs):
+            if tuning_or_training=='training':
+                print(f'training IQN to estimate {target}')
+            elif tuning_or_training=='tuning':
+                print(f'tuning IQN hyperparameters to estimate {target}')
+            start_time = time.perf_counter()    
+            value = func(*args, **kwargs)
+            end_time = time.perf_counter()      
+            run_time = end_time - start_time    
+            if tuning_or_training=='training':
+                print(f"training target {target} using {func.__name__!r} in {run_time:.4f} secs")
+            elif tuning_or_training=='tuning':
+                print(f"tuning IQN hyperparameters for {target} using {func.__name__!r} in {run_time:.4f} secs")
+            return value
+        return wrapper_timer
+    if _func is None:
+        return timer
+    else:
+        return timer(_func)
 
 
 def debug(func):
@@ -748,7 +759,7 @@ def train(model, optimizer, avloss, getbatch,
     return (xx, yy_t, yy_v, yy_v_avg)
 
 
-@timer
+@time_type_of_func(tuning_or_training='training')
 def run(model, 
         train_x, train_t, 
         valid_x, valid_t, traces,
@@ -916,6 +927,8 @@ class HyperTrainer():
 
     
 EPOCHS=1
+
+
 def run_train(params, save_model=False):
     """For tuning the parameters"""
 
@@ -957,6 +970,7 @@ def run_train(params, save_model=False):
 
 # run_train()
 
+
 def objective(trial):
     params = {
       "nlayers": trial.suggest_int("nlayers",1,6),      
@@ -973,6 +987,7 @@ def objective(trial):
     # all_losses.append(temp_loss)
     return temp_loss
 
+@time_type_of_func(tuning_or_training='tuning')
 def tune_hyperparameters():
     print(f'Getting best hyperparameters for target {target}')
     study=optuna.create_study(direction="minimize")
@@ -981,7 +996,7 @@ def tune_hyperparameters():
     print('best model parameters', best_trial.params)
 
     best_params=best_trial.params#this is a dictionary
-    tuned_dir = os.path.join(QN_BASE,'best_params')
+    tuned_dir = os.path.join(IQN_BASE,'best_params')
     mkdir(tuned_dir)
     filename=os.path.join(tuned_dir,'best_params_Test_Trials.csv')
     param_df=pd.DataFrame({
