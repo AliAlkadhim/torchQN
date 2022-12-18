@@ -13,7 +13,7 @@
 # 
 # There is also a `requirements.txt` here so that it can be run on an interactive website, eg binder or people can `pip install` it.
 
-# In[78]:
+# In[1]:
 
 
 import numpy as np; import pandas as pd
@@ -56,7 +56,7 @@ import ipywidgets as wid;
 # see if i can find/write a decorator to add the current cell to a file which will be run on cluster. I think %writefile file.py could work, by adding the cell to another file... 
 # 
 
-# In[50]:
+# In[2]:
 
 
 # 'IQN' in 
@@ -66,7 +66,7 @@ import ipywidgets as wid;
 # 'DATA' in list(os.environ)
 
 
-# In[51]:
+# In[3]:
 
 
 # os.environ['IQN_BASE']='/home/ali/Desktop/Pulled_Github_Repositories/torchQN'
@@ -94,7 +94,7 @@ mkdir -p ${IQN_BASE}/images/loss_plots ${IQN_BASE}/trained_models  ${IQN_BASE}/h
 tree $IQN_BASE
 
 
-# In[54]:
+# In[4]:
 
 
 # env = {}
@@ -126,7 +126,7 @@ except Exception:
 # 
 # Plotting and image functions
 
-# In[84]:
+# In[5]:
 
 
 def show_jupyter_image(image_filename, width = 1300, height = 300):
@@ -250,6 +250,17 @@ def debug(func):
     return wrapper_debug
 
 
+def make_interactive(func):
+    """ make the plot interactive"""
+    import functools
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        plt.ion()
+        output=func(*args, **kwargs)
+        plt.ioff()
+        return output
+    return wrapper
+        
 from IPython.core.magic import register_cell_magic
 
 @register_cell_magic
@@ -264,18 +275,7 @@ def write_and_run(line, cell):
     with open(file, mode) as f:
         f.write(cell)
     get_ipython().run_cell(cell)
-
-
-# In[85]:
-
-
-@time_type_of_func(tuning_or_training='training')
-def waster_time():
-    r=0
-    for i in range(500):
-        r+= np.exp(i)
-
-waster_time()
+    
 
 
 # <a name="Results_prior"></a>
@@ -288,7 +288,7 @@ waster_time()
 # Recall that the best IQNx4 autoregressive results that I attained prior to trying the Braden scaling was the following (which was implemented in the Davidson cluster here: `/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/OCT_7/*.py` and copied to my repo [here](https://github.com/AliAlkadhim/torchQN/tree/master/OCT_7) )
 # 
 
-# In[56]:
+# In[6]:
 
 
 show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height = 200)
@@ -296,7 +296,7 @@ show_jupyter_image('OCT_7/AUTOREGRESSIVE_RESULTS_OCT7.png',width = 800, height =
 
 # So we know IQNx4 works (but not perfect enough), but in this notebook we try the Braden scaling (first time trying this scaling) to see if we can do better.
 
-# In[79]:
+# In[7]:
 
 
 # update fonts
@@ -320,7 +320,7 @@ wid.HTMLMath('$\LaTeX$')
 
 # ## Set arguments and configurations
 
-# In[58]:
+# In[8]:
 
 
 # add_to_cluster()
@@ -359,18 +359,19 @@ else:
     
 
 
-# In[59]:
+# In[9]:
 
 
 get_ipython().run_line_magic('pinfo', 'plt.rcsetup.interactive_bk')
 
 
-# In[60]:
+# In[64]:
 
 
 if JUPYTER:
     # print(plt.rcsetup.interactive_bk )
-    plt.ion()
+    # matplotlib interactive mode: ion or ioff
+    plt.ioff()
     print('interactive? ', mpl.is_interactive())
     args = parser.parse_args(args=[])
     N = '10M_2'
@@ -398,14 +399,14 @@ else:
 
 # # Data
 
-# In[10]:
+# In[65]:
 
 
 use_svg_display()
 show_jupyter_image('images/pythia_ppt_diagram.png', width=2000,height=500)
 
 
-# In[61]:
+# In[66]:
 
 
 ###############################################################################################
@@ -423,7 +424,7 @@ loss_y_label_dict ={'RecoDatapT':'$p_T^{reco}$',
 
 # Decide on an evaluation order 
 
-# In[62]:
+# In[67]:
 
 
 ################################### SET DATA CONFIGURATIONS ###################################
@@ -468,7 +469,7 @@ if ORDER=='m_First':
 
 # Load and explore raw (unscaled) dataframes
 
-# In[63]:
+# In[262]:
 
 
 all_variable_cols=['genDatapT', 'genDataeta', 'genDataphi', 'genDatam','RecoDatapT', 'RecoDataeta', 'RecoDataphi', 'RecoDatam']
@@ -486,7 +487,7 @@ raw_test_data=pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
                      )
 
 
-# In[64]:
+# In[263]:
 
 
 def explore_data(df, title, scaled=False):
@@ -524,27 +525,27 @@ def explore_data(df, title, scaled=False):
     show_plot()
 
 
-# In[206]:
+# In[264]:
 
 
 explore_data(df=raw_train_data, title='Unscaled Dataframe')
 
 
-# In[207]:
+# In[265]:
 
 
 print(raw_train_data.shape)
 raw_train_data.describe()#unscaled
 
 
-# In[208]:
+# In[266]:
 
 
 print(raw_test_data.shape)
 raw_test_data.describe()#unscaled
 
 
-# In[209]:
+# In[267]:
 
 
 # np.array(train_data['genDatapT'])
@@ -555,7 +556,7 @@ raw_test_data.describe()#unscaled
 # scaling (or standarization, normalization) is someimes done in the following way:
 # $$ X' = \frac{X-X_{min}}{X_{max}-X_{min}} \qquad \rightarrow \qquad X= X' (X_{max}-X_{min}) + X_{min}$$
 
-# In[210]:
+# In[268]:
 
 
 # def standarize(values):
@@ -595,7 +596,7 @@ raw_test_data.describe()#unscaled
 # 
 # 7. Compare to $y$ (the actual distribution you're trying to estimate) one-to-one
 
-# In[211]:
+# In[269]:
 
 
 use_svg_display()
@@ -678,7 +679,7 @@ show_jupyter_image('images/scaling_forNN.jpg', width=2000,height=500)
 # # Scale the data accoding to the "Braden Kronheim scaling" :
 # 
 
-# In[65]:
+# In[270]:
 
 
 def z(x):
@@ -688,7 +689,7 @@ def z_inverse(xprime, x):
     return xprime * np.std(x) + np.mean(x)
 
 
-# In[66]:
+# In[271]:
 
 
 def get_scaling_info(df):
@@ -706,7 +707,7 @@ def get_scaling_info(df):
     return SCALE_DICT
 
 
-# In[214]:
+# In[272]:
 
 
 TRAIN_SCALE_DICT = get_scaling_info(raw_train_data);print(TRAIN_SCALE_DICT)
@@ -714,7 +715,7 @@ print('\n\n')
 TEST_SCALE_DICT = get_scaling_info(raw_test_data);print(TEST_SCALE_DICT)
 
 
-# In[67]:
+# In[273]:
 
 
 def L(orig_observable, label):
@@ -739,7 +740,7 @@ def L(orig_observable, label):
     return L_observable.to_numpy()
 
 
-# In[68]:
+# In[274]:
 
 
 def L_inverse(L_observable, label):
@@ -767,7 +768,7 @@ def L_inverse(L_observable, label):
 # $$
 # 
 
-# In[69]:
+# In[275]:
 
 
 def T(variable, scaled_df):
@@ -791,7 +792,7 @@ def T(variable, scaled_df):
     return target
 
 
-# In[70]:
+# In[276]:
 
 
 def L_scale_df(df, title, save=False):
@@ -826,7 +827,9 @@ def L_scale_df(df, title, save=False):
     return scaled_df
 
 
-# In[71]:
+# ## If you want to generate the Scaled data frames, run the cell below
+
+# In[277]:
 
 
 scaled_train_data = L_scale_df(raw_train_data, title='scaled_train_data_10M_2.csv',
@@ -838,16 +841,63 @@ scaled_test_data = L_scale_df(raw_test_data,  title='scaled_test_data_10M_2.csv'
 explore_data(df=scaled_train_data, title='Braden Kronheim-L-scaled Dataframe', scaled=True)
 
 
-# In[220]:
+# ### If you want to load the previously generated scaled dataframe, run the cell below
+
+# In[290]:
+
+
+target = 'RecoDatam'
+source  = FIELDS[target]
+features= source['inputs']
+########
+
+print('USING NEW DATASET\n')
+#UNSCALED
+# train_data_m=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
+#                        usecols=features,
+#                        nrows=SUBSAMPLE)
+
+# print('TRAINING FEATURES\n', train_data.head())
+
+# test_data_m= pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
+#                        usecols=features,
+#                        nrows=SUBSAMPLE)
+# print('\nTESTING FEATURES\n', test_data.head())
+# valid_data= pd.read_csv(os.path.join(DATA_DIR,'valid_data_10M_2.csv'),
+#                        usecols=features,
+#                        nrows=SUBSAMPLE)
+
+
+# SCALED
+train_data_m=pd.read_csv(os.path.join(DATA_DIR,'scaled_train_data_10M_2.csv'),
+                       usecols=all_cols,
+                       nrows=SUBSAMPLE)
+
+print('TRAINING FEATURES\n', train_data_m.head())
+
+test_data_m= pd.read_csv(os.path.join(DATA_DIR,'scaled_test_data_10M_2.csv'),
+                       usecols=all_cols,
+                       nrows=SUBSAMPLE)
+print('\nTESTING FEATURES\n', test_data_m.head())
+
+print('\ntrain set shape:',  train_data_m.shape)
+print('\ntest set shape:  ', test_data_m.shape)
+# print('validation set shape:', valid_data.shape)
+
+scaled_train_data = train_data_m
+scaled_test_data = test_data_m
+
+
+# In[291]:
 
 
 labels = ['pT', 'eta','phi','m']
 fig, ax=plt.subplots(1,1)
 for label in labels:
-    target = T(label, scaled_df=scaled_train_data)
+    target_ = T(label, scaled_df=scaled_train_data)
     
-    ax.hist(target, label = '$T($' +label+ '$)$', alpha=0.4 )
-    set_axes(ax=ax, xlabel='T', title='Predicted ratio targets')
+    ax.hist(target_, label = '$T($' +label+ '$)$', alpha=0.4 )
+set_axes(ax=ax, xlabel='pre-z ratio targets T', )
 plt.show()
 
 
@@ -946,7 +996,7 @@ plt.show()
 # $$\mathbf{x_m}=\{p_T^{\text{gen}}, \eta^{\text{gen}}, \phi^{\text{gen}}, m^{\text{gen}} , \tau \}.$$
 # 
 
-# In[221]:
+# In[292]:
 
 
 show_jupyter_image('images/IQN_training_flowchart.png',width=3000,height=1000)
@@ -954,7 +1004,7 @@ show_jupyter_image('images/IQN_training_flowchart.png',width=3000,height=1000)
 
 # ### Batches, validation, losses, and plotting of losses functions
 
-# In[72]:
+# In[293]:
 
 
 def get_batch(x, t, batch_size):
@@ -1035,51 +1085,9 @@ def plot_average_loss(traces, ftsize=18,save_loss_plots=False, show_loss_plots=T
         show_plot()
 
 
-# In[73]:
-
-
-target = 'RecoDatam'
-source  = FIELDS[target]
-features= source['inputs']
-########
-
-print('USING NEW DATASET\n')
-#UNSCALED
-# train_data_m=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
-#                        usecols=features,
-#                        nrows=SUBSAMPLE)
-
-# print('TRAINING FEATURES\n', train_data.head())
-
-# test_data_m= pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
-#                        usecols=features,
-#                        nrows=SUBSAMPLE)
-# print('\nTESTING FEATURES\n', test_data.head())
-# valid_data= pd.read_csv(os.path.join(DATA_DIR,'valid_data_10M_2.csv'),
-#                        usecols=features,
-#                        nrows=SUBSAMPLE)
-
-
-# SCALED
-train_data_m=pd.read_csv(os.path.join(DATA_DIR,'scaled_train_data_10M_2.csv'),
-                       usecols=all_cols,
-                       nrows=SUBSAMPLE)
-
-print('TRAINING FEATURES\n', train_data_m.head())
-
-test_data_m= pd.read_csv(os.path.join(DATA_DIR,'scaled_test_data_10M_2.csv'),
-                       usecols=all_cols,
-                       nrows=SUBSAMPLE)
-print('\nTESTING FEATURES\n', test_data_m.head())
-
-print('\ntrain set shape:',  train_data_m.shape)
-print('\ntest set shape:  ', test_data_m.shape)
-# print('validation set shape:', valid_data.shape)
-
-
 # # Get training and testing features and targets
 
-# In[74]:
+# In[294]:
 
 
 def split_t_x(df, target, input_features):
@@ -1097,14 +1105,14 @@ def split_t_x(df, target, input_features):
     return np.array(t), x
 
 
-# In[75]:
+# In[295]:
 
 
 print('Features = ', features)
-print('\n target = ', target)
+print('\nTarget = ', target)
 
 
-# In[76]:
+# In[296]:
 
 
 print(f'spliting data for {target}')
@@ -1118,7 +1126,7 @@ print('valid_t shape = ',valid_t_ratio.shape , 'valid_x shape = ', valid_x.shape
 print('no need to train_test_split since we already have the split dataframes')
 
 
-# In[77]:
+# In[297]:
 
 
 print(valid_x.mean(axis=0), valid_x.std(axis=0))
@@ -1127,7 +1135,7 @@ print(train_x.mean(axis=0), train_x.std(axis=0))
 
 # we expect the targets to have mean 0 and variance=1, since theyre the only things standarized
 
-# In[228]:
+# In[298]:
 
 
 print(valid_t_ratio.mean(), valid_t_ratio.std())
@@ -1136,18 +1144,18 @@ print(train_t_ratio.mean(), train_t_ratio.std())
 
 # ### Aplly final $z$ to the train and test set features, but run it only once! (generator)
 
-# In[229]:
+# In[299]:
 
 
-def z__scale_targets(train_t_ratio, valid_t_ratio):
-    print('##########################################\n')
-    print('BEFORE SCALING')
+# def z__scale_targets(train_t_ratio, valid_t_ratio):
+#     print('##########################################\n')
+#     print('BEFORE SCALING')
     
-    #yield train_t_ratio, valid_t_ratio
+#     #yield train_t_ratio, valid_t_ratio
     
 
 
-# In[230]:
+# In[300]:
 
 
 NFEATURES=train_x.shape[1]
@@ -1160,7 +1168,7 @@ print(valid_x.mean(axis=0), valid_x.std(axis=0))
 print(train_x.mean(axis=0), train_x.std(axis=0))
 
 
-# In[231]:
+# In[301]:
 
 
 train_x
@@ -1168,7 +1176,7 @@ train_x
 
 # ### Apply $z$ to targets before training
 
-# In[232]:
+# In[302]:
 
 
 train_t_ratio = z(train_t_ratio) 
@@ -1178,20 +1186,18 @@ print(valid_t_ratio.mean(), valid_t_ratio.std())
 print(train_t_ratio.mean(), train_t_ratio.std())
 
 
-# In[18]:
+# In[303]:
 
 
-fig = plt.figure(figsize=(5, 4))
-ax = fig.add_subplot(autoscale_on=False)
-ax.set_aspect('equal')
+fig = plt.figure(figsize=(10, 4))
+ax = fig.add_subplot(autoscale_on=True)
 ax.grid()
 for i in range(NFEATURES):
-    plt.hist(train_x[:,i], alpha=0.35)
-    plt.title("training features post-z score: X'=z(L(X))")
-plt.show()
+    ax.hist(train_x[:,i], alpha=0.35, label=f'feature {i}' )
+    set_axes(ax=ax, xlabel="Transformed features X' ",title="training features post-z score: X'=z(L(X))")
 
 
-# In[234]:
+# In[304]:
 
 
 train_x[:,-1].max()
@@ -1199,168 +1205,9 @@ train_x[:,-1].max()
 
 # ### Training and running-of-training functions
 
-# In[247]:
-
-
-n_iterations, n_layers, n_hidden, starting_learning_rate, dropout = get_model_params()
-BATCHSIZE=1000
-def train(model, optimizer, avloss, getbatch,
-          train_x, train_t, 
-          valid_x, valid_t,
-          batch_size, 
-          n_iterations, traces, 
-          step=10, window=10):
-    
-    # to keep track of average losses
-    xx, yy_t, yy_v, yy_v_avg = traces
-    
-    n = len(valid_x)
-    
-    print('Iteration vs average loss')
-    print("%10s\t%10s\t%10s" % \
-          ('iteration', 'train-set', 'valid-set'))
-    
-    for ii in range(n_iterations):
-
-        # set mode to training so that training specific 
-        # operations such as dropout are enabled.
-        model.train()
-        
-        # get a random sample (a batch) of data (as numpy arrays)
-        batch_x, batch_t = getbatch(train_x, train_t, batch_size)
-        # batch_x[:,-1]=batch_x[:,-1] 
-        # convert the numpy arrays batch_x and batch_t to tensor 
-        # types. The PyTorch tensor type is the magic that permits 
-        # automatic differentiation with respect to parameters. 
-        # However, since we do not need to take the derivatives
-        # with respect to x and t, we disable this feature
-        with torch.no_grad(): # no need to compute gradients 
-            # wrt. x and t
-            x = torch.from_numpy(batch_x).float()
-            t = torch.from_numpy(batch_t).float()      
-
-        # compute the output of the model for the batch of data x
-        # Note: outputs is 
-        #   of shape (-1, 1), but the tensor targets, t, is
-        #   of shape (-1,)
-        # In order for the tensor operations with outputs and t
-        # to work correctly, it is necessary that they have the
-        # same shape. We can do this with the reshape method.
-        outputs = model(x).reshape(t.shape)
-   
-        # compute a noisy approximation to the average loss
-        empirical_risk = avloss(outputs, t, x)
-        
-        # use automatic differentiation to compute a 
-        # noisy approximation of the local gradient
-        optimizer.zero_grad()       # clear previous gradients
-        empirical_risk.backward()   # compute gradients
-        
-        # finally, advance one step in the direction of steepest 
-        # descent, using the noisy local gradient. 
-        optimizer.step()            # move one step
-        
-        if ii % step == 0:
-            
-            acc_t = validate(model, avloss, train_x[:n], train_t[:n]) 
-            acc_v = validate(model, avloss, valid_x[:n], valid_t[:n])
-            yy_t.append(acc_t)
-            yy_v.append(acc_v)
-            
-            # compute running average for validation data
-            len_yy_v = len(yy_v)
-            if   len_yy_v < window:
-                yy_v_avg.append( yy_v[-1] )
-            elif len_yy_v == window:
-                yy_v_avg.append( sum(yy_v) / window )
-            else:
-                acc_v_avg  = yy_v_avg[-1] * window
-                acc_v_avg += yy_v[-1] - yy_v[-window-1]
-                yy_v_avg.append(acc_v_avg / window)
-                        
-            if len(xx) < 1:
-                xx.append(0)
-                print("%10d\t%10.6f\t%10.6f" % \
-                      (xx[-1], yy_t[-1], yy_v[-1]))
-            else:
-                xx.append(xx[-1] + step)
-                    
-                print("\r%10d\t%10.6f\t%10.6f\t%10.6f" % \
-                          (xx[-1], yy_t[-1], yy_v[-1], yy_v_avg[-1]), 
-                      end='')
-            
-    print()      
-    return (xx, yy_t, yy_v, yy_v_avg)
-
-
-@timer
-def run(model, 
-        train_x, train_t, 
-        valid_x, valid_t, traces,
-        n_batch=BATCHSIZE, 
-        n_iterations=n_iterations, 
-        traces_step=10, 
-        traces_window=10,
-        save_model=False):
-
-    learning_rate= starting_learning_rate
-    #add weight decay
-    L2=1e-3
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=L2) 
-    #starting at 10^-3	    
-    traces = train(model, optimizer, 
-                      average_quantile_loss,
-                      get_batch,
-                      train_x, train_t, 
-                      valid_x, valid_t,
-                      n_batch, 
-                  n_iterations,
-                  traces,
-                  step=traces_step, 
-                  window=traces_window)
-    
-    learning_rate=learning_rate/10
-    # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate) 
-    # #10^-4
-    traces = train(model, optimizer, 
-                      average_quantile_loss,
-                      get_batch,
-                      train_x, train_t, 
-                      valid_x, valid_t,
-                      n_batch, 
-                  n_iterations,
-                  traces,
-                  step=traces_step, 
-                  window=traces_window)
-
-
-    learning_rate=learning_rate/100
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate) 
-    #10^-6
-    traces = train(model, optimizer, 
-                      average_quantile_loss,
-                      get_batch,
-                      train_x, train_t, 
-                      valid_x, valid_t,
-                      n_batch, 
-                  n_iterations,
-                  traces,
-                  step=traces_step, 
-                  window=traces_window)
-
-    # plot_average_loss(traces)
-
-    if save_model:
-        filename='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
-        PATH = os.path.join(IQN_BASE, 'trained_models', filename)
-        torch.save(model.state_dict(), PATH)
-        print('\ntrained model dictionary saved in %s' % PATH)
-    return  model
-
-
 # ### Define basic NN model
 
-# In[236]:
+# In[336]:
 
 
 class RegularizedRegressionModel(nn.Module):
@@ -1375,7 +1222,7 @@ class RegularizedRegressionModel(nn.Module):
                 #here we choose its output layer as the hidden size (fully connected)
                 layers.append(nn.Linear(nfeatures, hidden_size))
                 #batch normalization
-                # layers.append(nn.BatchNorm1d(hidden_size))
+                layers.append(nn.BatchNorm1d(hidden_size))
                 #dropout only in the first layer
                 #Dropout seems to worsen model performance
                 layers.append(nn.Dropout(dropout))
@@ -1384,7 +1231,7 @@ class RegularizedRegressionModel(nn.Module):
             else:
                 #if this is not the first layer (we dont have layers)
                 layers.append(nn.Linear(hidden_size, hidden_size))
-                # layers.append(nn.BatchNorm1d(hidden_size))
+                layers.append(nn.BatchNorm1d(hidden_size))
                 #Dropout seems to worsen model performance
                 # layers.append(nn.Dropout(dropout))
                 layers.append(nn.LeakyReLU())
@@ -1406,18 +1253,18 @@ class RegularizedRegressionModel(nn.Module):
 # 
 # ## Hyperparameter Training Workflow
 
-# In[293]:
+# In[339]:
 
 
 def get_tuning_sample():
-    sample=int(100000)
+    sample=int(200000)
     # train_x_sample, train_t_ratio_sample, valid_x_sample, valid_t_ratio_sample
     return train_x[:sample], train_t_ratio[:sample], valid_x[:sample], valid_t_ratio[:sample]
 train_x_sample, train_t_ratio_sample, valid_x_sample, valid_t_ratio_sample = get_tuning_sample()
 train_x_sample.shape
 
 
-# In[295]:
+# In[340]:
 
 
 class HyperTrainer():
@@ -1521,28 +1368,27 @@ def run_train(params, save_model=False):
 def objective(trial):
     params = {
       "nlayers": trial.suggest_int("nlayers",1,6),      
-      "hidden_size": trial.suggest_int("hidden_size", 2, 256),
-      "dropout": trial.suggest_float("dropout", 0.1,0.5),
+      "hidden_size": trial.suggest_int("hidden_size", 1, 16),
+      "dropout": trial.suggest_float("dropout", 0.0,0.5),
       "optimizer_name" : trial.suggest_categorical("optimizer_name", ["Adam", "RMSprop"]),
       "learning_rate": trial.suggest_float("learning_rate", 1e-6, 1e-2),
-      "batch_size": trial.suggest_int("batch_size", 50, 40000)
+      "batch_size": trial.suggest_int("batch_size", 500, 3000)
 
     }
-    # all_losses=[]
 
     temp_loss = run_train(params,save_model=False)
-    # all_losses.append(temp_loss)
+
     return temp_loss
 
 def tune_hyperparameters():
     print(f'Getting best hyperparameters for target {target}')
     study=optuna.create_study(direction="minimize")
-    study.optimize(objective, n_trials=1000)
+    study.optimize(objective, n_trials=10)
     best_trial = study.best_trial
     print('best model parameters', best_trial.params)
 
     best_params=best_trial.params#this is a dictionary
-    tuned_dir = os.path.join(QN_BASE,'best_params')
+    tuned_dir = os.path.join(IQN_BASE,'best_params')
     mkdir(tuned_dir)
     filename=os.path.join(tuned_dir,'best_params_Test_Trials.csv')
     param_df=pd.DataFrame({
@@ -1558,30 +1404,69 @@ def tune_hyperparameters():
     param_df.to_csv(filename)   
 
 
-# In[ ]:
+# In[341]:
 
 
 tune_hyperparameters()
 
 
-# ### Run training
+# In[342]:
 
-# In[ ]:
+
+# BEST_PARAMS = {'nlayers': 6, 'hidden_size': 2, 'dropout': 0.40716885971031636, 'optimizer_name': 'Adam', 'learning_rate': 0.005215585403055171, 'batch_size': 1983}
+
+
+# In[343]:
 
 
 # def get_model_params_tuned()
-BEST_PARAMS = pd.read_csv(os.path.join(IQN_BASE, 'best_params','best_params_Test_Trials.csv'))
+
+tuned_dir = os.path.join(IQN_BASE,'best_params')
+
+tuned_filename=os.path.join(tuned_dir,'best_params_Test_Trials.csv')
+# BEST_PARAMS = pd.read_csv(os.path.join(IQN_BASE, 'best_params','best_params_Test_Trials.csv'))
+BEST_PARAMS=pd.read_csv(tuned_filename)
 print(BEST_PARAMS)
 
 n_layers = int(BEST_PARAMS["n_layers"]) 
 hidden_size = int(BEST_PARAMS["hidden_size"])
 dropout = float(BEST_PARAMS["dropout"])
+
+optimizer_name = BEST_PARAMS["optimizer_name"]
+print(type(optimizer_name))
 optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
-learning_rate =  float(BEST_PARAMS["learning_rate"])
+
+
+# In[344]:
+
+
+NFEATURES=train_x.shape[1]
+
+def load_untrained_model():
+    model=RegularizedRegressionModel(nfeatures=NFEATURES, ntargets=1,
+                               nlayers=n_layers, hidden_size=hidden_size, dropout=dropout)
+    print(model)
+    return model
+
+model=load_untrained_model()
+
+
+# In[345]:
+
+
+# optimizer_name =  'Adam'
+best_learning_rate =  float(BEST_PARAMS["learning_rate"])
+best_optimizer_temp = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate)
 batch_size = int(BEST_PARAMS["batch_size"])
 
 
-# In[238]:
+# In[346]:
+
+
+best_optimizer_temp
+
+
+# In[347]:
 
 
 @debug
@@ -1596,33 +1481,180 @@ def get_model_params_simple():
 get_model_params()
 
 
-# In[241]:
+# ### Run training
+
+# In[348]:
 
 
-NFEATURES=train_x.shape[1]
+# BATCHSIZE=10000
+BATCHSIZE=batch_size
+def train(model, optimizer, avloss, getbatch,
+          train_x, train_t, 
+          valid_x, valid_t,
+          batch_size, 
+          n_iterations, traces, 
+          step=10, window=10):
+    
+    # to keep track of average losses
+    xx, yy_t, yy_v, yy_v_avg = traces
+    
+    n = len(valid_x)
+    
+    print('Iteration vs average loss')
+    print("%10s\t%10s\t%10s" % \
+          ('iteration', 'train-set', 'valid-set'))
+    
+    for ii in range(n_iterations):
 
-def load_untrained_model():
-    model=RegularizedRegressionModel(nfeatures=NFEATURES, ntargets=1,
-                               nlayers=n_layers, hidden_size=n_hidden, dropout=dropout)
-    print(model)
-    return model
+        # set mode to training so that training specific 
+        # operations such as dropout are enabled.
+        model.train()
+        
+        # get a random sample (a batch) of data (as numpy arrays)
+        batch_x, batch_t = getbatch(train_x, train_t, batch_size)
+        # batch_x[:,-1]=batch_x[:,-1] 
+        # convert the numpy arrays batch_x and batch_t to tensor 
+        # types. The PyTorch tensor type is the magic that permits 
+        # automatic differentiation with respect to parameters. 
+        # However, since we do not need to take the derivatives
+        # with respect to x and t, we disable this feature
+        with torch.no_grad(): # no need to compute gradients 
+            # wrt. x and t
+            x = torch.from_numpy(batch_x).float()
+            t = torch.from_numpy(batch_t).float()      
+
+        # compute the output of the model for the batch of data x
+        # Note: outputs is 
+        #   of shape (-1, 1), but the tensor targets, t, is
+        #   of shape (-1,)
+        # In order for the tensor operations with outputs and t
+        # to work correctly, it is necessary that they have the
+        # same shape. We can do this with the reshape method.
+        outputs = model(x).reshape(t.shape)
+   
+        # compute a noisy approximation to the average loss
+        empirical_risk = avloss(outputs, t, x)
+        
+        # use automatic differentiation to compute a 
+        # noisy approximation of the local gradient
+        optimizer.zero_grad()       # clear previous gradients
+        empirical_risk.backward()   # compute gradients
+        
+        # finally, advance one step in the direction of steepest 
+        # descent, using the noisy local gradient. 
+        optimizer.step()            # move one step
+        
+        if ii % step == 0:
+            
+            acc_t = validate(model, avloss, train_x[:n], train_t[:n]) 
+            acc_v = validate(model, avloss, valid_x[:n], valid_t[:n])
+            yy_t.append(acc_t)
+            yy_v.append(acc_v)
+            
+            # compute running average for validation data
+            len_yy_v = len(yy_v)
+            if   len_yy_v < window:
+                yy_v_avg.append( yy_v[-1] )
+            elif len_yy_v == window:
+                yy_v_avg.append( sum(yy_v) / window )
+            else:
+                acc_v_avg  = yy_v_avg[-1] * window
+                acc_v_avg += yy_v[-1] - yy_v[-window-1]
+                yy_v_avg.append(acc_v_avg / window)
+                        
+            if len(xx) < 1:
+                xx.append(0)
+                print("%10d\t%10.6f\t%10.6f" % \
+                      (xx[-1], yy_t[-1], yy_v[-1]))
+            else:
+                xx.append(xx[-1] + step)
+                    
+                print("\r%10d\t%10.6f\t%10.6f\t%10.6f" % \
+                          (xx[-1], yy_t[-1], yy_v[-1], yy_v_avg[-1]), 
+                      end='')
+            
+    print()      
+    return (xx, yy_t, yy_v, yy_v_avg)
+
+
+# @time_type_of_func(tuning_or_training='training')
+def run(model, 
+        train_x, train_t, 
+        valid_x, valid_t, traces,
+        n_batch=BATCHSIZE, 
+        n_iterations=n_iterations, 
+        traces_step=200, 
+        traces_window=200,
+        save_model=False):
+
+    learning_rate= best_learning_rate
+    #add weight decay
+    L2=1e-3
+    # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=L2)
+    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate)
+    
+    #starting at 10^-3	    
+    traces = train(model, optimizer, 
+                      average_quantile_loss,
+                      get_batch,
+                      train_x, train_t, 
+                      valid_x, valid_t,
+                      n_batch, 
+                  n_iterations,
+                  traces,
+                  step=traces_step, 
+                  window=traces_window)
+    
+    learning_rate=learning_rate/100
+    # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate) 
+    # #10^-4
+    traces = train(model, optimizer, 
+                      average_quantile_loss,
+                      get_batch,
+                      train_x, train_t, 
+                      valid_x, valid_t,
+                      n_batch, 
+                  n_iterations,
+                  traces,
+                  step=traces_step, 
+                  window=traces_window)
+
+
+    learning_rate=learning_rate/100
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate) 
+    #10^-6
+    traces = train(model, optimizer, 
+                      average_quantile_loss,
+                      get_batch,
+                      train_x, train_t, 
+                      valid_x, valid_t,
+                      n_batch, 
+                  n_iterations,
+                  traces,
+                  step=traces_step, 
+                  window=traces_window)
+
+    # plot_average_loss(traces)
+
+    if save_model:
+        filename='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
+        PATH = os.path.join(IQN_BASE, 'trained_models', filename)
+        torch.save(model.state_dict(), PATH)
+        print('\ntrained model dictionary saved in %s' % PATH)
+    return  model
 
 
 # ## See if trainig works on T ratio
 
-# In[243]:
-
-
-model=load_untrained_model()
-
+# In[349]:
 
 
 IQN_trace=([], [], [], [])
-traces_step = 200
+traces_step = 400
 traces_window=traces_step
-n_iterations=100000
+n_iterations=10000
 IQN = run(model=model,train_x=train_x, train_t=train_t_ratio, 
-        valid_x=valid_x, valid_t=valid_t_ratio, traces=IQN_trace, n_batch=1000, 
+        valid_x=valid_x, valid_t=valid_t_ratio, traces=IQN_trace, n_batch=BATCHSIZE, 
         n_iterations=n_iterations, traces_step=traces_step, traces_window=traces_window,
         save_model=False)
 
@@ -1630,13 +1662,13 @@ IQN = run(model=model,train_x=train_x, train_t=train_t_ratio,
 
 # ## Save trained model (if its good, and if you haven't saved above) and load trained model (if you saved it)
 
-# In[251]:
+# In[350]:
 
 
 filename='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
-trained_models_path='trained_models'
-mkdir(trained_models_path)
-PATH = os.path.join(IQN_BASE,trained_models_path , filename)
+trained_models_dir='trained_models'
+mkdir(trained_models_dir)
+PATH = os.path.join(IQN_BASE,trained_models_dir , filename)
 
 @debug
 def save_model(model):
@@ -1645,7 +1677,7 @@ def save_model(model):
     print('\ntrained model dictionary saved in %s' % PATH)
 
 @debug
-def load_model(model):
+def load_model(PATH):
     # n_layers = int(BEST_PARAMS["n_layers"]) 
     # hidden_size = int(BEST_PARAMS["hidden_size"])
     # dropout = float(BEST_PARAMS["dropout"])
@@ -1667,22 +1699,28 @@ def load_model(model):
     return model
 
 
-# In[252]:
+# In[351]:
 
 
 save_model(IQN)
 
 
-# In[253]:
+# In[352]:
 
 
-plt.hist(valid_t_ratio, label='ratio target');
+IQN
+
+
+# In[353]:
+
+
+plt.hist(valid_t_ratio, label='post-z ratio target');
 for i in range(NFEATURES):
     plt.hist(valid_x[:,i], label =f"feature {i}", alpha=0.35)
 plt.legend();plt.show()
 
 
-# In[254]:
+# In[355]:
 
 
 def simple_eval(model):
@@ -1692,7 +1730,11 @@ def simple_eval(model):
     p = pred.detach().numpy()
     fig, ax = plt.subplots(1,1)
     label=FIELDS[target]['ylabel']
-    ax.hist(p, label=f'Predicted ratio for {label}')
+    ax.hist(p, label=f'Predicted post-z ratio for {label}', alpha=0.4, density=True)
+    orig_ratio = z(T('m', scaled_df=train_data_m))
+    print(orig_ratio[:5])
+    ax.hist(orig_ratio, label = f'original post-z ratio for {label}', alpha=0.4,density=True)
+    
     set_axes(ax, xlabel='predicted $T$')
     print('predicted ratio shape: ', p.shape)
     return p
@@ -1701,7 +1743,7 @@ p = simple_eval(IQN)
 plt.show()
 
 
-# In[255]:
+# In[356]:
 
 
 # IQN.eval()
@@ -1726,14 +1768,14 @@ plt.show()
 # 
 # $$z^{-1} (f_{\text{IQN}} ) = z^{-1}\left( y_{pred}, \text{mean}=\text{mean}(\mathbb{T}(\text{target_variable})), std=std (\mathbb{T}(\text{target_variable} ) \right)$$
 
-# In[256]:
+# In[357]:
 
 
 def z_inverse(xprime, mean, std):
     return xprime * std + mean
 
 
-# In[257]:
+# In[358]:
 
 
 recom_unsc_mean=TEST_SCALE_DICT[target]['mean']
@@ -1743,7 +1785,7 @@ print(recom_unsc_mean,recom_unsc_std)
 
 # Get unscaled dataframe again, just to verify
 
-# In[258]:
+# In[238]:
 
 
 raw_train_data=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
@@ -1758,7 +1800,7 @@ raw_test_data=pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
 raw_test_data.describe()
 
 
-# In[259]:
+# In[239]:
 
 
 m_reco = raw_test_data['RecoDatam']
@@ -1776,20 +1818,20 @@ plt.hist(m_reco,label=r'$m_{gen}^{test \ data}$');plt.legend();plt.show()
 # 
 # * First, calculate $z^{-1} (f_{\text{IQN}} )$
 
-# In[260]:
+# In[359]:
 
 
 print(valid_t_ratio.shape, valid_t_ratio[:5])
 
 
-# In[261]:
+# In[360]:
 
 
 orig_ratio = T('m', scaled_df=train_data_m)
 orig_ratio[:5]
 
 
-# In[262]:
+# In[361]:
 
 
 z_inv_f =z_inverse(xprime=p, mean=np.mean(orig_ratio), std=np.std(orig_ratio))
@@ -1801,20 +1843,20 @@ z_inv_f[:5]
 # $$\mathbb{L}(\mathcal{O^{\text{gen}}}) = \mathbb{L} (m^{\text{gen}})$$
 # 
 
-# In[263]:
+# In[362]:
 
 
 L_obs = L(orig_observable=m_gen, label='m')
 L_obs[:5]
 
 
-# In[264]:
+# In[363]:
 
 
 print(L_obs.shape, z_inv_f.shape)
 
 
-# In[265]:
+# In[364]:
 
 
 z_inv_f = z_inv_f.flatten();print(z_inv_f.shape)
@@ -1822,27 +1864,27 @@ z_inv_f = z_inv_f.flatten();print(z_inv_f.shape)
 
 # * "factor" $ = z^{-1} (f_{\text{IQN}} ) \left[ \mathbb{L} (m^\text{gen})+10 \right] -10 $
 
-# In[266]:
+# In[365]:
 
 
 factor = (z_inv_f * (L_obs  + 10) )-10
 factor[:5]
 
 
-# In[267]:
+# In[366]:
 
 
 m_pred = L_inverse(L_observable=factor, label='m')
 # pT_pred=get_finite(pT_pred)
 
 
-# In[268]:
+# In[367]:
 
 
 m_pred
 
 
-# In[269]:
+# In[368]:
 
 
 plt.hist(m_pred.flatten(),label='predicted',alpha=0.3);
@@ -1854,7 +1896,7 @@ plt.legend();plt.show()
 # ------------------
 # ### Paper plotting
 
-# In[270]:
+# In[369]:
 
 
 range_=[0,25]
@@ -1872,7 +1914,7 @@ norm_IQN=norm_autoregressive
 print('norm_data',norm_data,'\nnorm IQN',norm_IQN,'\nnorm_autoregressive', norm_autoregressive)
 
 
-# In[271]:
+# In[370]:
 
 
 def get_hist(label):
@@ -1893,13 +1935,13 @@ def get_hist_simple(label):
     return real_label_counts, predicted_label_counts, label_edges
 
 
-# In[272]:
+# In[371]:
 
 
 real_label_counts_m, predicted_label_counts_m, label_edges_m = get_hist_simple('m')
 
 
-# In[273]:
+# In[372]:
 
 
 def plot_one_m():
@@ -1934,7 +1976,7 @@ def plot_one_m():
     plt.gca().set_position([0, 0, 1, 1])
 
 
-# In[274]:
+# In[373]:
 
 
 plot_one_m()
