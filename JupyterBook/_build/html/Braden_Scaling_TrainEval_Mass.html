@@ -389,13 +389,11 @@ title="Print to PDF"
     <a class="reference internal nav-link" href="#if-you-want-to-generate-the-scaled-data-frames-run-the-cell-below">
      If you want to generate the Scaled data frames, run the cell below
     </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#if-you-want-to-load-the-previously-generated-scaled-dataframe-run-the-cell-below">
-       If you want to load the previously generated scaled dataframe, run the cell below
-      </a>
-     </li>
-    </ul>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#if-you-want-to-load-the-previously-generated-scaled-dataframe-run-the-cell-below">
+     If you want to load the previously generated scaled dataframe, run the cell below
+    </a>
    </li>
   </ul>
  </li>
@@ -626,13 +624,11 @@ title="Print to PDF"
     <a class="reference internal nav-link" href="#if-you-want-to-generate-the-scaled-data-frames-run-the-cell-below">
      If you want to generate the Scaled data frames, run the cell below
     </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#if-you-want-to-load-the-previously-generated-scaled-dataframe-run-the-cell-below">
-       If you want to load the previously generated scaled dataframe, run the cell below
-      </a>
-     </li>
-    </ul>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#if-you-want-to-load-the-previously-generated-scaled-dataframe-run-the-cell-below">
+     If you want to load the previously generated scaled dataframe, run the cell below
+    </a>
    </li>
   </ul>
  </li>
@@ -772,7 +768,7 @@ title="Print to PDF"
 <span class="kn">import</span> <span class="nn">copy</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">sys</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">display</span>
 <span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
-
+<span class="kn">import</span> <span class="nn">plotly</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">optuna</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;using (optional) optuna version </span><span class="si">{</span><span class="n">optuna</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -787,9 +783,9 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>using torch version 1.9.0
-matplotlib version=  3.5.1
-using (optional) optuna version 2.8.0
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>using torch version 1.11.0.post2
+matplotlib version=  3.5.3
+using (optional) optuna version 3.0.0
 </pre></div>
 </div>
 </div>
@@ -822,25 +818,20 @@ using (optional) optuna version 2.8.0
 <h3>A user is competent enought to do <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">setup.sh</span></code> on a <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script that comes in the repo, such as the next cell uncommented<a class="headerlink" href="#a-user-is-competent-enought-to-do-source-setup-sh-on-a-setup-sh-script-that-comes-in-the-repo-such-as-the-next-cell-uncommented" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#!/bin/bash
-export IQN_BASE= $pwd #/home/ali/Desktop/Pulled_Github_Repositories/torchQN
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># #!/bin/bash</span>
+<span class="c1"># export IQN_BASE= $pwd #/home/ali/Desktop/Pulled_Github_Repositories/torchQN</span>
 
-#DAVIDSON
-export DATA_DIR=&#39;/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/data&#39;
-#LOCAL
-export DATA_DIR=&#39;/home/ali/Desktop/Pulled_Github_Repositories/IQN_HEP/Davidson/data&#39;
-echo DATA DIR
-ls -l $DATA_DIR
-#ln -s $DATA_DIR $IQN_BASE, if you want
-#conda create env -n torch_env -f torch_env.yml
-conda activate torch_env
-mkdir -p ${IQN_BASE}/images/loss_plots ${IQN_BASE}/trained_models  ${IQN_BASE}/hyperparameters ${IQN_BASE}/predicted_data
-tree $IQN_BASE
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Overwriting setup.sh
+<span class="c1"># #DAVIDSON</span>
+<span class="c1"># export DATA_DIR=&#39;/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/data&#39;</span>
+<span class="c1"># #LOCAL</span>
+<span class="c1"># export DATA_DIR=&#39;/home/ali/Desktop/Pulled_Github_Repositories/IQN_HEP/Davidson/data&#39;</span>
+<span class="c1"># echo DATA DIR</span>
+<span class="c1"># ls -l $DATA_DIR</span>
+<span class="c1"># #ln -s $DATA_DIR $IQN_BASE, if you want</span>
+<span class="c1"># #conda create env -n torch_env -f torch_env.yml</span>
+<span class="c1"># conda activate torch_env</span>
+<span class="c1"># mkdir -p ${IQN_BASE}/images/loss_plots ${IQN_BASE}/trained_models  ${IQN_BASE}/hyperparameters ${IQN_BASE}/predicted_data</span>
+<span class="c1"># tree $IQN_BASE</span>
 </pre></div>
 </div>
 </div>
@@ -1041,6 +1032,15 @@ BASE directory not properly set. Read repo README.    If you need a function fro
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
     <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="n">run_cell</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
     
+    
+<span class="nd">@debug</span>
+<span class="k">def</span> <span class="nf">get_model_params_simple</span><span class="p">():</span>
+    <span class="n">dropout</span><span class="o">=</span><span class="mf">0.2</span>
+    <span class="n">n_layers</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">n_hidden</span><span class="o">=</span><span class="mi">32</span>
+    <span class="n">starting_learning_rate</span><span class="o">=</span><span class="mf">1e-3</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;n_iterations, n_layers, n_hidden, starting_learning_rate, dropout&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">n_iterations</span><span class="p">,</span> <span class="n">n_layers</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">,</span> <span class="n">starting_learning_rate</span><span class="p">,</span> <span class="n">dropout</span>
 </pre></div>
 </div>
 </div>
@@ -1085,7 +1085,7 @@ BASE directory not properly set. Read repo README.    If you need a function fro
 </div>
 <div class="cell_output docutils container">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "cc77dbe14c474c1ebb8af3209004f76a", "version_major": 2, "version_minor": 0}
+{"model_id": "3872f50440354354a9f4e93a6aeb1eb4", "version_major": 2, "version_minor": 0}
 </script></div>
 </div>
 <section id="set-arguments-and-configurations">
@@ -1126,25 +1126,6 @@ BASE directory not properly set. Read repo README.    If you need a function fro
 <span class="k">else</span><span class="p">:</span>
     <span class="n">SUBSAMPLE</span><span class="o">=</span><span class="kc">None</span>
     
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.rcsetup.interactive_bk<span class="o">?</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Red">Type:</span>        list
-<span class=" -Color -Color-Red">String form:</span> [&#39;GTK3Agg&#39;, &#39;GTK3Cairo&#39;, &#39;GTK4Agg&#39;, &#39;GTK4Cairo&#39;, &#39;MacOSX&#39;, &#39;nbAgg&#39;, &#39;QtAgg&#39;, &#39;QtCairo&#39;, &#39;Qt5Agg&#39;, &#39;Qt5Cairo&#39;, &#39;TkAgg&#39;, &#39;TkCairo&#39;, &#39;WebAgg&#39;, &#39;WX&#39;, &#39;WXAgg&#39;, &#39;WXCairo&#39;]
-<span class=" -Color -Color-Red">Length:</span>      16
-<span class=" -Color -Color-Red">Docstring:</span>  
-Built-in mutable sequence.
-
-If no argument is given, the constructor creates a new empty list.
-The argument must be an iterable if specified.
 </pre></div>
 </div>
 </div>
@@ -1201,7 +1182,7 @@ The argument must be an iterable if specified.
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_24_0.png" src="_images/Braden_Scaling_TrainEval_Mass_24_0.png" />
+<img alt="_images/Braden_Scaling_TrainEval_Mass_23_0.png" src="_images/Braden_Scaling_TrainEval_Mass_23_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1280,6 +1261,11 @@ The argument must be an iterable if specified.
                       <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
                      <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span>
                      <span class="p">)</span>
+
+<span class="n">raw_valid_data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;validation_data_10M_2.csv&#39;</span><span class="p">),</span>
+                      <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
+                      <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span>
+                      <span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1923,6 +1909,10 @@ z\left(\frac{y_n + 10}{x_n + 10}\right), \qquad n = 1,\cdots,4,
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="n">scaled_test_data</span> <span class="o">=</span> <span class="n">L_scale_df</span><span class="p">(</span><span class="n">raw_test_data</span><span class="p">,</span>  <span class="n">title</span><span class="o">=</span><span class="s1">&#39;scaled_test_data_10M_2.csv&#39;</span><span class="p">,</span>
                             <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">scaled_valid_data</span> <span class="o">=</span> <span class="n">L_scale_df</span><span class="p">(</span><span class="n">raw_valid_data</span><span class="p">,</span>  <span class="n">title</span><span class="o">=</span><span class="s1">&#39;scaled_valid_data_10M_2.csv&#39;</span><span class="p">,</span>
+                            <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="n">explore_data</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">scaled_train_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Braden Kronheim-L-scaled Dataframe&#39;</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
@@ -1980,6 +1970,38 @@ min    2.595965e-07
 50%    4.996784e-01  
 75%    7.503565e-01  
 max    9.999998e-01  
+
+
+
+            genDatapT      RecoDatapT      genDataeta     RecoDataeta  \
+count  1000000.000000  1000000.000000  1000000.000000  1000000.000000   
+mean         3.421223        3.411684        0.000698        0.000735   
+std          0.336185        0.381671        2.204255        2.197915   
+min          2.995732        2.438330       -5.184830       -5.000600   
+25%          3.167410        3.155224       -1.652290       -1.647702   
+50%          3.345898        3.366547        0.001781        0.000949   
+75%          3.591019        3.623741        1.652180        1.648922   
+max          6.518423        6.374464        5.139480        4.999840   
+
+           genDataphi     RecoDataphi        genDatam       RecoDatam  \
+count  1000000.000000  1000000.000000  1000000.000000  1000000.000000   
+mean        -0.000896       -0.000819        2.150291        1.967158   
+std          1.813629        1.814279        0.288274        0.327415   
+min         -3.141580       -3.480465        0.693135        0.693121   
+25%         -1.569685       -1.570240        1.962370        1.758022   
+50%         -0.000836       -0.001184        2.144196        1.961933   
+75%          1.568172        1.568535        2.329907        2.171459   
+max          3.141590        3.483175        4.110044        4.258457   
+
+                tau  
+count  1.000000e+06  
+mean   5.004851e-01  
+std    2.885275e-01  
+min    5.130061e-07  
+25%    2.507914e-01  
+50%    5.007886e-01  
+75%    7.504558e-01  
+max    9.999994e-01  
 [&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;]
 [&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;, &#39;tau&#39;]
 Reco_var:  RecoDatapT , 	 gen_var:  genDatapT
@@ -1988,10 +2010,11 @@ Reco_var:  RecoDataphi , 	 gen_var:  genDataphi
 Reco_var:  RecoDatam , 	 gen_var:  genDatam
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_52_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_52_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_52_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_52_1.svg" /><img alt="_images/Braden_Scaling_TrainEval_Mass_52_2.svg" src="_images/Braden_Scaling_TrainEval_Mass_52_2.svg" /></div>
 </div>
+</section>
 <section id="if-you-want-to-load-the-previously-generated-scaled-dataframe-run-the-cell-below">
-<h3>If you want to load the previously generated scaled dataframe, run the cell below<a class="headerlink" href="#if-you-want-to-load-the-previously-generated-scaled-dataframe-run-the-cell-below" title="Permalink to this headline">#</a></h3>
+<h2>If you want to load the previously generated scaled dataframe, run the cell below<a class="headerlink" href="#if-you-want-to-load-the-previously-generated-scaled-dataframe-run-the-cell-below" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;RecoDatam&#39;</span>
@@ -2026,6 +2049,10 @@ Reco_var:  RecoDatam , 	 gen_var:  genDatam
 <span class="n">test_data_m</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;scaled_test_data_10M_2.csv&#39;</span><span class="p">),</span>
                        <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
                        <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span><span class="p">)</span>
+
+<span class="n">valid_data_m</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;scaled_valid_data_10M_2.csv&#39;</span><span class="p">),</span>
+                       <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
+                       <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">TESTING FEATURES</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">test_data_m</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">train set shape:&#39;</span><span class="p">,</span>  <span class="n">train_data_m</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -2034,6 +2061,7 @@ Reco_var:  RecoDatam , 	 gen_var:  genDatam
 
 <span class="n">scaled_train_data</span> <span class="o">=</span> <span class="n">train_data_m</span>
 <span class="n">scaled_test_data</span> <span class="o">=</span> <span class="n">test_data_m</span>
+<span class="n">scaled_valid_data</span> <span class="o">=</span> <span class="n">valid_data_m</span>
 </pre></div>
 </div>
 </div>
@@ -2096,7 +2124,6 @@ test set shape:   (1000000, 9)
 <hr class="docutils" />
 </section>
 </section>
-</section>
 <hr class="docutils" />
 <section class="tex2jax_ignore mathjax_ignore" id="ml">
 <h1>ML<a class="headerlink" href="#ml" title="Permalink to this headline">#</a></h1>
@@ -2110,8 +2137,11 @@ test set shape:   (1000000, 9)
 <p>where <span class="math notranslate nohighlight">\(L\)</span> is the loss function, <span class="math notranslate nohighlight">\(f\)</span> is the model (neural network/classifier/regressor, etc. In this case it’s an IQN) (implicitly parameterized by potentially a  gazillion parameters),</p>
 <p>and <span class="math notranslate nohighlight">\(p(y|x)\)</span> the PDF of targets <span class="math notranslate nohighlight">\(y\)</span> that we want to estimate, given (set of) features <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(R\)</span> is the risk functional (sometime called objective function or cost function):</p>
 <div class="math notranslate nohighlight">
-\[ R[f] = \int \cdots \int \, p(y, \mathbf{x}) \, L(f(\mathbf{x}, \theta), y) \, dy \, d\mathbf{x}\]</div>
-<p>where the <span class="math notranslate nohighlight">\(R[f]\)</span> is approximated by the normalized sum of the losses over the all the samples. So, for IQNs,</p>
+\[ R[f] =E_{(\mathbf{x},t) \sim p} [L(f(\mathbf{x}, \theta), y)]  =\int \int \, p(y, \mathbf{x}) \, L(f(\mathbf{x}, \theta), y) \, dy \, d\mathbf{x}\]</div>
+<p>As can be seen with the equation above, the risk function, or generalization error <span class="math notranslate nohighlight">\(R[f]\)</span>, is an expectation taken with respect with the underlying distribution <span class="math notranslate nohighlight">\(p(\mathbf{x},y)\)</span>. This means that the training data and the test data drawn independently distributed (iid) from the underlying distribution <span class="math notranslate nohighlight">\(p(\mathbf{x},y)\)</span>. Since it impossibly to calculate <span class="math notranslate nohighlight">\(R[f]\)</span> exactly, since nobody can tell us the exact form of <span class="math notranslate nohighlight">\(p(\mathbf{x},y)\)</span> (from an infinite stream of data points), <span class="math notranslate nohighlight">\(R[f]\)</span> is approximated using the training error (or empirical risk) <span class="math notranslate nohighlight">\(R_\text{emp}\)</span>, which is a statistic calculated only on the training set</p>
+<div class="math notranslate nohighlight">
+\[ R_{\text{emp}} [\mathbf{x},y,f] = \frac{1}{n} \sum_{i=1}^{n} L \left( f(\mathbf{x}^{(i)}, \theta), y^{(i)} \right) \]</div>
+<p>So, for IQNs,</p>
 <div class="math notranslate nohighlight">
 \[\begin{split} L_{\text{IQN}}(f, y)=\left\{\begin{array}{ll}
 \tau(y-f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})) &amp; y \geq f(\boldsymbol{x}, \tau ; \boldsymbol{\theta}) \\
@@ -2313,8 +2343,11 @@ Target =  RecoDatam
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;train_t shape = &#39;</span><span class="p">,</span><span class="n">train_t_ratio</span><span class="o">.</span><span class="n">shape</span> <span class="p">,</span> <span class="s1">&#39;train_x shape = &#39;</span><span class="p">,</span> <span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> Training features:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">train_x</span><span class="p">)</span>
-<span class="n">valid_t_ratio</span><span class="p">,</span> <span class="n">valid_x</span> <span class="o">=</span> <span class="n">split_t_x</span><span class="p">(</span><span class="n">df</span><span class="o">=</span> <span class="n">test_data_m</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
+<span class="n">valid_t_ratio</span><span class="p">,</span> <span class="n">valid_x</span> <span class="o">=</span> <span class="n">split_t_x</span><span class="p">(</span><span class="n">df</span><span class="o">=</span> <span class="n">valid_data_m</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;valid_t shape = &#39;</span><span class="p">,</span><span class="n">valid_t_ratio</span><span class="o">.</span><span class="n">shape</span> <span class="p">,</span> <span class="s1">&#39;valid_x shape = &#39;</span><span class="p">,</span> <span class="n">valid_x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">test_t_ratio</span><span class="p">,</span> <span class="n">test_x</span> <span class="o">=</span> <span class="n">split_t_x</span><span class="p">(</span><span class="n">df</span><span class="o">=</span> <span class="n">test_data_m</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;test_t shape = &#39;</span><span class="p">,</span><span class="n">test_t_ratio</span><span class="o">.</span><span class="n">shape</span> <span class="p">,</span> <span class="s1">&#39;test_x shape = &#39;</span><span class="p">,</span> <span class="n">test_x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;no need to train_test_split since we already have the split dataframes&#39;</span><span class="p">)</span>
 </pre></div>
@@ -2334,6 +2367,7 @@ train_t shape =  (8000000,) train_x shape =  (8000000, 5)
  [ 3.56850964 -1.12318     0.356494    2.08765398  0.05535172]
  [ 3.27935361 -1.09427    -1.49334     1.83323565  0.07489863]]
 valid_t shape =  (8000000,) valid_x shape =  (1000000, 5)
+test_t shape =  (8000000,) test_x shape =  (1000000, 5)
 no need to train_test_split since we already have the split dataframes
 </pre></div>
 </div>
@@ -2347,8 +2381,8 @@ no need to train_test_split since we already have the split dataframes
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[ 3.42088240e+00  2.82176673e-03 -5.11682032e-04  2.15007070e+00
-  4.99793517e-01] [0.33405087 2.20251322 1.81415838 0.28770612 0.28883029]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[ 3.42122253e+00  6.98189368e-04 -8.95543973e-04  2.15029052e+00
+  5.00485136e-01] [0.33618462 2.20425356 1.81362773 0.28827428 0.28852734]
 [ 3.42124491e+00 -1.78188172e-03 -3.83090331e-04  2.15056416e+00
   4.99915289e-01] [0.33480629 2.20430976 1.81382516 0.28800584 0.28867295]
 </pre></div>
@@ -2387,10 +2421,28 @@ no need to train_test_split since we already have the split dataframes
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">NFEATURES</span><span class="o">=</span><span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NFEATURES</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-    <span class="n">train_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span><span class="n">train_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span>
-    <span class="n">valid_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span><span class="n">valid_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span>
-    
+
+<span class="k">def</span> <span class="nf">apply_z_to_features</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;TO ensure this z scaling is only applied once to the training features, we use a generator &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NFEATURES</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">train_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span><span class="n">train_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">test_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span><span class="n">test_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">valid_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span><span class="n">valid_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">yield</span> <span class="n">train_x</span> 
+    <span class="k">yield</span> <span class="n">test_x</span> 
+    <span class="k">yield</span> <span class="n">valid_x</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">apply_z_generator</span> <span class="o">=</span> <span class="n">apply_z_to_features</span><span class="p">()</span>
+
+<span class="n">train_x</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">apply_z_generator</span><span class="p">)</span>
+<span class="n">test_x</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">apply_z_generator</span><span class="p">)</span>
+<span class="n">valid_x</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">apply_z_generator</span><span class="p">)</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="n">valid_x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">valid_x</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">train_x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">train_x</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
@@ -2398,8 +2450,8 @@ no need to train_test_split since we already have the split dataframes
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[ 1.24373400e-16 -7.91189336e-18  2.08402184e-17 -1.84715532e-15
-  4.99793517e-01] [1.         1.         1.         1.         0.28883029]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[-2.55532484e-16  2.34408049e-17 -2.47215581e-17 -2.22109975e-15
+  5.00485136e-01] [1.         1.         1.         1.         0.28852734]
 [ 3.98275191e-15 -1.10134124e-18 -3.12905257e-17 -1.14646888e-14
   4.99915289e-01] [1.         1.         1.         1.         0.28867295]
 </pre></div>
@@ -2408,18 +2460,20 @@ no need to train_test_split since we already have the split dataframes
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_x</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_x</span><span class="p">[:</span><span class="mi">3</span><span class="p">,:],</span> <span class="n">test_x</span><span class="p">[:</span><span class="mi">3</span><span class="p">,:],</span> <span class="n">valid_x</span><span class="p">[:</span><span class="mi">3</span><span class="p">,:]</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[-0.11563106,  0.37652098,  1.60021658, -1.98214105,  0.36130954],
-       [-0.68688865, -0.5270258 ,  0.35110997, -0.31849075,  0.12689925],
-       [-0.68688865, -0.5270258 ,  0.35110997, -0.31849075,  0.96230681],
-       ...,
-       [ 0.9035064 , -1.01247028, -1.55407862,  0.23586457,  0.08421659],
-       [ 0.43985052, -0.50872982,  0.19675385, -0.21843372,  0.05535172],
-       [-0.42380118, -0.49561461, -0.82309858, -1.10181279,  0.07489863]])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(array([[-0.11563106,  0.37652098,  1.60021658, -1.98214105,  0.36130954],
+        [-0.68688865, -0.5270258 ,  0.35110997, -0.31849075,  0.12689925],
+        [-0.68688865, -0.5270258 ,  0.35110997, -0.31849075,  0.96230681]]),
+ array([[ 1.06101772,  0.37324145, -0.69948596, -0.27467897,  0.25004557],
+        [ 1.06101772,  0.37324145, -0.69948596, -0.27467897,  0.84749256],
+        [-0.48554751,  1.60141978,  0.85740126,  0.31973299,  0.85199529]]),
+ array([[-0.68215953,  0.56054886, -0.34477387, -1.23054084,  0.93582274],
+        [-0.2284882 ,  1.43668218, -0.12155883, -0.6725882 ,  0.9272482 ],
+        [-0.2284882 ,  1.43668218, -0.12155883, -0.6725882 ,  0.37568739]]))
 </pre></div>
 </div>
 </div>
@@ -2429,8 +2483,24 @@ no need to train_test_split since we already have the split dataframes
 <h2>Apply <span class="math notranslate nohighlight">\(z\)</span> to targets before training<a class="headerlink" href="#apply-z-to-targets-before-training" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_t_ratio</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span><span class="n">train_t_ratio</span><span class="p">)</span> 
-<span class="n">valid_t_ratio</span><span class="o">=</span> <span class="n">z</span><span class="p">(</span><span class="n">valid_t_ratio</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">apply_z_to_targets</span><span class="p">():</span>
+    <span class="n">train_t_ratio_</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span><span class="n">train_t_ratio</span><span class="p">)</span> 
+    <span class="n">test_t_ratio_</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span><span class="n">test_t_ratio</span><span class="p">)</span> 
+    <span class="n">valid_t_ratio_</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span><span class="n">valid_t_ratio</span><span class="p">)</span>
+    
+    <span class="k">yield</span> <span class="n">train_t_ratio_</span>
+    <span class="k">yield</span> <span class="n">test_t_ratio_</span>
+    <span class="k">yield</span> <span class="n">valid_t_ratio_</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">apply_z_to_targets_generator</span> <span class="o">=</span> <span class="n">apply_z_to_targets</span><span class="p">()</span>
+<span class="n">train_t_ratio</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">apply_z_to_targets_generator</span><span class="p">)</span>
+<span class="n">test_t_ratio</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">apply_z_to_targets_generator</span><span class="p">)</span>
+<span class="n">valid_t_ratio</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">apply_z_to_targets_generator</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">valid_t_ratio</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">valid_t_ratio</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">train_t_ratio</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">train_t_ratio</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
@@ -2446,17 +2516,20 @@ no need to train_test_split since we already have the split dataframes
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#check that it looks correct</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">autoscale_on</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NFEATURES</span><span class="p">):</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">train_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;feature </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span> <span class="p">)</span>
-    <span class="n">set_axes</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Transformed features X&#39; &quot;</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;training features post-z score: X&#39;=z(L(X))&quot;</span><span class="p">)</span>
+    <span class="c1"># set_axes(ax=ax, xlabel=&quot;Transformed features X&#39; &quot;,title=&quot;training features post-z score: X&#39;=z(L(X))&quot;)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_75_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_75_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_77_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_77_0.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2479,6 +2552,46 @@ no need to train_test_split since we already have the split dataframes
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">RegularizedRegressionModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Used for hyperparameter tuning &quot;&quot;&quot;</span>
+    <span class="c1">#inherit from the super class</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nfeatures</span><span class="p">,</span> <span class="n">ntargets</span><span class="p">,</span> <span class="n">nlayers</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">dropout</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nlayers</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">layers</span><span class="p">)</span> <span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="c1">#inital layer has to have size of input features as its input layer</span>
+                <span class="c1">#its output layer can have any size but it must match the size of the input layer of the next linear layer</span>
+                <span class="c1">#here we choose its output layer as the hidden size (fully connected)</span>
+                <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">nfeatures</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">))</span>
+                <span class="c1">#batch normalization</span>
+                <span class="c1"># layers.append(nn.BatchNorm1d(hidden_size))</span>
+                <span class="c1">#dropout only in the first layer</span>
+                <span class="c1">#Dropout seems to worsen model performance</span>
+                <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">))</span>
+                <span class="c1">#ReLU activation </span>
+                <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1">#if this is not the first layer (we dont have layers)</span>
+                <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">))</span>
+                <span class="c1"># layers.append(nn.BatchNorm1d(hidden_size))</span>
+                <span class="c1">#Dropout seems to worsen model performance</span>
+                <span class="c1"># layers.append(nn.Dropout(dropout))</span>
+                <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">())</span>
+                <span class="c1">#output layer:</span>
+        <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">ntargets</span><span class="p">))</span> 
+
+        <span class="c1"># only for classification add sigmoid</span>
+        <span class="c1"># layers.append(nn.Sigmoid())</span>
+            <span class="c1">#we have defined sequential model using the layers in oulist </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers</span><span class="p">)</span>
+
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    
+    
+<span class="k">class</span> <span class="nc">TrainingRegularizedRegressionModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Used for training, and adds more regularization to prevent overfitting &quot;&quot;&quot;</span>
     <span class="c1">#inherit from the super class</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nfeatures</span><span class="p">,</span> <span class="n">ntargets</span><span class="p">,</span> <span class="n">nlayers</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">dropout</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -2501,7 +2614,7 @@ no need to train_test_split since we already have the split dataframes
                 <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">))</span>
                 <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">))</span>
                 <span class="c1">#Dropout seems to worsen model performance</span>
-                <span class="c1"># layers.append(nn.Dropout(dropout))</span>
+                <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">))</span>
                 <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">())</span>
                 <span class="c1">#output layer:</span>
         <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">ntargets</span><span class="p">))</span> 
@@ -2523,23 +2636,46 @@ no need to train_test_split since we already have the split dataframes
 <hr class="docutils" />
 <section id="hyperparameter-training-workflow">
 <h2>Hyperparameter Training Workflow<a class="headerlink" href="#hyperparameter-training-workflow" title="Permalink to this headline">#</a></h2>
+<p>We should not touch our test set until we have chosen our hyperparameters (have done model selection) using the valid set (also, we can’t tune the model using the train set since it obviously will just overfit the train set). Then in the training process we evaluate on test set to keep ourselves honest and to see if we are overfitting the train set.</p>
+<p>It seems that one of the big challenges in this project is generalization (or overfitting). ways to reduce overfitting and improve generalization (that is, make the generalization error <span class="math notranslate nohighlight">\(R[f]\)</span> closer to the training error <span class="math notranslate nohighlight">\(R_{\text{emp}}\)</span> is:</p>
+<ol class="simple">
+<li><p>Reducing model complexity (e.g. using a linear model instead of a non-linear model, and user fewer model parameters). 2. using more training data. 3. feature selecting (i.e. using fewer features, since some of the features might be irrelevant or redundant). 4. Data augmentation, i.e. generating additional training examples through e.g. horizontal flipping/random cropping for images, or adding noise to training examples, all of which increase the size and diversity of the training set. 5. Regularization techniques, such as adding a penalty to the weights of the model during training (weight decay). This penalty could be e.g. L1 or L2 norm of the weights. 5. Cross valudation: dividing the training set into several smaller sets, training the model on one set, and evaluating it on the others. (can use e.g. <code class="docutils literal notranslate"><span class="pre">sklearn.model_selection.KFold</span></code> instead of doing it from scratch).</p></li>
+</ol>
+<p>Other than overfitting, the name of the game for training of course is to minimize the loss with respect to the weights. INPUT (features) is forward propagated (meaning each layer is basically a matrix of the size of the weights is a matrix of <span class="math notranslate nohighlight">\(( N_inputs + 1) X (N_outputs)\)</span> (and the inputs) is <span class="math notranslate nohighlight">\(w[N_inputs]+b\)</span> which is the rows, and the outputs (<span class="math notranslate nohighlight">\(y=\mathbf{w}+b\)</span>) will have shape <span class="math notranslate nohighlight">\([N_outputs]\)</span>  through each layer into the OUTPUT (target). More explicitly the shape of output <span class="math notranslate nohighlight">\(y\)</span> of each layer will be</p>
+<div class="math notranslate nohighlight">
+\[[y] = [1 \times (N_{input}+1) ] \cdot [(N_{input} +1) \times N_{output}] = [1\times N_{output}]  \]</div>
+<p>Where <span class="math notranslate nohighlight">\(N_{input}\)</span> and <span class="math notranslate nohighlight">\(N_{output}\)</span> are the numbers of input and output features, taken to be rows and columns of the matrices, respectively. The <span class="math notranslate nohighlight">\(+1\)</span> in <span class="math notranslate nohighlight">\( (N_{input}+1) \)</span> is for the bias column.</p>
+<p>Forward Prop: pass.
+INPUT <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> -&gt; … -&gt; a bunch of layers … -&gt; OUTPUT <span class="math notranslate nohighlight">\(y\)</span></p>
+<p>Backprop.: Going backward from the output layer to the input layer. Basically, for one layer, <span class="math notranslate nohighlight">\(Backprop(dLoss/dy) = dLoss/dx\)</span>, where <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> are the inputs and outputs for one layer. This will use, in the simplest case, <span class="math notranslate nohighlight">\(dLoss/dx = dLoss/dy \ dy/dx\)</span> where <span class="math notranslate nohighlight">\( dy/dx\)</span> will be in terms of the weights of the current layer. <span class="math notranslate nohighlight">\(dLoss/dw = dLoss/dy \ dy/dw\)</span>, and then the weights are updated as to minimize the loss, e.g. for SGD: <span class="math notranslate nohighlight">\(w \leftarrow w - (dLoss/dw \ \eta\)</span> where <span class="math notranslate nohighlight">\(\eta\)</span> is the learning rate.</p>
+<p>the dLoss/dx becomes the dLoss/dy of the next layer:</p>
+<p>X layer1 - &gt; layer_2 … -&gt; layer_n -&gt; y
+&lt;-…  dL/dx  &lt;- BP dL/dy  &lt;- dL/dx   &lt;-BP  dL/dy</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_tuning_sample</span><span class="p">():</span>
     <span class="n">sample</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mi">200000</span><span class="p">)</span>
     <span class="c1"># train_x_sample, train_t_ratio_sample, valid_x_sample, valid_t_ratio_sample</span>
-    <span class="k">return</span> <span class="n">train_x</span><span class="p">[:</span><span class="n">sample</span><span class="p">],</span> <span class="n">train_t_ratio</span><span class="p">[:</span><span class="n">sample</span><span class="p">],</span> <span class="n">valid_x</span><span class="p">[:</span><span class="n">sample</span><span class="p">],</span> <span class="n">valid_t_ratio</span><span class="p">[:</span><span class="n">sample</span><span class="p">]</span>
+    <span class="n">get_whole</span><span class="o">=</span><span class="kc">True</span>
+    <span class="k">if</span> <span class="n">get_whole</span><span class="p">:</span>
+        <span class="n">train_x_sample</span><span class="p">,</span> <span class="n">train_t_ratio_sample</span><span class="p">,</span> <span class="n">valid_x_sample</span><span class="p">,</span> <span class="n">valid_t_ratio_sample</span> <span class="o">=</span> <span class="n">train_x</span><span class="p">,</span> <span class="n">train_t_ratio</span><span class="p">,</span> <span class="n">valid_x</span><span class="p">,</span> <span class="n">valid_t_ratio</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">train_x_sample</span><span class="p">,</span> <span class="n">train_t_ratio_sample</span><span class="p">,</span> <span class="n">valid_x_sample</span><span class="p">,</span> <span class="n">valid_t_ratio_sample</span><span class="o">=</span><span class="n">train_x</span><span class="p">[:</span><span class="n">sample</span><span class="p">],</span> <span class="n">train_t_ratio</span><span class="p">[:</span><span class="n">sample</span><span class="p">],</span> <span class="n">valid_x</span><span class="p">[:</span><span class="n">sample</span><span class="p">],</span> <span class="n">valid_t_ratio</span><span class="p">[:</span><span class="n">sample</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">train_x_sample</span><span class="p">,</span> <span class="n">train_t_ratio_sample</span><span class="p">,</span> <span class="n">valid_x_sample</span><span class="p">,</span> <span class="n">valid_t_ratio_sample</span>
+
 <span class="n">train_x_sample</span><span class="p">,</span> <span class="n">train_t_ratio_sample</span><span class="p">,</span> <span class="n">valid_x_sample</span><span class="p">,</span> <span class="n">valid_t_ratio_sample</span> <span class="o">=</span> <span class="n">get_tuning_sample</span><span class="p">()</span>
-<span class="n">train_x_sample</span><span class="o">.</span><span class="n">shape</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">train_x_sample</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(200000, 5)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(8000000, 5)
 </pre></div>
 </div>
 </div>
 </div>
+<p>Need to use test set <em>and</em> validation set for tuning.</p>
+<p>Note that hyperparameters are usually not directly transferrable across architectures and datasets.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">HyperTrainer</span><span class="p">():</span>
@@ -2625,31 +2761,33 @@ no need to train_test_split since we already have the split dataframes
     <span class="n">early_stopping_iter</span><span class="o">=</span><span class="mi">10</span><span class="c1">#stop after 10 iteractions of not improving loss</span>
     <span class="n">early_stopping_coutner</span><span class="o">=</span><span class="mi">0</span>
 
-    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">EPOCHS</span><span class="p">):</span>
-        <span class="n">train_loss</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">train_x_sample</span><span class="p">,</span> <span class="n">train_t_ratio_sample</span><span class="p">)</span>
-        <span class="n">valid_loss</span><span class="o">=</span><span class="n">trainer</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">valid_x_sample</span><span class="p">,</span> <span class="n">valid_t_ratio_sample</span><span class="p">)</span>
+    <span class="c1"># for epoch in range(EPOCHS):</span>
+    <span class="c1"># train_loss = trainer.train(train_x_sample, train_t_ratio_sample)</span>
+        <span class="c1">#test loss</span>
+    <span class="n">valid_loss</span><span class="o">=</span><span class="n">trainer</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">valid_x_sample</span><span class="p">,</span> <span class="n">valid_t_ratio_sample</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> </span><span class="si">{</span><span class="n">train_loss</span><span class="si">}</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> </span><span class="si">{</span><span class="n">valid_loss</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">valid_loss</span><span class="o">&lt;</span><span class="n">best_loss</span><span class="p">:</span>
-            <span class="n">best_loss</span><span class="o">=</span><span class="n">valid_loss</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">early_stopping_coutner</span><span class="o">+=</span><span class="mi">1</span>
-        <span class="k">if</span> <span class="n">early_stopping_coutner</span> <span class="o">&gt;</span> <span class="n">early_stopping_iter</span><span class="p">:</span>
-            <span class="k">break</span>
+        <span class="c1"># print(f&quot;{epoch} \t {train_loss} \t {valid_loss}&quot;)</span>
+        
+        <span class="c1"># if valid_loss&lt;best_loss:</span>
+        <span class="c1">#     best_loss=valid_loss</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     early_stopping_coutner+=1</span>
+        <span class="c1"># if early_stopping_coutner &gt; early_stopping_iter:</span>
+            <span class="c1"># break</span>
             
-    <span class="k">return</span> <span class="n">best_loss</span>
+    <span class="c1"># return best_loss</span>
+    <span class="k">return</span> <span class="n">valid_loss</span>
 
-<span class="c1"># run_train()</span>
 
 <span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="n">trial</span><span class="p">):</span>
     <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
           <span class="s2">&quot;nlayers&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;nlayers&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span>      
-          <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span>
+          <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
           <span class="s2">&quot;dropout&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s2">&quot;dropout&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
           <span class="s2">&quot;optimizer_name&quot;</span> <span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_categorical</span><span class="p">(</span><span class="s2">&quot;optimizer_name&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;RMSprop&quot;</span><span class="p">,</span> <span class="s2">&quot;SGD&quot;</span><span class="p">]),</span>
-          <span class="s2">&quot;momentum&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s2">&quot;momentum&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span><span class="mf">0.9</span><span class="p">),</span>
+          <span class="s2">&quot;momentum&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s2">&quot;momentum&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span><span class="mf">0.99</span><span class="p">),</span>
           <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">),</span>
-          <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;batch_size&quot;</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">3000</span><span class="p">)</span>
+          <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;batch_size&quot;</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
 
         <span class="p">}</span>
     
@@ -2657,44 +2795,51 @@ no need to train_test_split since we already have the split dataframes
 
         <span class="n">temp_loss</span> <span class="o">=</span> <span class="n">run_train</span><span class="p">(</span><span class="n">params</span><span class="p">,</span><span class="n">save_model</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">trial</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="n">temp_loss</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
-        <span class="c1">#activate pruning (early stopping)</span>
+        <span class="c1">#activate pruning (early stopping if the current step in the trial has unpromising results)</span>
+        <span class="c1">#instead of doing lots of iterations, do less iterations and more steps in each trial,  </span>
+        <span class="c1">#such that a trial is terminated if a step yields an unpromising loss.</span>
+        
         <span class="k">if</span> <span class="n">trial</span><span class="o">.</span><span class="n">should_prune</span><span class="p">():</span>
             <span class="k">raise</span> <span class="n">optuna</span><span class="o">.</span><span class="n">TrialPruned</span><span class="p">()</span>
     
     <span class="k">return</span> <span class="n">temp_loss</span>
 
-<span class="k">def</span> <span class="nf">tune_hyperparameters</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Getting best hyperparameters for target </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="c1"># study=optuna.create_study(direction=&quot;minimize&quot;)</span>
-    <span class="c1">#choose a different sampling strategy (https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.CmaEsSampler.html#optuna.samplers.CmaEsSampler)</span>
-    <span class="c1"># sampler=optuna.samplers.RandomSampler()</span>
+<span class="nd">@time_type_of_func</span><span class="p">(</span><span class="n">tuning_or_training</span><span class="o">=</span><span class="s1">&#39;tuning&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">tune_hyperparameters</span><span class="p">(</span><span class="n">save_best_params</span><span class="p">):</span>
+    
+
     <span class="n">sampler</span><span class="o">=</span><span class="kc">False</span>
     <span class="k">if</span> <span class="n">sampler</span><span class="p">:</span>
+        <span class="c1">#choose a different sampling strategy (https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.CmaEsSampler.html#optuna.samplers.CmaEsSampler)</span>
+        <span class="c1"># sampler=optuna.samplers.RandomSampler()</span>
         <span class="n">study</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">create_study</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s1">&#39;minimize&#39;</span><span class="p">,</span>
                                   <span class="n">pruner</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">pruners</span><span class="o">.</span><span class="n">MedianPruner</span><span class="p">(),</span> <span class="n">sampler</span><span class="o">=</span><span class="n">sampler</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="c1">#but the default sampler is usually better - no need to change it!</span>
         <span class="n">study</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">create_study</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s1">&#39;minimize&#39;</span><span class="p">,</span>
                                   <span class="n">pruner</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">pruners</span><span class="o">.</span><span class="n">HyperbandPruner</span><span class="p">())</span>
-    <span class="n">study</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">n_trials</span><span class="o">=</span><span class="mi">100</span>
+    <span class="n">study</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="n">n_trials</span><span class="p">)</span>
     <span class="n">best_trial</span> <span class="o">=</span> <span class="n">study</span><span class="o">.</span><span class="n">best_trial</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;best model parameters&#39;</span><span class="p">,</span> <span class="n">best_trial</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
 
     <span class="n">best_params</span><span class="o">=</span><span class="n">best_trial</span><span class="o">.</span><span class="n">params</span><span class="c1">#this is a dictionary</span>
-    <span class="n">tuned_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span><span class="s1">&#39;best_params&#39;</span><span class="p">)</span>
-    <span class="n">mkdir</span><span class="p">(</span><span class="n">tuned_dir</span><span class="p">)</span>
-    <span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tuned_dir</span><span class="p">,</span><span class="s1">&#39;best_params_Test_Trials.csv&#39;</span><span class="p">)</span>
-    <span class="n">param_df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-                            <span class="s1">&#39;n_layers&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;nlayers&quot;</span><span class="p">],</span> 
-                            <span class="s1">&#39;hidden_size&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">],</span> 
-                            <span class="s1">&#39;dropout&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;dropout&quot;</span><span class="p">],</span>
-                            <span class="s1">&#39;optimizer_name&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;optimizer_name&quot;</span><span class="p">],</span>
-                            <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">],</span> 
-                            <span class="s1">&#39;batch_size&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">],</span>
-                            <span class="s1">&#39;momentum&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;momentum&quot;</span><span class="p">]},</span>
-                                    <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">save_best_params</span><span class="p">:</span>
+        <span class="n">tuned_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span><span class="s1">&#39;best_params&#39;</span><span class="p">)</span>
+        <span class="n">mkdir</span><span class="p">(</span><span class="n">tuned_dir</span><span class="p">)</span>
+        <span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tuned_dir</span><span class="p">,</span><span class="s1">&#39;best_params_mass_</span><span class="si">%s</span><span class="s1">_trials.csv&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">n_trials</span><span class="p">)))</span>
+        <span class="n">param_df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+                                <span class="s1">&#39;n_layers&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;nlayers&quot;</span><span class="p">],</span> 
+                                <span class="s1">&#39;hidden_size&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">],</span> 
+                                <span class="s1">&#39;dropout&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;dropout&quot;</span><span class="p">],</span>
+                                <span class="s1">&#39;optimizer_name&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;optimizer_name&quot;</span><span class="p">],</span>
+                                <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">],</span> 
+                                <span class="s1">&#39;batch_size&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">],</span>
+                                <span class="s1">&#39;momentum&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;momentum&quot;</span><span class="p">]},</span>
+                                        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
 
-    <span class="n">param_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>   
+        <span class="n">param_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>   
     <span class="k">return</span> <span class="n">study</span>
 </pre></div>
 </div>
@@ -2702,75 +2847,163 @@ no need to train_test_split since we already have the split dataframes
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">study</span><span class="o">=</span> <span class="n">tune_hyperparameters</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">study</span><span class="o">=</span> <span class="n">tune_hyperparameters</span><span class="p">(</span><span class="n">save_best_params</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Getting best hyperparameters for target RecoDatam
-0 	 0.00998931675913963 	 0.009974184790807627
-0 	 0.010102988670473666 	 0.009963865717063772
-0 	 0.01016046250412626 	 0.009980018889671755
-0 	 0.010281202148424443 	 0.009956008622745515
-0 	 0.010050639910343887 	 0.009973903748159223
-0 	 0.010133953424677716 	 0.010036182504004086
-0 	 0.010027668189224034 	 0.00996831478477466
-0 	 0.010062532245390913 	 0.009992026698909477
-0 	 0.010082567347043938 	 0.010043625441772678
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tuning IQN hyperparameters to estimate RecoDatam
+Getting best hyperparameters for target RecoDatam
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.010062881539908756 	 0.009945277872055439
-0 	 0.028571769554763628 	 0.027885029794077885
-0 	 0.030525757408723597 	 0.02920866606196737
-0 	 0.026347183922765055 	 0.02600874757863642
-0 	 0.030590829729710813 	 0.029897414491105532
-0 	 0.02593835388741842 	 0.026204846981095105
-0 	 0.030412589187221475 	 0.02754882817992027
-0 	 0.028299092277278746 	 0.02750811303857219
-0 	 0.028055237641502525 	 0.027151026619159108
-0 	 0.02940002487603888 	 0.028817504846306675
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.030728139488031547 	 0.02965495729349493
-0 	 0.010067851378999907 	 0.009711997493949546
-0 	 0.010421056418004344 	 0.009978495983315534
-0 	 0.009537131679816522 	 0.009485489538191822
-0 	 0.009755587667559698 	 0.009616599420484494
-0 	 0.010153579402166758 	 0.009927444793229661
-0 	 0.009697694999028781 	 0.009598698848772536
-0 	 0.0115695483855914 	 0.010750747482541581
-0 	 0.00967816421567612 	 0.00966787746428517
-0 	 0.010608906071993145 	 0.010081612221415383
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.010956976412568873 	 0.010670689803526898
-0 	 0.01080489258670652 	 0.010587398384349309
-0 	 0.010751345364803485 	 0.010540346906968692
-0 	 0.012953156642676303 	 0.011860674742304704
-0 	 0.010715253267923303 	 0.010456198137646826
-0 	 0.010846591650891059 	 0.010507941697827532
-0 	 0.010625140258410071 	 0.01040794048105373
-0 	 0.01202988740748564 	 0.011009033428506072
-0 	 0.012190801198894293 	 0.010875266680668415
-0 	 0.011489284945360442 	 0.010584710689254496
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.010817981324585696 	 0.010553270868823924
-0 	 0.02660840357385096 	 0.026874614822096517
-0 	 0.02660518767786961 	 0.026277892896775103
-0 	 0.026594969363105733 	 0.026655343358590156
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	 0.02659751479031325 	 0.026484808709775032
-best model parameters {&#39;nlayers&#39;: 2, &#39;hidden_size&#39;: 16, &#39;dropout&#39;: 0.027137346893667535, &#39;optimizer_name&#39;: &#39;RMSprop&#39;, &#39;momentum&#39;: 0.8746066085447676, &#39;learning_rate&#39;: 0.0074223973717202985, &#39;batch_size&#39;: 1899}
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span> <span class="p">[</span><span class="mi">56</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">study</span><span class="o">=</span> <span class="n">tune_hyperparameters</span><span class="p">(</span><span class="n">save_best_params</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nn">Cell In [6], line 93,</span> in <span class="ni">time_type_of_func.&lt;locals&gt;.timer.&lt;locals&gt;.wrapper_timer</span><span class="nt">(*args, **kwargs)</span>
+<span class="g g-Whitespace">     </span><span class="mi">91</span>     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;tuning IQN hyperparameters to estimate </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">92</span> <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>    
+<span class="ne">---&gt; </span><span class="mi">93</span> <span class="n">value</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">94</span> <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>      
+<span class="g g-Whitespace">     </span><span class="mi">95</span> <span class="n">run_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>    
+
+<span class="nn">Cell In [55], line 138,</span> in <span class="ni">tune_hyperparameters</span><span class="nt">(save_best_params)</span>
+<span class="g g-Whitespace">    </span><span class="mi">135</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">136</span>     <span class="n">study</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">create_study</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s1">&#39;minimize&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">137</span>                               <span class="n">pruner</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">pruners</span><span class="o">.</span><span class="n">HyperbandPruner</span><span class="p">())</span>
+<span class="ne">--&gt; </span><span class="mi">138</span> <span class="n">study</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">139</span> <span class="n">best_trial</span> <span class="o">=</span> <span class="n">study</span><span class="o">.</span><span class="n">best_trial</span>
+<span class="g g-Whitespace">    </span><span class="mi">140</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;best model parameters&#39;</span><span class="p">,</span> <span class="n">best_trial</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+
+<span class="nn">File ~/anaconda3/envs/new_torch/lib/python3.9/site-packages/optuna/study/study.py:419,</span> in <span class="ni">Study.optimize</span><span class="nt">(self, func, n_trials, timeout, n_jobs, catch, callbacks, gc_after_trial, show_progress_bar)</span>
+<span class="g g-Whitespace">    </span><span class="mi">315</span> <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">316</span>     <span class="bp">self</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">317</span>     <span class="n">func</span><span class="p">:</span> <span class="n">ObjectiveFuncType</span><span class="p">,</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">324</span>     <span class="n">show_progress_bar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">325</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">326</span>     <span class="sd">&quot;&quot;&quot;Optimize an objective function.</span>
+<span class="g g-Whitespace">    </span><span class="mi">327</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">328</span><span class="sd">     Optimization is done by choosing a suitable set of hyperparameter values from a given</span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">416</span><span class="sd">             If nested invocation of this method occurs.</span>
+<span class="g g-Whitespace">    </span><span class="mi">417</span><span class="sd">     &quot;&quot;&quot;</span>
+<span class="ne">--&gt; </span><span class="mi">419</span>     <span class="n">_optimize</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">420</span>         <span class="n">study</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">421</span>         <span class="n">func</span><span class="o">=</span><span class="n">func</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">422</span>         <span class="n">n_trials</span><span class="o">=</span><span class="n">n_trials</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">423</span>         <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">424</span>         <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">425</span>         <span class="n">catch</span><span class="o">=</span><span class="n">catch</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">426</span>         <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">427</span>         <span class="n">gc_after_trial</span><span class="o">=</span><span class="n">gc_after_trial</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">428</span>         <span class="n">show_progress_bar</span><span class="o">=</span><span class="n">show_progress_bar</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">429</span>     <span class="p">)</span>
+
+<span class="nn">File ~/anaconda3/envs/new_torch/lib/python3.9/site-packages/optuna/study/_optimize.py:66,</span> in <span class="ni">_optimize</span><span class="nt">(study, func, n_trials, timeout, n_jobs, catch, callbacks, gc_after_trial, show_progress_bar)</span>
+<span class="g g-Whitespace">     </span><span class="mi">64</span> <span class="k">try</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">65</span>     <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="ne">---&gt; </span><span class="mi">66</span>         <span class="n">_optimize_sequential</span><span class="p">(</span>
+<span class="g g-Whitespace">     </span><span class="mi">67</span>             <span class="n">study</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">68</span>             <span class="n">func</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">69</span>             <span class="n">n_trials</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">70</span>             <span class="n">timeout</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">71</span>             <span class="n">catch</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">72</span>             <span class="n">callbacks</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">73</span>             <span class="n">gc_after_trial</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">74</span>             <span class="n">reseed_sampler_rng</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">75</span>             <span class="n">time_start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">76</span>             <span class="n">progress_bar</span><span class="o">=</span><span class="n">progress_bar</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">77</span>         <span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">78</span>     <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">79</span>         <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+
+<span class="nn">File ~/anaconda3/envs/new_torch/lib/python3.9/site-packages/optuna/study/_optimize.py:160,</span> in <span class="ni">_optimize_sequential</span><span class="nt">(study, func, n_trials, timeout, catch, callbacks, gc_after_trial, reseed_sampler_rng, time_start, progress_bar)</span>
+<span class="g g-Whitespace">    </span><span class="mi">157</span>         <span class="k">break</span>
+<span class="g g-Whitespace">    </span><span class="mi">159</span> <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">160</span>     <span class="n">frozen_trial</span> <span class="o">=</span> <span class="n">_run_trial</span><span class="p">(</span><span class="n">study</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">catch</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">161</span> <span class="k">finally</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">162</span>     <span class="c1"># The following line mitigates memory problems that can be occurred in some</span>
+<span class="g g-Whitespace">    </span><span class="mi">163</span>     <span class="c1"># environments (e.g., services that use computing containers such as CircleCI).</span>
+<span class="g g-Whitespace">    </span><span class="mi">164</span>     <span class="c1"># Please refer to the following PR for further details:</span>
+<span class="g g-Whitespace">    </span><span class="mi">165</span>     <span class="c1"># https://github.com/optuna/optuna/pull/325.</span>
+<span class="g g-Whitespace">    </span><span class="mi">166</span>     <span class="k">if</span> <span class="n">gc_after_trial</span><span class="p">:</span>
+
+<span class="nn">File ~/anaconda3/envs/new_torch/lib/python3.9/site-packages/optuna/study/_optimize.py:234,</span> in <span class="ni">_run_trial</span><span class="nt">(study, func, catch)</span>
+<span class="g g-Whitespace">    </span><span class="mi">227</span>         <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Should not reach.&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">229</span> <span class="k">if</span> <span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">230</span>     <span class="n">frozen_trial</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">TrialState</span><span class="o">.</span><span class="n">FAIL</span>
+<span class="g g-Whitespace">    </span><span class="mi">231</span>     <span class="ow">and</span> <span class="n">func_err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+<span class="g g-Whitespace">    </span><span class="mi">232</span>     <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_err</span><span class="p">,</span> <span class="n">catch</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">233</span> <span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">234</span>     <span class="k">raise</span> <span class="n">func_err</span>
+<span class="g g-Whitespace">    </span><span class="mi">235</span> <span class="k">return</span> <span class="n">frozen_trial</span>
+
+<span class="nn">File ~/anaconda3/envs/new_torch/lib/python3.9/site-packages/optuna/study/_optimize.py:196,</span> in <span class="ni">_run_trial</span><span class="nt">(study, func, catch)</span>
+<span class="g g-Whitespace">    </span><span class="mi">194</span> <span class="k">with</span> <span class="n">get_heartbeat_thread</span><span class="p">(</span><span class="n">trial</span><span class="o">.</span><span class="n">_trial_id</span><span class="p">,</span> <span class="n">study</span><span class="o">.</span><span class="n">_storage</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">195</span>     <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">196</span>         <span class="n">value_or_values</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">trial</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">197</span>     <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">TrialPruned</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">198</span>         <span class="c1"># TODO(mamu): Handle multi-objective cases.</span>
+<span class="g g-Whitespace">    </span><span class="mi">199</span>         <span class="n">state</span> <span class="o">=</span> <span class="n">TrialState</span><span class="o">.</span><span class="n">PRUNED</span>
+
+<span class="nn">Cell In [55], line 117,</span> in <span class="ni">objective</span><span class="nt">(trial)</span>
+<span class="g g-Whitespace">    </span><span class="mi">104</span> <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+<span class="g g-Whitespace">    </span><span class="mi">105</span>       <span class="s2">&quot;nlayers&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;nlayers&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span>      
+<span class="g g-Whitespace">    </span><span class="mi">106</span>       <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">112</span> 
+<span class="g g-Whitespace">    </span><span class="mi">113</span>     <span class="p">}</span>
+<span class="g g-Whitespace">    </span><span class="mi">115</span> <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">117</span>     <span class="n">temp_loss</span> <span class="o">=</span> <span class="n">run_train</span><span class="p">(</span><span class="n">params</span><span class="p">,</span><span class="n">save_model</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">118</span>     <span class="n">trial</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="n">temp_loss</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">119</span>     <span class="c1">#activate pruning (early stopping)</span>
+
+<span class="nn">Cell In [55], line 87,</span> in <span class="ni">run_train</span><span class="nt">(params, save_model)</span>
+<span class="g g-Whitespace">     </span><span class="mi">82</span> <span class="n">early_stopping_coutner</span><span class="o">=</span><span class="mi">0</span>
+<span class="g g-Whitespace">     </span><span class="mi">84</span> <span class="c1"># for epoch in range(EPOCHS):</span>
+<span class="g g-Whitespace">     </span><span class="mi">85</span> <span class="c1"># train_loss = trainer.train(train_x_sample, train_t_ratio_sample)</span>
+<span class="g g-Whitespace">     </span><span class="mi">86</span>     <span class="c1">#test loss</span>
+<span class="ne">---&gt; </span><span class="mi">87</span> <span class="n">valid_loss</span><span class="o">=</span><span class="n">trainer</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">valid_x_sample</span><span class="p">,</span> <span class="n">valid_t_ratio_sample</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">89</span>     <span class="c1"># print(f&quot;{epoch} \t {train_loss} \t {valid_loss}&quot;)</span>
+<span class="g g-Whitespace">     </span><span class="mi">90</span>     
+<span class="g g-Whitespace">     </span><span class="mi">91</span>     <span class="c1"># if valid_loss&lt;best_loss:</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">97</span>         
+<span class="g g-Whitespace">     </span><span class="mi">98</span> <span class="c1"># return best_loss</span>
+<span class="g g-Whitespace">     </span><span class="mi">99</span> <span class="k">return</span> <span class="n">valid_loss</span>
+
+<span class="nn">Cell In [55], line 52,</span> in <span class="ni">HyperTrainer.evaluate</span><span class="nt">(self, x, t)</span>
+<span class="g g-Whitespace">     </span><span class="mi">50</span>     <span class="n">targets</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">batch_t</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">51</span>     <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">52</span>     <span class="n">loss</span> <span class="o">=</span><span class="n">average_quantile_loss</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">53</span>     <span class="n">final_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">54</span> <span class="k">return</span> <span class="n">final_loss</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span>
+
+<span class="nn">Cell In [38], line 28,</span> in <span class="ni">average_quantile_loss</span><span class="nt">(f, t, x)</span>
+<span class="g g-Whitespace">     </span><span class="mi">25</span> <span class="n">tau</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># last column is tau.</span>
+<span class="g g-Whitespace">     </span><span class="mi">26</span> <span class="c1">#Eq (2)</span>
+<span class="g g-Whitespace">     </span><span class="mi">27</span> <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="n">f</span><span class="p">,</span> 
+<span class="ne">---&gt; </span><span class="mi">28</span>                               <span class="n">tau</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="n">f</span><span class="p">),</span> 
+<span class="g g-Whitespace">     </span><span class="mi">29</span>                               <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">tau</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">f</span> <span class="o">-</span> <span class="n">t</span><span class="p">)))</span>
+
+<span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#make sure you have plotly installed</span>
-<span class="n">optuna</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">plot_param_importances</span><span class="p">(</span><span class="n">study</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#make sure you have plotly installed with jupyterlab support. For jupyterlab3.x:</span>
+<span class="c1"># conda install &quot;jupyterlab&gt;=3&quot; &quot;ipywidgets&gt;=7.6&quot;</span>
+
+<span class="c1"># for JupyterLab 2.x renderer support:</span>
+<span class="c1"># jupyter labextension install jupyterlab-plotly@5.11.0 @jupyter-widgets/jupyterlab-manager</span>
+<span class="c1">#conda install -c plotly plotly=5.11.0</span>
+<span class="kn">from</span> <span class="nn">optuna</span> <span class="kn">import</span> <span class="n">visualization</span>
+
+<span class="n">visualization</span><span class="o">.</span><span class="n">plot_param_importances</span><span class="p">(</span><span class="n">study</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2787,9 +3020,10 @@ best model parameters {&#39;nlayers&#39;: 2, &#39;hidden_size&#39;: 16, &#39;dro
 <span class="n">The</span> <span class="n">above</span> <span class="n">exception</span> <span class="n">was</span> <span class="n">the</span> <span class="n">direct</span> <span class="n">cause</span> <span class="n">of</span> <span class="n">the</span> <span class="n">following</span> <span class="n">exception</span><span class="p">:</span>
 
 <span class="ne">ImportError</span><span class="g g-Whitespace">                               </span>Traceback (most recent call last)
-<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_78123</span><span class="o">/</span><span class="mf">937927330.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1">#make sure you have plotly installed</span>
-<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">optuna</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">plot_param_importances</span><span class="p">(</span><span class="n">study</span><span class="p">)</span>
+<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_797645</span><span class="o">/</span><span class="mf">859914537.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="kn">from</span> <span class="nn">optuna</span> <span class="kn">import</span> <span class="n">visualization</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span> 
+<span class="ne">----&gt; </span><span class="mi">9</span> <span class="n">visualization</span><span class="o">.</span><span class="n">plot_param_importances</span><span class="p">(</span><span class="n">study</span><span class="p">)</span>
 
 <span class="nn">~/anaconda3/lib/python3.7/site-packages/optuna/visualization/_param_importances.py</span> in <span class="ni">plot_param_importances</span><span class="nt">(study, evaluator, params, target, target_name)</span>
 <span class="g g-Whitespace">     </span><span class="mi">93</span>     <span class="s2">&quot;&quot;&quot;</span>
@@ -2817,6 +3051,9 @@ best model parameters {&#39;nlayers&#39;: 2, &#39;hidden_size&#39;: 16, &#39;dro
 </div>
 </div>
 </div>
+<hr class="docutils" />
+<hr class="docutils" />
+<hr class="docutils" />
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># BEST_PARAMS = {&#39;nlayers&#39;: 6, &#39;hidden_size&#39;: 2, &#39;dropout&#39;: 0.40716885971031636, &#39;optimizer_name&#39;: &#39;Adam&#39;, &#39;learning_rate&#39;: 0.005215585403055171, &#39;batch_size&#39;: 1983}</span>
@@ -2829,8 +3066,7 @@ best model parameters {&#39;nlayers&#39;: 2, &#39;hidden_size&#39;: 16, &#39;dro
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># def get_model_params_tuned()</span>
 
 <span class="n">tuned_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span><span class="s1">&#39;best_params&#39;</span><span class="p">)</span>
-
-<span class="n">tuned_filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tuned_dir</span><span class="p">,</span><span class="s1">&#39;best_params_Test_Trials.csv&#39;</span><span class="p">)</span>
+<span class="n">tuned_filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tuned_dir</span><span class="p">,</span><span class="s1">&#39;best_params_mass.csv&#39;</span><span class="p">)</span>
 <span class="c1"># BEST_PARAMS = pd.read_csv(os.path.join(IQN_BASE, &#39;best_params&#39;,&#39;best_params_Test_Trials.csv&#39;))</span>
 <span class="n">BEST_PARAMS</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">tuned_filename</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">BEST_PARAMS</span><span class="p">)</span>
@@ -2847,10 +3083,10 @@ best model parameters {&#39;nlayers&#39;: 2, &#39;hidden_size&#39;: 16, &#39;dro
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   Unnamed: 0  n_layers  hidden_size   dropout optimizer_name  learning_rate  \
-0           0         4           12  0.465772        RMSprop       0.007149   
+0           0         1            5  0.141347            SGD       0.003165   
 
    batch_size  momentum  
-0        2805  0.834451  
+0        2948  0.369386  
 &lt;class &#39;pandas.core.series.Series&#39;&gt;
 </pre></div>
 </div>
@@ -2861,7 +3097,7 @@ best model parameters {&#39;nlayers&#39;: 2, &#39;hidden_size&#39;: 16, &#39;dro
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">NFEATURES</span><span class="o">=</span><span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
 <span class="k">def</span> <span class="nf">load_untrained_model</span><span class="p">():</span>
-    <span class="n">model</span><span class="o">=</span><span class="n">RegularizedRegressionModel</span><span class="p">(</span><span class="n">nfeatures</span><span class="o">=</span><span class="n">NFEATURES</span><span class="p">,</span> <span class="n">ntargets</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">TrainingRegularizedRegressionModel</span><span class="p">(</span><span class="n">nfeatures</span><span class="o">=</span><span class="n">NFEATURES</span><span class="p">,</span> <span class="n">ntargets</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                                <span class="n">nlayers</span><span class="o">=</span><span class="n">n_layers</span><span class="p">,</span> <span class="n">hidden_size</span><span class="o">=</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">dropout</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">model</span>
@@ -2873,20 +3109,14 @@ best model parameters {&#39;nlayers&#39;: 2, &#39;hidden_size&#39;: 16, &#39;dro
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RegularizedRegressionModel(
   (model): Sequential(
-    (0): Linear(in_features=5, out_features=12, bias=True)
-    (1): BatchNorm1d(12, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    (2): Dropout(p=0.4657721482261096, inplace=False)
-    (3): LeakyReLU(negative_slope=0.01)
-    (4): Linear(in_features=12, out_features=12, bias=True)
-    (5): BatchNorm1d(12, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (0): Linear(in_features=5, out_features=20, bias=True)
+    (1): Dropout(p=0.141346858975224, inplace=False)
+    (2): LeakyReLU(negative_slope=0.01)
+    (3): Linear(in_features=20, out_features=20, bias=True)
+    (4): LeakyReLU(negative_slope=0.01)
+    (5): Linear(in_features=20, out_features=20, bias=True)
     (6): LeakyReLU(negative_slope=0.01)
-    (7): Linear(in_features=12, out_features=12, bias=True)
-    (8): BatchNorm1d(12, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    (9): LeakyReLU(negative_slope=0.01)
-    (10): Linear(in_features=12, out_features=12, bias=True)
-    (11): BatchNorm1d(12, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    (12): LeakyReLU(negative_slope=0.01)
-    (13): Linear(in_features=12, out_features=1, bias=True)
+    (7): Linear(in_features=20, out_features=1, bias=True)
   )
 )
 </pre></div>
@@ -2897,7 +3127,7 @@ best model parameters {&#39;nlayers&#39;: 2, &#39;hidden_size&#39;: 16, &#39;dro
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># optimizer_name =  &#39;Adam&#39;</span>
 <span class="n">best_learning_rate</span> <span class="o">=</span>  <span class="nb">float</span><span class="p">(</span><span class="n">BEST_PARAMS</span><span class="p">[</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">])</span>
-<span class="n">momentum</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">BEST_PARAMS</span><span class="p">[</span><span class="s2">&quot;momentum&quot;</span><span class="p">])</span>
+<span class="n">momentum</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">BEST_PARAMS</span><span class="p">[</span><span class="s2">&quot;momentum&quot;</span><span class="p">])</span> 
 <span class="n">best_optimizer_temp</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="p">,</span> <span class="n">optimizer_name</span><span class="p">)(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">best_learning_rate</span><span class="p">,</span><span class="n">momentum</span><span class="o">=</span><span class="n">momentum</span><span class="p">)</span>
 <span class="n">batch_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">BEST_PARAMS</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">])</span>
 </pre></div>
@@ -2911,41 +3141,14 @@ best model parameters {&#39;nlayers&#39;: 2, &#39;hidden_size&#39;: 16, &#39;dro
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RMSprop (
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SGD (
 Parameter Group 0
-    alpha: 0.99
-    centered: False
-    eps: 1e-08
-    lr: 0.007148721153274
-    momentum: 0.8344506124273587
+    dampening: 0
+    lr: 0.0031645926758082
+    momentum: 0.7387727733031814
+    nesterov: False
     weight_decay: 0
 )
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@debug</span>
-<span class="k">def</span> <span class="nf">get_model_params_simple</span><span class="p">():</span>
-    <span class="n">dropout</span><span class="o">=</span><span class="mf">0.2</span>
-    <span class="n">n_layers</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">n_hidden</span><span class="o">=</span><span class="mi">32</span>
-    <span class="n">starting_learning_rate</span><span class="o">=</span><span class="mf">1e-3</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;n_iterations, n_layers, n_hidden, starting_learning_rate, dropout&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">n_iterations</span><span class="p">,</span> <span class="n">n_layers</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">,</span> <span class="n">starting_learning_rate</span><span class="p">,</span> <span class="n">dropout</span>
-
-<span class="n">get_model_params_simple</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Calling get_model_params_simple()
-n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
-&#39;get_model_params_simple&#39; returned (10000, 2, 32, 0.001, 0.2)
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(10000, 2, 32, 0.001, 0.2)
 </pre></div>
 </div>
 </div>
@@ -2955,7 +3158,7 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># BATCHSIZE=10000</span>
-<span class="n">BATCHSIZE</span><span class="o">=</span><span class="n">batch_size</span>
+<span class="n">BATCHSIZE</span><span class="o">=</span><span class="n">batch_size</span> <span class="o">*</span> <span class="mi">2</span>
 <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">avloss</span><span class="p">,</span> <span class="n">getbatch</span><span class="p">,</span>
           <span class="n">train_x</span><span class="p">,</span> <span class="n">train_t</span><span class="p">,</span> 
           <span class="n">valid_x</span><span class="p">,</span> <span class="n">valid_t</span><span class="p">,</span>
@@ -2970,7 +3173,7 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
     
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Iteration vs average loss&#39;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%10s</span><span class="se">\t</span><span class="si">%10s</span><span class="se">\t</span><span class="si">%10s</span><span class="s2">&quot;</span> <span class="o">%</span> \
-          <span class="p">(</span><span class="s1">&#39;iteration&#39;</span><span class="p">,</span> <span class="s1">&#39;train-set&#39;</span><span class="p">,</span> <span class="s1">&#39;valid-set&#39;</span><span class="p">))</span>
+          <span class="p">(</span><span class="s1">&#39;iteration&#39;</span><span class="p">,</span> <span class="s1">&#39;train-set&#39;</span><span class="p">,</span> <span class="s1">&#39;test-set&#39;</span><span class="p">))</span>
     
     <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iterations</span><span class="p">):</span>
 
@@ -3012,6 +3215,8 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
         <span class="c1"># descent, using the noisy local gradient. </span>
         <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>            <span class="c1"># move one step</span>
         
+        <span class="c1">#add early stopping when the model starts to overfit, as determined by performance on</span>
+        <span class="c1">#valid set (when valid loss plateaus or starts increasing when train loss keeps decreasing)</span>
         <span class="k">if</span> <span class="n">ii</span> <span class="o">%</span> <span class="n">step</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             
             <span class="n">acc_t</span> <span class="o">=</span> <span class="n">validate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">avloss</span><span class="p">,</span> <span class="n">train_x</span><span class="p">[:</span><span class="n">n</span><span class="p">],</span> <span class="n">train_t</span><span class="p">[:</span><span class="n">n</span><span class="p">])</span> 
@@ -3045,7 +3250,7 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
     <span class="k">return</span> <span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy_t</span><span class="p">,</span> <span class="n">yy_v</span><span class="p">,</span> <span class="n">yy_v_avg</span><span class="p">)</span>
 
 
-<span class="c1"># @time_type_of_func(tuning_or_training=&#39;training&#39;)</span>
+<span class="nd">@time_type_of_func</span><span class="p">(</span><span class="n">tuning_or_training</span><span class="o">=</span><span class="s1">&#39;training&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> 
         <span class="n">train_x</span><span class="p">,</span> <span class="n">train_t</span><span class="p">,</span> 
         <span class="n">valid_x</span><span class="p">,</span> <span class="n">valid_t</span><span class="p">,</span> <span class="n">traces</span><span class="p">,</span>
@@ -3056,10 +3261,10 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
         <span class="n">save_model</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
     <span class="n">learning_rate</span><span class="o">=</span> <span class="n">best_learning_rate</span>
-    <span class="c1">#add weight decay</span>
+    <span class="c1">#add weight decay (important regularization to reduce overfitting)</span>
     <span class="n">L2</span><span class="o">=</span><span class="mf">1e-3</span>
     <span class="c1"># optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=L2)</span>
-    <span class="n">optimizer</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="p">,</span> <span class="n">optimizer_name</span><span class="p">)(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">best_learning_rate</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="n">momentum</span><span class="p">)</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="p">,</span> <span class="n">optimizer_name</span><span class="p">)(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">best_learning_rate</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="n">momentum</span><span class="p">,</span> <span class="n">weight_decay</span><span class="o">=</span><span class="n">L2</span><span class="p">)</span>
     
     <span class="c1">#starting at 10^-3	    </span>
     <span class="n">traces</span> <span class="o">=</span> <span class="n">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> 
@@ -3074,8 +3279,8 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
                   <span class="n">window</span><span class="o">=</span><span class="n">traces_window</span><span class="p">)</span>
     
     <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="o">/</span><span class="mi">100</span>
-    <span class="c1"># optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate) </span>
-    <span class="c1"># #10^-4</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="p">,</span> <span class="n">optimizer_name</span><span class="p">)(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">best_learning_rate</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="n">momentum</span><span class="p">)</span>
+    <span class="c1">#10^-4</span>
     <span class="n">traces</span> <span class="o">=</span> <span class="n">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> 
                       <span class="n">average_quantile_loss</span><span class="p">,</span>
                       <span class="n">get_batch</span><span class="p">,</span>
@@ -3088,19 +3293,19 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
                   <span class="n">window</span><span class="o">=</span><span class="n">traces_window</span><span class="p">)</span>
 
 
-    <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="o">/</span><span class="mi">100</span>
-    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span> 
-    <span class="c1">#10^-6</span>
-    <span class="n">traces</span> <span class="o">=</span> <span class="n">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> 
-                      <span class="n">average_quantile_loss</span><span class="p">,</span>
-                      <span class="n">get_batch</span><span class="p">,</span>
-                      <span class="n">train_x</span><span class="p">,</span> <span class="n">train_t</span><span class="p">,</span> 
-                      <span class="n">valid_x</span><span class="p">,</span> <span class="n">valid_t</span><span class="p">,</span>
-                      <span class="n">n_batch</span><span class="p">,</span> 
-                  <span class="n">n_iterations</span><span class="p">,</span>
-                  <span class="n">traces</span><span class="p">,</span>
-                  <span class="n">step</span><span class="o">=</span><span class="n">traces_step</span><span class="p">,</span> 
-                  <span class="n">window</span><span class="o">=</span><span class="n">traces_window</span><span class="p">)</span>
+<span class="c1">#     learning_rate=learning_rate/100</span>
+<span class="c1">#     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate) </span>
+<span class="c1">#     #10^-6</span>
+<span class="c1">#     traces = train(model, optimizer, </span>
+<span class="c1">#                       average_quantile_loss,</span>
+<span class="c1">#                       get_batch,</span>
+<span class="c1">#                       train_x, train_t, </span>
+<span class="c1">#                       valid_x, valid_t,</span>
+<span class="c1">#                       n_batch, </span>
+<span class="c1">#                   n_iterations,</span>
+<span class="c1">#                   traces,</span>
+<span class="c1">#                   step=traces_step, </span>
+<span class="c1">#                   window=traces_window)</span>
 
     <span class="c1"># plot_average_loss(traces)</span>
 
@@ -3123,25 +3328,24 @@ n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">IQN_trace</span><span class="o">=</span><span class="p">([],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[])</span>
 <span class="n">traces_step</span> <span class="o">=</span> <span class="mi">800</span>
 <span class="n">traces_window</span><span class="o">=</span><span class="n">traces_step</span>
-<span class="n">n_iterations</span><span class="o">=</span><span class="mi">10000</span>
+<span class="n">n_iterations</span><span class="o">=</span><span class="mi">100000</span>
 <span class="n">IQN</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span><span class="n">train_x</span><span class="o">=</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_t</span><span class="o">=</span><span class="n">train_t_ratio</span><span class="p">,</span> 
-        <span class="n">valid_x</span><span class="o">=</span><span class="n">valid_x</span><span class="p">,</span> <span class="n">valid_t</span><span class="o">=</span><span class="n">valid_t_ratio</span><span class="p">,</span> <span class="n">traces</span><span class="o">=</span><span class="n">IQN_trace</span><span class="p">,</span> <span class="n">n_batch</span><span class="o">=</span><span class="n">BATCHSIZE</span><span class="p">,</span> 
+        <span class="n">valid_x</span><span class="o">=</span><span class="n">test_x</span><span class="p">,</span> <span class="n">valid_t</span><span class="o">=</span><span class="n">test_t_ratio</span><span class="p">,</span> <span class="n">traces</span><span class="o">=</span><span class="n">IQN_trace</span><span class="p">,</span> <span class="n">n_batch</span><span class="o">=</span><span class="n">BATCHSIZE</span><span class="p">,</span> 
         <span class="n">n_iterations</span><span class="o">=</span><span class="n">n_iterations</span><span class="p">,</span> <span class="n">traces_step</span><span class="o">=</span><span class="n">traces_step</span><span class="p">,</span> <span class="n">traces_window</span><span class="o">=</span><span class="n">traces_window</span><span class="p">,</span>
         <span class="n">save_model</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration vs average loss
- iteration	 train-set	 valid-set
-         0	  0.310763	  0.344909
-      9600	  0.274990	  0.325370	  0.325370
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>training IQN to estimate RecoDatam
 Iteration vs average loss
- iteration	 train-set	 valid-set
-     20000	  0.272158	  0.326502	  0.326502
+ iteration	 train-set	  test-set
+         0	  0.383932	  0.383932
+     99200	  0.273795	  0.273795	  0.273795
 Iteration vs average loss
- iteration	 train-set	 valid-set
-     30400	  0.270424	  0.325835	  0.325835
+ iteration	 train-set	  test-set
+    199200	  0.273961	  0.273961	  0.273961
+training target RecoDatam using &#39;run&#39; in 614.7817 secs
 </pre></div>
 </div>
 </div>
@@ -3196,42 +3400,30 @@ Iteration vs average loss
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Calling save_model(RegularizedRegressionModel(
   (model): Sequential(
-    (0): Linear(in_features=5, out_features=12, bias=True)
-    (1): BatchNorm1d(12, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    (2): Dropout(p=0.4657721482261096, inplace=False)
-    (3): LeakyReLU(negative_slope=0.01)
-    (4): Linear(in_features=12, out_features=12, bias=True)
-    (5): BatchNorm1d(12, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (0): Linear(in_features=5, out_features=20, bias=True)
+    (1): Dropout(p=0.141346858975224, inplace=False)
+    (2): LeakyReLU(negative_slope=0.01)
+    (3): Linear(in_features=20, out_features=20, bias=True)
+    (4): LeakyReLU(negative_slope=0.01)
+    (5): Linear(in_features=20, out_features=20, bias=True)
     (6): LeakyReLU(negative_slope=0.01)
-    (7): Linear(in_features=12, out_features=12, bias=True)
-    (8): BatchNorm1d(12, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    (9): LeakyReLU(negative_slope=0.01)
-    (10): Linear(in_features=12, out_features=12, bias=True)
-    (11): BatchNorm1d(12, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    (12): LeakyReLU(negative_slope=0.01)
-    (13): Linear(in_features=12, out_features=1, bias=True)
+    (7): Linear(in_features=20, out_features=1, bias=True)
   )
 ))
 RegularizedRegressionModel(
   (model): Sequential(
-    (0): Linear(in_features=5, out_features=12, bias=True)
-    (1): BatchNorm1d(12, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    (2): Dropout(p=0.4657721482261096, inplace=False)
-    (3): LeakyReLU(negative_slope=0.01)
-    (4): Linear(in_features=12, out_features=12, bias=True)
-    (5): BatchNorm1d(12, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (0): Linear(in_features=5, out_features=20, bias=True)
+    (1): Dropout(p=0.141346858975224, inplace=False)
+    (2): LeakyReLU(negative_slope=0.01)
+    (3): Linear(in_features=20, out_features=20, bias=True)
+    (4): LeakyReLU(negative_slope=0.01)
+    (5): Linear(in_features=20, out_features=20, bias=True)
     (6): LeakyReLU(negative_slope=0.01)
-    (7): Linear(in_features=12, out_features=12, bias=True)
-    (8): BatchNorm1d(12, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    (9): LeakyReLU(negative_slope=0.01)
-    (10): Linear(in_features=12, out_features=12, bias=True)
-    (11): BatchNorm1d(12, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    (12): LeakyReLU(negative_slope=0.01)
-    (13): Linear(in_features=12, out_features=1, bias=True)
+    (7): Linear(in_features=20, out_features=1, bias=True)
   )
 )
 
-trained model dictionary saved in /home/ali/Desktop/Pulled_Github_Repositories/torchQN/trained_models/Trained_IQNx4_RecoDatam_10K_iter.dict
+trained model dictionary saved in /home/ali/Desktop/Pulled_Github_Repositories/torchQN/trained_models/Trained_IQNx4_RecoDatam_100K_iter.dict
 &#39;save_model&#39; returned None
 </pre></div>
 </div>
@@ -3246,20 +3438,14 @@ trained model dictionary saved in /home/ali/Desktop/Pulled_Github_Repositories/t
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RegularizedRegressionModel(
   (model): Sequential(
-    (0): Linear(in_features=5, out_features=12, bias=True)
-    (1): BatchNorm1d(12, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    (2): Dropout(p=0.4657721482261096, inplace=False)
-    (3): LeakyReLU(negative_slope=0.01)
-    (4): Linear(in_features=12, out_features=12, bias=True)
-    (5): BatchNorm1d(12, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (0): Linear(in_features=5, out_features=20, bias=True)
+    (1): Dropout(p=0.141346858975224, inplace=False)
+    (2): LeakyReLU(negative_slope=0.01)
+    (3): Linear(in_features=20, out_features=20, bias=True)
+    (4): LeakyReLU(negative_slope=0.01)
+    (5): Linear(in_features=20, out_features=20, bias=True)
     (6): LeakyReLU(negative_slope=0.01)
-    (7): Linear(in_features=12, out_features=12, bias=True)
-    (8): BatchNorm1d(12, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    (9): LeakyReLU(negative_slope=0.01)
-    (10): Linear(in_features=12, out_features=12, bias=True)
-    (11): BatchNorm1d(12, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    (12): LeakyReLU(negative_slope=0.01)
-    (13): Linear(in_features=12, out_features=1, bias=True)
+    (7): Linear(in_features=20, out_features=1, bias=True)
   )
 )
 </pre></div>
@@ -3276,7 +3462,7 @@ trained model dictionary saved in /home/ali/Desktop/Pulled_Github_Repositories/t
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_100_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_100_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_105_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_105_0.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -3291,7 +3477,7 @@ trained model dictionary saved in /home/ali/Desktop/Pulled_Github_Repositories/t
     <span class="n">orig_ratio</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span><span class="n">T</span><span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="n">scaled_df</span><span class="o">=</span><span class="n">train_data_m</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">orig_ratio</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">orig_ratio</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;original post-z ratio for </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span><span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
     <span class="n">set_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;predicted $T$&#39;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;predicted ratio shape: &#39;</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">p</span>
@@ -3311,7 +3497,7 @@ dtype: float64
 predicted ratio shape:  (1000000, 1)
 </pre></div>
 </div>
-<img alt="_images/Braden_Scaling_TrainEval_Mass_101_2.svg" src="_images/Braden_Scaling_TrainEval_Mass_101_2.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_106_2.svg" src="_images/Braden_Scaling_TrainEval_Mass_106_2.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -3371,150 +3557,14 @@ predicted ratio shape:  (1000000, 1)
                      <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span>
                      <span class="p">)</span>
 <span class="n">raw_test_data</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>genDatapT</th>
-      <th>genDataeta</th>
-      <th>genDataphi</th>
-      <th>genDatam</th>
-      <th>RecoDatapT</th>
-      <th>RecoDataeta</th>
-      <th>RecoDataphi</th>
-      <th>RecoDatam</th>
-      <th>tau</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>count</th>
-      <td>1000000.000000</td>
-      <td>1000000.000000</td>
-      <td>1000000.000000</td>
-      <td>1000000.000000</td>
-      <td>1000000.000000</td>
-      <td>1000000.000000</td>
-      <td>1000000.000000</td>
-      <td>1000000.000000</td>
-      <td>1.000000e+06</td>
-    </tr>
-    <tr>
-      <th>mean</th>
-      <td>32.665481</td>
-      <td>0.002822</td>
-      <td>-0.000512</td>
-      <td>6.957271</td>
-      <td>32.849094</td>
-      <td>0.002815</td>
-      <td>-0.000550</td>
-      <td>5.554067</td>
-      <td>4.997935e-01</td>
-    </tr>
-    <tr>
-      <th>std</th>
-      <td>14.746671</td>
-      <td>2.202514</td>
-      <td>1.814159</td>
-      <td>2.765754</td>
-      <td>15.617181</td>
-      <td>2.196167</td>
-      <td>1.814699</td>
-      <td>2.644894</td>
-      <td>2.888304e-01</td>
-    </tr>
-    <tr>
-      <th>min</th>
-      <td>20.000000</td>
-      <td>-5.159990</td>
-      <td>-3.141590</td>
-      <td>-0.000566</td>
-      <td>11.475300</td>
-      <td>-4.999270</td>
-      <td>-3.477685</td>
-      <td>-0.000061</td>
-      <td>2.595965e-07</td>
-    </tr>
-    <tr>
-      <th>25%</th>
-      <td>23.759175</td>
-      <td>-1.648685</td>
-      <td>-1.571470</td>
-      <td>5.111978</td>
-      <td>23.489400</td>
-      <td>-1.644865</td>
-      <td>-1.571400</td>
-      <td>3.806208</td>
-      <td>2.496069e-01</td>
-    </tr>
-    <tr>
-      <th>50%</th>
-      <td>28.395500</td>
-      <td>0.000701</td>
-      <td>-0.001251</td>
-      <td>6.532905</td>
-      <td>28.992800</td>
-      <td>0.001701</td>
-      <td>-0.000872</td>
-      <td>5.119875</td>
-      <td>4.996784e-01</td>
-    </tr>
-    <tr>
-      <th>75%</th>
-      <td>36.294825</td>
-      <td>1.654850</td>
-      <td>1.571060</td>
-      <td>8.277790</td>
-      <td>37.563675</td>
-      <td>1.651652</td>
-      <td>1.570125</td>
-      <td>6.775580</td>
-      <td>7.503565e-01</td>
-    </tr>
-    <tr>
-      <th>max</th>
-      <td>553.745000</td>
-      <td>5.143080</td>
-      <td>3.141590</td>
-      <td>77.079700</td>
-      <td>516.104000</td>
-      <td>5.005660</td>
-      <td>3.478095</td>
-      <td>75.951300</td>
-      <td>9.999998e-01</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m_reco</span> <span class="o">=</span> <span class="n">raw_test_data</span><span class="p">[</span><span class="s1">&#39;RecoDatam&#39;</span><span class="p">]</span>
+<span class="n">m_reco</span> <span class="o">=</span> <span class="n">raw_test_data</span><span class="p">[</span><span class="s1">&#39;RecoDatam&#39;</span><span class="p">]</span>
 <span class="n">m_gen</span> <span class="o">=</span> <span class="n">raw_test_data</span><span class="p">[</span><span class="s1">&#39;genDatam&#39;</span><span class="p">]</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">m_reco</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$m_</span><span class="si">{gen}</span><span class="s1">^{test \ data}$&#39;</span><span class="p">);</span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_108_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_108_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_112_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_112_0.svg" /></div>
 </div>
 <p>Apply the descaling formula for our observable</p>
 <div class="math notranslate nohighlight">
@@ -3562,11 +3612,11 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[0.9923062 ],
-       [1.0030547 ],
-       [0.9913265 ],
-       [0.98035794],
-       [0.9936841 ]], dtype=float32)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[1.010673  ],
+       [1.0099984 ],
+       [0.98119617],
+       [0.97980946],
+       [0.98448396]], dtype=float32)
 </pre></div>
 </div>
 </div>
@@ -3624,7 +3674,7 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1.97817135, 2.10791776, 2.13587847, 2.04528088, 1.89612586])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([2.19987869, 2.1917355 , 2.01186217, 2.03854189, 1.78598401])
 </pre></div>
 </div>
 </div>
@@ -3644,8 +3694,8 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([5.22951068, 6.23108431, 6.46447902, ..., 6.35655793, 3.65776634,
-       6.26889852])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([7.02391872, 6.95073361, 5.47722825, ..., 2.41978714, 3.13010808,
+       5.48240938])
 </pre></div>
 </div>
 </div>
@@ -3660,7 +3710,7 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_121_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_121_0.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_125_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_125_0.svg" /></div>
 </div>
 <hr class="docutils" />
 <section id="paper-plotting">
@@ -3763,7 +3813,7 @@ norm_autoregressive 1000000
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/Braden_Scaling_TrainEval_Mass_127_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_127_0.svg" /><img alt="_images/Braden_Scaling_TrainEval_Mass_127_1.svg" src="_images/Braden_Scaling_TrainEval_Mass_127_1.svg" /></div>
+<img alt="_images/Braden_Scaling_TrainEval_Mass_131_0.svg" src="_images/Braden_Scaling_TrainEval_Mass_131_0.svg" /></div>
 </div>
 <hr class="docutils" />
 <hr class="docutils" />
