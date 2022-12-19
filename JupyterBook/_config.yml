@@ -14,6 +14,9 @@ execute:
   stderr_output             : remove-warn  # One of 'show', 'remove', 'remove-warn', 'warn', 'error', 'severe'
 
 #######################################################################################
+launch_buttons:
+  binderhub_url: "https://mybinder.org"  # The URL for your BinderHub (e.g., https://mybinder.org)
+
 
 #############add sphinx
 sphinx:
