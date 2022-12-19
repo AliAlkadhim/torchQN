@@ -1,3 +1,5 @@
+# TUNE MASS HYPERPARAMETERS ON CLUSTER
+
 import numpy as np; import pandas as pd
 import scipy as sp; import scipy.stats as st
 import torch; import torch.nn as nn; print(f"using torch version {torch.__version__}")
