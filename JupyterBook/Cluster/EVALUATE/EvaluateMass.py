@@ -367,8 +367,8 @@ def simple_eval(model):
     
 # def main():
 
-n_iterations=int(4e3)
-PARAMS = {'n_layers':5, 'hidden_size':50, 'dropout':0.25, 'optimizer_name':'Adam', }
+n_iterations=int(1e4)
+PARAMS = {'n_layers':int(5), 'hidden_size':int(50), 'dropout':float(0.25), 'optimizer_name':'Adam', }
 TRAIN_SCALE_DICT = get_scaling_info(scaled_train_data);print(TRAIN_SCALE_DICT)
 print('\n\n')
 TEST_SCALE_DICT = get_scaling_info(scaled_test_data);print(TEST_SCALE_DICT)

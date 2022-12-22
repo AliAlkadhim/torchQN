@@ -398,13 +398,13 @@ def split_t_x(df, target, input_features):
     """ Get teh target as the ratio, according to the T equation"""
     
     if target=='RecoDatam':
-        t = T('m', scaled_df=train_data_m)
+        t = T('m', scaled_df=scaled_train_data)
     if target=='RecoDatapT':
-        t = T('pT', scaled_df=train_data_m)
+        t = T('pT', scaled_df=scaled_train_data)
     if target=='RecoDataeta':
-        t = T('eta', scaled_df=train_data_m)
+        t = T('eta', scaled_df=scaled_train_data)
     if target=='RecoDataphi':
-        t = T('phi', scaled_df=train_data_m)
+        t = T('phi', scaled_df=scaled_train_data)
     x = np.array(df[input_features])
     return np.array(t), x
 
@@ -512,35 +512,31 @@ print(train_t_ratio.mean(), train_t_ratio.std())
 #BEST_PARAMS=pd.read_csv(tuned_filename)
 #print(BEST_PARAMS)
 
+
 n_layers =5# int(BEST_PARAMS["n_layers"]) 
 hidden_size = 50 #int(BEST_PARAMS["hidden_size"])
 dropout = 0.25 #float(BEST_PARAMS["dropout"])s
-
-optimizer_name ='SGD' #BEST_PARAMS["optimizer_name"]
+optimizer_name ='Adam' #BEST_PARAMS["optimizer_name"]
 print(type(optimizer_name))
 #optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
-
-def load_untrained_model():
+def load_untrained_model(PARAMS):
     model=RegularizedRegressionModel(nfeatures=NFEATURES, ntargets=1,
-                               nlayers=n_layers, hidden_size=hidden_size, dropout=dropout)
+                               nlayers=PARAMS['n_layers'], hidden_size=PARAMS['hidden_size'], dropout=PARAMS['dropout'])
+    # model.apply(initialize_weights)
     print(model)
     return model
 
-
-
-
 # optimizer_name =  'Adam'
 best_learning_rate =  3e-03 #float(BEST_PARAMS["learning_rate"])
-momentum=0.39 #float(BEST_PARAMS["momentum"]) 
+momentum=0.5 #float(BEST_PARAMS["momentum"]) 
 # best_optimizer_temp = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate,
 #                                                            momentum=momentum,
 #                                                           amsgrad=True  )
-batch_size = 2948 #int(BEST_PARAMS["batch_size"])
-
+batch_size = 512 #int(BEST_PARAMS["batch_size"])
 # BATCHSIZE=10000
 BATCHSIZE=batch_size 
 # n_iterations=int(1e7)
-n_iterations=int(4e3)
+n_iterations=int(1e4)
 
 def train(model, optimizer, avloss, getbatch,
           train_x, train_t, 
@@ -644,8 +640,8 @@ def run(model,
     #add weight decay (important regularization to reduce overfitting)
     L2=1e-4
     # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=L2)
-    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate,     
-                                                    #  amsgrad=True,
+    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate,     
+                                                     amsgrad=True,
                                                     #  momentum=momentum, 
                                                     #  weight_decay=L2
                                                      )
@@ -663,8 +659,8 @@ def run(model,
                   window=traces_window)
     
     learning_rate=learning_rate/10
-    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate, 
-                                                    #  amsgrad=True,
+    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate, 
+                                                     amsgrad=True,
                                                     #  momentum=momentum
                                                      )
     #10^-4
@@ -681,8 +677,8 @@ def run(model,
 
 
     learning_rate=learning_rate/100
-    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate, 
-                                                    #  amsgrad=True,
+    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate, 
+                                                     amsgrad=True,
                                                     #  momentum=momentum
                                                      )
     #10^-6
@@ -749,7 +745,8 @@ def load_model(PATH):
     #N_epochs X N_train_examples = N_iterations X batch_size
 N_epochs = (n_iterations * BATCHSIZE)/int(train_x.shape[0])
 print(f'training for {n_iterations} iteration, which is  {N_epochs} epochs')
-model=load_untrained_model()
+PARAMS = {'n_layers':int(5), 'hidden_size':int(50), 'dropout':float(0.25), 'optimizer_name':'SGD', }
+model=load_untrained_model(PARAMS)
 IQN_trace=([], [], [], [])
 traces_step = 800
 traces_window=traces_step
