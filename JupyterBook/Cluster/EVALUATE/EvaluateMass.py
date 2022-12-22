@@ -283,39 +283,43 @@ def z(x):
 def z_inverse(xprime, x):
     return xprime * np.std(x) + np.mean(x)
 
-def apply_z_to_features():
-    """TO ensure this z scaling is only applied once to the training features, we use a generator """
+def z2(x, mean, std):
+    eps=1e-20
+    return (x - mean)/(std+ eps)
+def z_inverse(xprime, x):
+    return xprime * np.std(x) + np.mean(x)
+
+def z_inverse2(xprime, train_mean, train_std):
+    """mean original train mean, std: original. Probably not needed  """
+    return xprime * train_mean + train_std
+
+def apply_z_to_features(TRAIN_SCALE_DICT, train_x, test_x, valid_x):
+    """TO ensure this z scaling is only applied once to the training features, we use a generator. 
+    This doesn't change the shapes of anything, just applies z to all the feature columns other than tau"""
+    NFEATURES=train_x.shape[1]
     for i in range(NFEATURES-1):
-        train_x[:,i] = z(train_x[:,i])
-        test_x[:,i] = z(test_x[:,i])
-        valid_x[:,i] = z(valid_x[:,i])
+        variable = list(TRAIN_SCALE_DICT)[i]
+        train_mean = float(TRAIN_SCALE_DICT[variable]['mean'])
+        train_std = float(TRAIN_SCALE_DICT[variable]['std'])
+        train_x[:,i] = z2(train_x[:,i], mean = train_mean, std=train_std)
+        test_x[:,i] = z2(test_x[:,i], mean = train_mean, std=train_std)
+        valid_x[:,i] = z2(valid_x[:,i], mean = train_mean, std=train_std)
     yield train_x 
     yield test_x 
     yield valid_x
 
-def apply_z_to_targets():
-    train_t_ratio_ = z(train_t_ratio) 
-    test_t_ratio_ = z(test_t_ratio) 
-    valid_t_ratio_ = z(valid_t_ratio)
+
+def apply_z_to_targets(train_t_ratio, test_t_ratio, valid_t_ratio):
+    train_mean = np.mean(train_t_ratio)
+    train_std = np.std(train_t_ratio)
+    train_t_ratio_ = z2(train_t_ratio, mean = train_mean, std = train_std) 
+    test_t_ratio_ = z2(test_t_ratio, mean = train_mean, std = train_std) 
+    valid_t_ratio_ = z2(valid_t_ratio, mean = train_mean, std = train_std)
     
     yield train_t_ratio_
     yield test_t_ratio_
     yield valid_t_ratio_
     
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
 @debug
 def save_model(model, PATH):
     print(model)
@@ -363,24 +367,28 @@ def simple_eval(model):
     
 # def main():
 
-n_iterations=int(3e4)
-PARAMS = {'n_layers':1, 'hidden_size':64, 'dropout':0.25, 'optimizer_name':'Adam', }
-
+n_iterations=int(4e3)
+PARAMS = {'n_layers':5, 'hidden_size':50, 'dropout':0.25, 'optimizer_name':'Adam', }
+TRAIN_SCALE_DICT = get_scaling_info(scaled_train_data);print(TRAIN_SCALE_DICT)
+print('\n\n')
+TEST_SCALE_DICT = get_scaling_info(scaled_test_data);print(TEST_SCALE_DICT)
 NFEATURES=train_x.shape[1]
 # to features
-apply_z_generator = apply_z_to_features()
+apply_z_generator = apply_z_to_features(TRAIN_SCALE_DICT, train_x, test_x, valid_x)
 train_x = next(apply_z_generator)
 test_x = next(apply_z_generator)
 valid_x = next(apply_z_generator)
 print(valid_x.mean(axis=0), valid_x.std(axis=0))
 print(train_x.mean(axis=0), train_x.std(axis=0))
 #to targets
-apply_z_to_targets_generator = apply_z_to_targets()
+apply_z_to_targets_generator = apply_z_to_targets(train_t_ratio, test_t_ratio, valid_t_ratio)
 train_t_ratio = next(apply_z_to_targets_generator)
 test_t_ratio = next(apply_z_to_targets_generator)
 valid_t_ratio = next(apply_z_to_targets_generator)
 print(valid_t_ratio.mean(), valid_t_ratio.std())
 print(train_t_ratio.mean(), train_t_ratio.std())
+
+
 filename='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
 # filename='Trained_IQNx4_RecoDatam_10K_iter.dict'
 # print(f'model file name: {filename}')
@@ -399,6 +407,7 @@ p = simple_eval(IQN_m)
 
 def z_inverse(xprime, mean, std):
     return xprime * std + mean
+
 raw_train_data=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
                       usecols=all_cols,
                       nrows=SUBSAMPLE

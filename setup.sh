@@ -10,4 +10,4 @@ ls -l $DATA_DIR
 #conda create env -n torch_env -f torch_env.yml
 #conda activate torch_env
 mkdir -p ${IQN_BASE}/images/loss_plots ${IQN_BASE}/trained_models  ${IQN_BASE}/hyperparameters ${IQN_BASE}/predicted_data
-tree $IQN_BASE
+#tree $IQN_BASE
