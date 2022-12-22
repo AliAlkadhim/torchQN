@@ -1,10 +1,9 @@
-# TUNE MASS HYPERPARAMETERS ON CLUSTER
 
 import numpy as np; import pandas as pd
-import scipy as sp; import scipy.stats as st
+# import scipy as sp; import scipy.stats as st
 import torch; import torch.nn as nn; print(f"using torch version {torch.__version__}")
 #use numba's just-in-time compiler to speed things up
-from numba import njit
+# from numba import njit
 from sklearn.preprocessing import StandardScaler; from sklearn.model_selection import train_test_split
 import matplotlib as mp; print('matplotlib version= ', mp.__version__)
 
@@ -17,10 +16,10 @@ plt.style.use('seaborn-deep')
 mp.rcParams['agg.path.chunksize'] = 10000
 font_legend = 15; font_axes=15
 # %matplotlib inline
-import copy; import sys; import os
+import sys; import os
 from IPython.display import Image, display
-from importlib import import_module
-
+# from importlib import import_module
+#import plotly
 try:
     import optuna
     print(f"using (optional) optuna version {optuna.__version__}")
@@ -30,27 +29,8 @@ except Exception:
 import argparse
 import time
 # import sympy as sy
-import ipywidgets as wid; 
+#import ipywidgets as wid; 
 
-# %%writefile setup.sh
-# #!/bin/bash
-# export IQN_BASE= $pwd #/home/ali/Desktop/Pulled_Github_Repositories/torchQN
-
-# #DAVIDSON
-# export DATA_DIR='/home/DAVIDSON/alalkadhim.visitor/IQN/DAVIDSON_NEW/data'
-# #LOCAL
-# export DATA_DIR='/home/ali/Desktop/Pulled_Github_Repositories/IQN_HEP/Davidson/data'
-# echo DATA DIR
-# ls -l $DATA_DIR
-# #ln -s $DATA_DIR $IQN_BASE, if you want
-# #conda create env -n torch_env -f torch_env.yml
-# conda activate torch_env
-# mkdir -p ${IQN_BASE}/images/loss_plots ${IQN_BASE}/trained_models  ${IQN_BASE}/hyperparameters ${IQN_BASE}/predicted_data
-# tree $IQN_BASE
-
-# env = {}
-# env.update(os.environ)
-# env.update(source(os.environ["IQN_BASE"])) 
 
 try:
     IQN_BASE = os.environ['IQN_BASE']
@@ -64,13 +44,14 @@ try:
     print('DATA directory also properly set, in %s' % os.environ['DATA_DIR'])
 except Exception:
     # IQN_BASE=os.getcwd()
-    print("""\nBASE directory not properly set. Read repo README.\
-    If you need a function from utils, use the decorator below, or add utils to sys.path\n
+    print("""\nBASE directory not properly set. Read repo README.    If you need a function from utils, use the decorator below, or add utils to sys.path\n
     You can also do 
     os.environ['IQN_BASE']=<ABSOLUTE PATH FOR THE IQN REPO>
     or
     os.environ['IQN_BASE']=os.getcwd()""")
     pass
+
+
 
 def show_jupyter_image(image_filename, width = 1300, height = 300):
     """Show a saved image directly in jupyter. Make sure image_filename is in your IQN_BASE !"""
@@ -151,6 +132,7 @@ def SourceIQN(func):
         func(*args, env=env)
     return _func
 
+
 def time_type_of_func(tuning_or_training, _func=None):
     def timer(func):
         """Print the runtime of the decorated function"""
@@ -177,7 +159,6 @@ def time_type_of_func(tuning_or_training, _func=None):
     else:
         return timer(_func)
 
-
 def debug(func):
     """Print the function signature and return value"""
     import functools
@@ -193,9 +174,20 @@ def debug(func):
     return wrapper_debug
 
 
-from IPython.core.magic import register_cell_magic
+def make_interactive(func):
+    """ make the plot interactive"""
+    import functools
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        plt.ion()
+        output=func(*args, **kwargs)
+        plt.ioff()
+        return output
+    return wrapper
+        
+# from IPython.core.magic import register_cell_magic
 
-@register_cell_magic
+# @register_cell_magic
 def write_and_run(line, cell):
     """write the current cell to a file (or append it with -a argument) as well as execute it
     use with %%write_and_run at the top of a given cell"""
@@ -209,6 +201,17 @@ def write_and_run(line, cell):
     get_ipython().run_cell(cell)
     
     
+@debug
+def get_model_params_simple():
+    dropout=0.2
+    n_layers = 2
+    n_hidden=32
+    starting_learning_rate=1e-3
+    print('n_iterations, n_layers, n_hidden, starting_learning_rate, dropout')
+    return n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
+
+
+
 
 # update fonts
 FONTSIZE = 14
@@ -217,86 +220,8 @@ font = {'family' : 'serif',
         'size'   : FONTSIZE}
 mp.rc('font', **font)
 
-# set usetex = False if LaTex is not 
-# available on your system or if the 
-# rendering is too slow
-mp.rc('text', usetex=True)
-
-# set a seed to ensure reproducibility
-seed = 128
-rnd  = np.random.RandomState(seed)
-#sometimes jupyter doesnt initialize MathJax automatically for latex, so do this:
-wid.HTMLMath('$\LaTeX$')
-
-
-
-# add_to_cluster()
-################################### ARGUMENTS ###################################
-parser=argparse.ArgumentParser(description='train for different targets')
-parser.add_argument('--N', type=str, help='''size of the dataset you want to use. 
-                    Options are 10M and 100K and 10M_2, the default is 10M_2''', required=False,default='10M_2')
-#N_epochs X N_train_examples = N_iterations X batch_size
-# N_iterations = (N_epochs * train_data.shape[0])/batch_size
-#N_iterations = (N_epochs * train_data.shape[0])/64 = 125000 for 1 epoch
-parser.add_argument('--n_iterations', type=int, help='''The number of iterations for training, 
-                    the default is''', required=False,default=50)
-#default=5000000 )
-parser.add_argument('--n_layers', type=int, help='''The number of layers in your NN, 
-                    the default is 5''', required=False,default=6)
-parser.add_argument('--n_hidden', type=int, help='''The number of hidden layers in your NN, 
-                    the default is 5''', required=False,default=6)
-parser.add_argument('--starting_learning_rate', type=float, help='''Starting learning rate, 
-                    the defulat is 10^-3''', required=False,default=1.e-2)
-parser.add_argument('--show_loss_plots', type=bool, help='''Boolean to show the loss plots, 
-                    default is False''', required=False,default=False)
-parser.add_argument('--save_model', type=bool, help='''Boolean to save the trained model dictionary''', 
-                    required=False,default=False)
-parser.add_argument('--save_loss_plots', type=bool, help='''Boolean to save the loss plots''', 
-                    required=False,default=False)
-
-
-################################### CONFIGURATIONS ###################################
 DATA_DIR=os.environ['DATA_DIR']
-JUPYTER=True
-use_subsample=False
-if use_subsample:
-    SUBSAMPLE=int(1e5)#subsample use for development - in production use whole dataset
-else:
-    SUBSAMPLE=None
-    
-    
-if JUPYTER:
-    # print(plt.rcsetup.interactive_bk )
-    plt.ion()
-    print('interactive? ', mpl.is_interactive())
-    args = parser.parse_args(args=[])
-    N = '10M_2'
-    n_iterations = int(1e4)
-    n_layers, n_hidden = int(1), int(10)
-    starting_learning_rate = float(1.e-2)
-    show_loss_plots = False
-    save_model=False
-    save_loss_plots = False
-else:
-    args = parser.parse_args()
-    N = args.N
-    n_iterations = args.n_iterations
-    n_layers = args.n_layers
-    n_hidden = args.n_hidden
-    starting_learning_rate=args.starting_learning_rate
-    show_loss_plots=args.show_loss_plots
-    save_model=args.save_model
-    save_loss_plots=args.save_loss_plots
-
-################################### SET DATA CONFIGURATIONS ###################################
 X       = ['genDatapT', 'genDataeta', 'genDataphi', 'genDatam', 'tau']
-
-#set order of training:
-#pT_first: pT->>m->eta->phi
-#m_first: m->pT->eta->phi
-
-
-
 
 ORDER='m_First'
 
@@ -326,21 +251,17 @@ if ORDER=='m_First':
                                'xmin'  : -3.2, 
                                'xmax'  :3.2}
               }
-    
-    
+
+
+# Load and explore raw (unscaled) dataframes
+
+# In[20]:
+
+
 all_variable_cols=['genDatapT', 'genDataeta', 'genDataphi', 'genDatam','RecoDatapT', 'RecoDataeta', 'RecoDataphi', 'RecoDatam']
 all_cols=['genDatapT', 'genDataeta', 'genDataphi', 'genDatam','RecoDatapT', 'RecoDataeta', 'RecoDataphi', 'RecoDatam', 'tau']
-################################### Load unscaled dataframes ###################################
-print(f'SUBSAMPLE = {SUBSAMPLE}')
-raw_train_data=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
-                      usecols=all_cols,
-                      nrows=SUBSAMPLE
-                      )
 
-raw_test_data=pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
-                      usecols=all_cols,
-                     nrows=SUBSAMPLE
-                     )
+
 
 
 def explore_data(df, title, scaled=False):
@@ -378,11 +299,24 @@ def explore_data(df, title, scaled=False):
     show_plot()
     
     
-def z(x):
-    eps=1e-20
-    return (x - np.mean(x))/(np.std(x)+ eps)
-def z_inverse(xprime, x):
-    return xprime * np.std(x) + np.mean(x)
+
+def get_scaling_info(df):
+    """args: df is train or eval df.
+    returns: dictionary with mean of std of each feature (column) in the df"""
+    features=['genDatapT', 'genDataeta', 'genDataphi', 'genDatam',
+              'RecoDatapT', 'RecoDataeta', 'RecoDataphi', 'RecoDatam', 'tau']
+    SCALE_DICT = dict.fromkeys(features)
+    for i in range(8):
+        feature = features[i]
+        feature_values = np.array(df[feature])
+        SCALE_DICT[feature]={}
+        SCALE_DICT[feature]['mean'] = np.mean(feature_values)
+        SCALE_DICT[feature]['std'] = np.std(feature_values)
+    return SCALE_DICT
+
+
+
+
 
 def L(orig_observable, label):
     eps=1e-20
@@ -427,6 +361,8 @@ def L_inverse(L_observable, label):
     return L_inverse_observable
 
 
+
+
 def T(variable, scaled_df):
     if variable=='pT':
         L_pT_gen=scaled_df['genDatapT']
@@ -446,6 +382,8 @@ def T(variable, scaled_df):
         target =  (L_m_reco+10)/(L_m_gen+10) 
     
     return target
+
+
 
 def L_scale_df(df, title, save=False):
     #scale
@@ -478,25 +416,6 @@ def L_scale_df(df, title, save=False):
         scaled_df.to_csv(os.path.join(DATA_DIR, title) )
     return scaled_df
 
-
-scaled_train_data = L_scale_df(raw_train_data, title='scaled_train_data_10M_2.csv',
-                             save=True)
-print('\n\n')
-scaled_test_data = L_scale_df(raw_test_data,  title='scaled_test_data_10M_2.csv',
-                            save=True)
-
-explore_data(df=scaled_train_data, title='Braden Kronheim-L-scaled Dataframe', scaled=True)
-
-
-
-labels = ['pT', 'eta','phi','m']
-fig, ax=plt.subplots(1,1)
-for label in labels:
-    target = T(label, scaled_df=scaled_train_data)
-    
-    ax.hist(target, label = '$T($' +label+ '$)$', alpha=0.4 )
-    set_axes(ax=ax, xlabel='T', title='Predicted ratio targets')
-plt.show()
 
 
 def get_batch(x, t, batch_size):
@@ -577,44 +496,6 @@ def plot_average_loss(traces, ftsize=18,save_loss_plots=False, show_loss_plots=T
         show_plot()
         
         
-target = 'RecoDatam'
-source  = FIELDS[target]
-features= source['inputs']
-########
-
-print('USING NEW DATASET\n')
-#UNSCALED
-# train_data_m=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
-#                        usecols=features,
-#                        nrows=SUBSAMPLE)
-
-# print('TRAINING FEATURES\n', train_data.head())
-
-# test_data_m= pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
-#                        usecols=features,
-#                        nrows=SUBSAMPLE)
-# print('\nTESTING FEATURES\n', test_data.head())
-# valid_data= pd.read_csv(os.path.join(DATA_DIR,'valid_data_10M_2.csv'),
-#                        usecols=features,
-#                        nrows=SUBSAMPLE)
-
-
-# SCALED
-train_data_m=pd.read_csv(os.path.join(DATA_DIR,'scaled_train_data_10M_2.csv'),
-                       usecols=all_cols,
-                       nrows=SUBSAMPLE)
-
-print('TRAINING FEATURES\n', train_data_m.head())
-
-test_data_m= pd.read_csv(os.path.join(DATA_DIR,'scaled_test_data_10M_2.csv'),
-                       usecols=all_cols,
-                       nrows=SUBSAMPLE)
-print('\nTESTING FEATURES\n', test_data_m.head())
-
-print('\ntrain set shape:',  train_data_m.shape)
-print('\ntest set shape:  ', test_data_m.shape)
-# print('validation set shape:', valid_data.shape)
-
 
 def split_t_x(df, target, input_features):
     """ Get teh target as the ratio, according to the T equation"""
@@ -632,201 +513,34 @@ def split_t_x(df, target, input_features):
 
 
 
-print('Features = ', features)
-print('\n target = ', target)
+def apply_z_to_features():
+    """TO ensure this z scaling is only applied once to the training features, we use a generator """
+    for i in range(NFEATURES-1):
+        train_x[:,i] = z(train_x[:,i])
+        test_x[:,i] = z(test_x[:,i])
+        valid_x[:,i] = z(valid_x[:,i])
+    yield train_x 
+    yield test_x 
+    yield valid_x
 
-print(f'spliting data for {target}')
-train_t_ratio, train_x = split_t_x(df= train_data_m, target = target, input_features=features)
-print('train_t shape = ',train_t_ratio.shape , 'train_x shape = ', train_x.shape)
-print('\n Training features:\n')
-print(train_x)
-valid_t_ratio, valid_x = split_t_x(df= test_data_m, target = target, input_features=features)
-print('valid_t shape = ',valid_t_ratio.shape , 'valid_x shape = ', valid_x.shape)
 
-print('no need to train_test_split since we already have the split dataframes')
 
-NFEATURES=train_x.shape[1]
-for i in range(NFEATURES-1):
-    train_x[:,i] = z(train_x[:,i])
-    valid_x[:,i] = z(valid_x[:,i])
+
+
+# ### Apply $z$ to targets before training
+
+def apply_z_to_targets():
+    train_t_ratio_ = z(train_t_ratio) 
+    test_t_ratio_ = z(test_t_ratio) 
+    valid_t_ratio_ = z(valid_t_ratio)
     
-print(valid_x.mean(axis=0), valid_x.std(axis=0))
-
-print(train_x.mean(axis=0), train_x.std(axis=0))
-
-
-train_t_ratio = z(train_t_ratio) 
-valid_t_ratio= z(valid_t_ratio)
-
-print(valid_t_ratio.mean(), valid_t_ratio.std())
-print(train_t_ratio.mean(), train_t_ratio.std())
-
-fig = plt.figure(figsize=(5, 4))
-ax = fig.add_subplot(autoscale_on=False)
-ax.set_aspect('equal')
-ax.grid()
-for i in range(NFEATURES):
-    plt.hist(train_x[:,i], alpha=0.35)
-    plt.title("training features post-z score: X'=z(L(X))")
-plt.show()
-
-n_iterations, n_layers, n_hidden, starting_learning_rate, dropout = get_model_params()
-BATCHSIZE=1000
-def train(model, optimizer, avloss, getbatch,
-          train_x, train_t, 
-          valid_x, valid_t,
-          batch_size, 
-          n_iterations, traces, 
-          step=10, window=10):
+    yield train_t_ratio_
+    yield test_t_ratio_
+    yield valid_t_ratio_
     
-    # to keep track of average losses
-    xx, yy_t, yy_v, yy_v_avg = traces
-    
-    n = len(valid_x)
-    
-    print('Iteration vs average loss')
-    print("%10s\t%10s\t%10s" % \
-          ('iteration', 'train-set', 'valid-set'))
-    
-    for ii in range(n_iterations):
-
-        # set mode to training so that training specific 
-        # operations such as dropout are enabled.
-        model.train()
-        
-        # get a random sample (a batch) of data (as numpy arrays)
-        batch_x, batch_t = getbatch(train_x, train_t, batch_size)
-        # batch_x[:,-1]=batch_x[:,-1] 
-        # convert the numpy arrays batch_x and batch_t to tensor 
-        # types. The PyTorch tensor type is the magic that permits 
-        # automatic differentiation with respect to parameters. 
-        # However, since we do not need to take the derivatives
-        # with respect to x and t, we disable this feature
-        with torch.no_grad(): # no need to compute gradients 
-            # wrt. x and t
-            x = torch.from_numpy(batch_x).float()
-            t = torch.from_numpy(batch_t).float()      
-
-        # compute the output of the model for the batch of data x
-        # Note: outputs is 
-        #   of shape (-1, 1), but the tensor targets, t, is
-        #   of shape (-1,)
-        # In order for the tensor operations with outputs and t
-        # to work correctly, it is necessary that they have the
-        # same shape. We can do this with the reshape method.
-        outputs = model(x).reshape(t.shape)
-   
-        # compute a noisy approximation to the average loss
-        empirical_risk = avloss(outputs, t, x)
-        
-        # use automatic differentiation to compute a 
-        # noisy approximation of the local gradient
-        optimizer.zero_grad()       # clear previous gradients
-        empirical_risk.backward()   # compute gradients
-        
-        # finally, advance one step in the direction of steepest 
-        # descent, using the noisy local gradient. 
-        optimizer.step()            # move one step
-        
-        if ii % step == 0:
-            
-            acc_t = validate(model, avloss, train_x[:n], train_t[:n]) 
-            acc_v = validate(model, avloss, valid_x[:n], valid_t[:n])
-            yy_t.append(acc_t)
-            yy_v.append(acc_v)
-            
-            # compute running average for validation data
-            len_yy_v = len(yy_v)
-            if   len_yy_v < window:
-                yy_v_avg.append( yy_v[-1] )
-            elif len_yy_v == window:
-                yy_v_avg.append( sum(yy_v) / window )
-            else:
-                acc_v_avg  = yy_v_avg[-1] * window
-                acc_v_avg += yy_v[-1] - yy_v[-window-1]
-                yy_v_avg.append(acc_v_avg / window)
-                        
-            if len(xx) < 1:
-                xx.append(0)
-                print("%10d\t%10.6f\t%10.6f" % \
-                      (xx[-1], yy_t[-1], yy_v[-1]))
-            else:
-                xx.append(xx[-1] + step)
-                    
-                print("\r%10d\t%10.6f\t%10.6f\t%10.6f" % \
-                          (xx[-1], yy_t[-1], yy_v[-1], yy_v_avg[-1]), 
-                      end='')
-            
-    print()      
-    return (xx, yy_t, yy_v, yy_v_avg)
-
-
-@time_type_of_func(tuning_or_training='training')
-def run(model, 
-        train_x, train_t, 
-        valid_x, valid_t, traces,
-        n_batch=BATCHSIZE, 
-        n_iterations=n_iterations, 
-        traces_step=10, 
-        traces_window=10,
-        save_model=False):
-
-    learning_rate= starting_learning_rate
-    #add weight decay
-    L2=1e-3
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=L2) 
-    #starting at 10^-3	    
-    traces = train(model, optimizer, 
-                      average_quantile_loss,
-                      get_batch,
-                      train_x, train_t, 
-                      valid_x, valid_t,
-                      n_batch, 
-                  n_iterations,
-                  traces,
-                  step=traces_step, 
-                  window=traces_window)
-    
-    learning_rate=learning_rate/10
-    # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate) 
-    # #10^-4
-    traces = train(model, optimizer, 
-                      average_quantile_loss,
-                      get_batch,
-                      train_x, train_t, 
-                      valid_x, valid_t,
-                      n_batch, 
-                  n_iterations,
-                  traces,
-                  step=traces_step, 
-                  window=traces_window)
-
-
-    learning_rate=learning_rate/100
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate) 
-    #10^-6
-    traces = train(model, optimizer, 
-                      average_quantile_loss,
-                      get_batch,
-                      train_x, train_t, 
-                      valid_x, valid_t,
-                      n_batch, 
-                  n_iterations,
-                  traces,
-                  step=traces_step, 
-                  window=traces_window)
-
-    # plot_average_loss(traces)
-
-    if save_model:
-        filename='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
-        PATH = os.path.join(IQN_BASE, 'trained_models', filename)
-        torch.save(model.state_dict(), PATH)
-        print('\ntrained model dictionary saved in %s' % PATH)
-    return  model
-
 
 class RegularizedRegressionModel(nn.Module):
+    """Used for hyperparameter tuning """
     #inherit from the super class
     def __init__(self, nfeatures, ntargets, nlayers, hidden_size, dropout):
         super().__init__()
@@ -864,12 +578,60 @@ class RegularizedRegressionModel(nn.Module):
         return self.model(x)
     
     
+class TrainingRegularizedRegressionModel(nn.Module):
+    """Used for training, and adds more regularization to prevent overfitting """
+    #inherit from the super class
+    def __init__(self, nfeatures, ntargets, nlayers, hidden_size, dropout):
+        super().__init__()
+        layers = []
+        for _ in range(nlayers):
+            if len(layers) ==0:
+                #inital layer has to have size of input features as its input layer
+                #its output layer can have any size but it must match the size of the input layer of the next linear layer
+                #here we choose its output layer as the hidden size (fully connected)
+                layers.append(nn.Linear(nfeatures, hidden_size))
+                #batch normalization
+                layers.append(nn.BatchNorm1d(hidden_size))
+                #dropout only in the first layer
+                #Dropout seems to worsen model performance
+                layers.append(nn.Dropout(dropout))
+                #ReLU activation 
+                layers.append(nn.LeakyReLU())
+            else:
+                #if this is not the first layer (we dont have layers)
+                layers.append(nn.Linear(hidden_size, hidden_size))
+                layers.append(nn.BatchNorm1d(hidden_size))
+                #Dropout seems to worsen model performance
+                layers.append(nn.Dropout(dropout))
+                layers.append(nn.LeakyReLU())
+                #output layer:
+        layers.append(nn.Linear(hidden_size, ntargets)) 
+
+        # only for classification add sigmoid
+        # layers.append(nn.Sigmoid())
+            #we have defined sequential model using the layers in oulist 
+        self.model = nn.Sequential(*layers)
+
+    
+    def forward(self, x):
+        return self.model(x)
+
+
+
+
+# ## Hyperparameter Training Workflow
+
+
 def get_tuning_sample():
-    sample=int(100000)
+    sample=int(200000)
     # train_x_sample, train_t_ratio_sample, valid_x_sample, valid_t_ratio_sample
-    return train_x[:sample], train_t_ratio[:sample], valid_x[:sample], valid_t_ratio[:sample]
-train_x_sample, train_t_ratio_sample, valid_x_sample, valid_t_ratio_sample = get_tuning_sample()
-train_x_sample.shape
+    get_whole=True
+    if get_whole:
+        train_x_sample, train_t_ratio_sample, valid_x_sample, valid_t_ratio_sample = train_x, train_t_ratio, valid_x, valid_t_ratio
+    else:
+        train_x_sample, train_t_ratio_sample, valid_x_sample, valid_t_ratio_sample=train_x[:sample], train_t_ratio[:sample], valid_x[:sample], valid_t_ratio[:sample]
+    return train_x_sample, train_t_ratio_sample, valid_x_sample, valid_t_ratio_sample
+
 
 
 class HyperTrainer():
@@ -880,7 +642,7 @@ class HyperTrainer():
         #self.device= device
         self.optimizer = optimizer
         self.batch_size=batch_size
-        self.n_iterations_tune=int(500)
+        self.n_iterations_tune=int(50)
 
         #the loss function returns the loss function. It is a static method so it doesn't need self
         # @staticmethod
@@ -929,8 +691,6 @@ class HyperTrainer():
 
     
 EPOCHS=1
-
-
 def run_train(params, save_model=False):
     """For tuning the parameters"""
 
@@ -949,84 +709,111 @@ def run_train(params, save_model=False):
     
     # optimizer = torch.optim.Adam(model.parameters(), lr=params["learning_rate"]) 
     
-    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate)
+    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), 
+                            lr=learning_rate, momentum = params["momentum"])
     
     trainer=HyperTrainer(model, optimizer, batch_size=params["batch_size"])
     best_loss = np.inf
-    early_stopping_iter=20#stop after 10 iteractions of not improving loss
+    early_stopping_iter=10#stop after 10 iteractions of not improving loss
     early_stopping_coutner=0
 
-    for epoch in range(EPOCHS):
-        train_loss = trainer.train(train_x_sample, train_t_ratio_sample)
-        valid_loss=trainer.evaluate(valid_x_sample, valid_t_ratio_sample)
+    # for epoch in range(EPOCHS):
+    # train_loss = trainer.train(train_x_sample, train_t_ratio_sample)
+        #test loss
+    valid_loss=trainer.evaluate(valid_x_sample, valid_t_ratio_sample)
 
-        print(f"{epoch} \t {train_loss} \t {valid_loss}")
-        if valid_loss<best_loss:
-            best_loss=valid_loss
-        else:
-            early_stopping_coutner+=1
-        if early_stopping_coutner > early_stopping_iter:
-            break
+        # print(f"{epoch} \t {train_loss} \t {valid_loss}")
+        
+        # if valid_loss<best_loss:
+        #     best_loss=valid_loss
+        # else:
+        #     early_stopping_coutner+=1
+        # if early_stopping_coutner > early_stopping_iter:
+            # break
             
-    return best_loss
+    # return best_loss
+    return valid_loss
 
-# run_train()
+
 
 
 def objective(trial):
+    CLUSTER=False
+    #cluster has greater memory than my laptop, which allows higher max values in hyperparam. search space
+    if CLUSTER:
+        nlayers_max,n_hidden_max, batch_size_max=int(24),int(350), int(1e5)
+        n_trials=1000
+    else:
+        nlayers_max,n_hidden_max, batch_size_max=int(6),int(256), int(3e4)
+        n_trials=2
+    #hyperparameter search space:
     params = {
-      "nlayers": trial.suggest_int("nlayers",1,6),      
-      "hidden_size": trial.suggest_int("hidden_size", 2, 256),
-      "dropout": trial.suggest_float("dropout", 0.1,0.5),
-      "optimizer_name" : trial.suggest_categorical("optimizer_name", ["Adam", "RMSprop"]),
-      "learning_rate": trial.suggest_float("learning_rate", 1e-6, 1e-2),
-      "batch_size": trial.suggest_int("batch_size", 50, 40000)
+          "nlayers": trial.suggest_int("nlayers",1,nlayers_max),      
+          "hidden_size": trial.suggest_int("hidden_size", 1, n_hidden_max),
+          "dropout": trial.suggest_float("dropout", 0.0,0.5),
+          "optimizer_name" : trial.suggest_categorical("optimizer_name", ["RMSprop", "SGD"]),
+          "momentum": trial.suggest_float("momentum", 0.0,0.99),
+          "learning_rate": trial.suggest_float("learning_rate", 1e-6, 1e-2),
+          "batch_size": trial.suggest_int("batch_size", 500, batch_size_max)
 
-    }
-    # all_losses=[]
+        }
+    
+    for step in range(10):
 
-    temp_loss = run_train(params,save_model=False)
-    # all_losses.append(temp_loss)
+        temp_loss = run_train(params,save_model=False)
+        trial.report(temp_loss, step)
+        #activate pruning (early stopping if the current step in the trial has unpromising results)
+        #instead of doing lots of iterations, do less iterations and more steps in each trial,  
+        #such that a trial is terminated if a step yields an unpromising loss.
+        
+        if trial.should_prune():
+            raise optuna.TrialPruned()
+    
     return temp_loss
 
 @time_type_of_func(tuning_or_training='tuning')
-def tune_hyperparameters():
-    print(f'Getting best hyperparameters for target {target}')
-    study=optuna.create_study(direction="minimize")
-    study.optimize(objective, n_trials=1000)
+def tune_hyperparameters(save_best_params):
+    
+
+    sampler=False#use different sampling technique than the defualt one if sampler=True.
+    if sampler:
+        #choose a different sampling strategy (https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.CmaEsSampler.html#optuna.samplers.CmaEsSampler)
+        # sampler=optuna.samplers.RandomSampler()
+        study=optuna.create_study(direction='minimize',
+                                  pruner=optuna.pruners.MedianPruner(), sampler=sampler)
+    else:
+        #but the default sampler is usually better - no need to change it!
+        study=optuna.create_study(direction='minimize',
+                                  pruner=optuna.pruners.HyperbandPruner())
+    print(f'using {n_trials} trials for tuning')
+    study.optimize(objective, n_trials=n_trials)
     best_trial = study.best_trial
     print('best model parameters', best_trial.params)
 
     best_params=best_trial.params#this is a dictionary
-    tuned_dir = os.path.join(IQN_BASE,'best_params')
-    mkdir(tuned_dir)
-    filename=os.path.join(tuned_dir,'best_params_Test_Trials.csv')
-    param_df=pd.DataFrame({
-                            'n_layers':best_params["nlayers"], 
-                            'hidden_size':best_params["hidden_size"], 
-                            'dropout':best_params["dropout"],
-                            'optimizer_name':best_params["optimizer_name"],
-                            'learning_rate': best_params["learning_rate"], 
-                            'batch_size':best_params["batch_size"] },
-                                    index=[0]
-    )
+    #save best hyperapameters in a pandas dataframe as a .csv
+    if save_best_params:
+        tuned_dir = os.path.join(IQN_BASE,'best_params')
+        mkdir('tuned_dir')
+        filename=os.path.join(tuned_dir,'best_params_mass_%s_trials.csv' % str(int(n_trials)))
+        param_df=pd.DataFrame({
+                                'n_layers':best_params["nlayers"], 
+                                'hidden_size':best_params["hidden_size"], 
+                                'dropout':best_params["dropout"],
+                                'optimizer_name':best_params["optimizer_name"],
+                                'learning_rate': best_params["learning_rate"], 
+                                'batch_size':best_params["batch_size"],
+                                'momentum':best_params["momentum"]},
+                                        index=[0]
+        )
 
-    param_df.to_csv(filename)   
+        param_df.to_csv(filename)   
+    return study
+
+
+
+def load_untrained_model():
+    model=TrainingRegularizedRegressionModel(nfeatures=NFEATURES, ntargets=1,
+                               nlayers=n_layers, hidden_size=hidden_size, dropout=dropout)
     
-
-tune_hyperparameters()
-
-
-
-
-# def get_model_params_tuned()
-BEST_PARAMS = pd.read_csv(os.path.join(IQN_BASE, 'best_params','MASS_best_params_Test_Trial.csv'))
-print(BEST_PARAMS)
-
-n_layers = int(BEST_PARAMS["n_layers"]) 
-hidden_size = int(BEST_PARAMS["hidden_size"])
-dropout = float(BEST_PARAMS["dropout"])
-optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
-learning_rate =  float(BEST_PARAMS["learning_rate"])
-batch_size = int(BEST_PARAMS["batch_size"])
-
+    

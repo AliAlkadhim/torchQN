@@ -1,0 +1,9 @@
+environment: line 10: __conda_exe: command not found
+# conda environments:
+#
+torch_env             *  /home/DAVIDSON/alalkadhim.visitor/.conda/envs/torch_env
+base                     /home/DAVIDSON/alalkadhim.visitor/software/miniconda3
+
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd-phy2kuchera: error: *** STEP 13039.0 ON phy2kuchera CANCELLED AT 2022-12-20T14:30:06 ***
+slurmstepd-phy2kuchera: error: *** JOB 13039 ON phy2kuchera CANCELLED AT 2022-12-20T14:30:06 ***
