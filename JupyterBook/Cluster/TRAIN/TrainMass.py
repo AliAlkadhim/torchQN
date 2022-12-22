@@ -204,14 +204,14 @@ def write_and_run(line, cell):
     #get_ipython().run_cell(cell)
     
     
-@debug
-def get_model_params_simple():
-    dropout=0.2
-    n_layers = 2
-    n_hidden=32
-    starting_learning_rate=1e-3
-    print('n_iterations, n_layers, n_hidden, starting_learning_rate, dropout')
-    return n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
+# @debug
+# def get_model_params_simple():
+#     dropout=0.2
+#     n_layers = 2
+#     n_hidden=32
+#     starting_learning_rate=1e-3
+#     print('n_iterations, n_layers, n_hidden, starting_learning_rate, dropout')
+#     return n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
 
 
 
@@ -229,8 +229,8 @@ mp.rc('font', **font)
 mp.rc('text', usetex=True)
 
 # set a seed to ensure reproducibility
-seed = 128
-rnd  = np.random.RandomState(seed)
+# seed = 128
+# rnd  = np.random.RandomState(seed)
 #sometimes jupyter doesnt initialize MathJax automatically for latex, so do this:
 
 
@@ -242,7 +242,7 @@ JUPYTER=False
 use_subsample=False
 # use_subsample=True
 if use_subsample:
-    SUBSAMPLE=int(1e2)#subsample use for development - in production use whole dataset
+    SUBSAMPLE=int(1e4)#subsample use for development - in production use whole dataset
 else:
     SUBSAMPLE=None
     
@@ -340,6 +340,18 @@ print('\n RAW TEST DATA\n')
 print(raw_test_data.shape)
 raw_test_data.describe()#unscaled
 
+########## Generate scaled data###############
+scaled_train_data = L_scale_df(raw_train_data, title='scaled_train_data_10M_2.csv',
+                             save=True)
+print('\n\n')
+scaled_test_data = L_scale_df(raw_test_data,  title='scaled_test_data_10M_2.csv',
+                            save=True)
+print('\n\n')
+
+scaled_valid_data = L_scale_df(raw_valid_data,  title='scaled_valid_data_10M_2.csv',
+                            save=True)
+
+# explore_data(df=scaled_train_data, title='Braden Kronheim-L-scaled Dataframe', scaled=True)
 
 ################ Load scaled data##############
 print('SCALED TRAIN DATA')
@@ -356,6 +368,7 @@ test_data_m= pd.read_csv(os.path.join(DATA_DIR,'scaled_test_data_10M_2.csv'),
 valid_data_m= pd.read_csv(os.path.join(DATA_DIR,'scaled_valid_data_10M_2.csv'),
                        usecols=all_cols,
                        nrows=SUBSAMPLE)
+
 # print('\nTESTING FEATURES\n', test_data_m.head())
 
 # print('\ntrain set shape:',  train_data_m.shape)
@@ -414,10 +427,20 @@ NFEATURES=train_x.shape[1]
 
 ################ Apply Z scaling############
 def z(x):
+    """used for targets """
     eps=1e-20
     return (x - np.mean(x))/(np.std(x)+ eps)
 
 def z2(x, mean, std):
+    """
+    Args:
+        x ([type]): [description]
+        mean ([type]): [description]
+        std ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     eps=1e-20
     return (x - mean)/(std+ eps)
 def z_inverse(xprime, x):
@@ -481,16 +504,6 @@ print(train_t_ratio.mean(), train_t_ratio.std())
 # ax.legend()
 # plt.show()
 
-#check that it looks correct
-# fig = plt.figure(figsize=(10, 4))
-# ax = fig.add_subplot(autoscale_on=True)
-# ax.grid()
-# for i in range(NFEATURES):
-#     ax.hist(train_x[:,i], alpha=0.35, label=f'feature {i}' )
-#     # set_axes(ax=ax, xlabel="Transformed features X' ",title="training features post-z score: X'=z(L(X))")
-# ax.legend()
-# plt.show()
-
 
 ######### Get beset hyperparameters
 #tuned_dir = os.path.join(IQN_BASE,'best_params')
@@ -503,7 +516,7 @@ n_layers =5# int(BEST_PARAMS["n_layers"])
 hidden_size = 50 #int(BEST_PARAMS["hidden_size"])
 dropout = 0.25 #float(BEST_PARAMS["dropout"])s
 
-optimizer_name ='Adam' #BEST_PARAMS["optimizer_name"]
+optimizer_name ='SGD' #BEST_PARAMS["optimizer_name"]
 print(type(optimizer_name))
 #optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
 
@@ -517,17 +530,17 @@ def load_untrained_model():
 
 
 # optimizer_name =  'Adam'
-best_learning_rate =  1e-03 #float(BEST_PARAMS["learning_rate"])
+best_learning_rate =  3e-03 #float(BEST_PARAMS["learning_rate"])
 momentum=0.39 #float(BEST_PARAMS["momentum"]) 
-best_optimizer_temp = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate,
-                                                        #    momentum=momentum
-                                                          amsgrad=True  )
-batch_size = 512 #int(BEST_PARAMS["batch_size"])
+# best_optimizer_temp = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate,
+#                                                            momentum=momentum,
+#                                                           amsgrad=True  )
+batch_size = 2948 #int(BEST_PARAMS["batch_size"])
 
 # BATCHSIZE=10000
 BATCHSIZE=batch_size 
 # n_iterations=int(1e7)
-n_iterations=int(3e4)
+n_iterations=int(4e3)
 
 def train(model, optimizer, avloss, getbatch,
           train_x, train_t, 
@@ -631,7 +644,8 @@ def run(model,
     #add weight decay (important regularization to reduce overfitting)
     L2=1e-4
     # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=L2)
-    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate,     amsgrad=True
+    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate,     
+                                                    #  amsgrad=True,
                                                     #  momentum=momentum, 
                                                     #  weight_decay=L2
                                                      )
@@ -650,6 +664,7 @@ def run(model,
     
     learning_rate=learning_rate/10
     optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate, 
+                                                    #  amsgrad=True,
                                                     #  momentum=momentum
                                                      )
     #10^-4
@@ -666,7 +681,10 @@ def run(model,
 
 
     learning_rate=learning_rate/100
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate) 
+    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate, 
+                                                    #  amsgrad=True,
+                                                    #  momentum=momentum
+                                                     )
     #10^-6
     traces = train(model, optimizer, 
                       average_quantile_loss,
@@ -727,30 +745,30 @@ def load_model(PATH):
     print(model)
     return model
 
-def main():
+# def main():
     #N_epochs X N_train_examples = N_iterations X batch_size
-    N_epochs = (n_iterations * BATCHSIZE)/int(train_x.shape[0])
-    print(f'training for {n_iterations} iteration, which is  {N_epochs} epochs')
-    model=load_untrained_model()
-    IQN_trace=([], [], [], [])
-    traces_step = 800
-    traces_window=traces_step
-    IQN = run(model=model,train_x=train_x, train_t=train_t_ratio, 
-            valid_x=test_x, valid_t=test_t_ratio, traces=IQN_trace, n_batch=BATCHSIZE, 
-            n_iterations=n_iterations, traces_step=traces_step, traces_window=traces_window,
-            save_model=False)
+N_epochs = (n_iterations * BATCHSIZE)/int(train_x.shape[0])
+print(f'training for {n_iterations} iteration, which is  {N_epochs} epochs')
+model=load_untrained_model()
+IQN_trace=([], [], [], [])
+traces_step = 800
+traces_window=traces_step
+IQN = run(model=model,train_x=train_x, train_t=train_t_ratio, 
+        valid_x=test_x, valid_t=test_t_ratio, traces=IQN_trace, n_batch=BATCHSIZE, 
+        n_iterations=n_iterations, traces_step=traces_step, traces_window=traces_window,
+        save_model=False)
 
 
-    # ## Save trained model (if its good, and if you haven't saved above) and load trained model (if you saved it)
+# ## Save trained model (if its good, and if you haven't saved above) and load trained model (if you saved it)
 
 
-    filename_model='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
-    trained_models_dir='trained_models'
-    mkdir(trained_models_dir)
-    # on cluster, Im using another TRAIN directory
-    PATH_model = os.path.join(IQN_BASE,'JupyterBook', 'Cluster', 'TRAIN', trained_models_dir , filename_model)
+filename_model='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
+trained_models_dir='trained_models'
+mkdir(trained_models_dir)
+# on cluster, Im using another TRAIN directory
+PATH_model = os.path.join(IQN_BASE,'JupyterBook', 'Cluster', 'TRAIN', trained_models_dir , filename_model)
 
-    save_model(IQN, PATH_model)
+save_model(IQN, PATH_model)
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
