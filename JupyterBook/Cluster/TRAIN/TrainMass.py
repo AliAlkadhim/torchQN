@@ -55,7 +55,6 @@ except Exception:
     os.environ['IQN_BASE']=os.getcwd()""")
     pass
 
-
 # def show_jupyter_image(image_filename, width = 1300, height = 300):
 #     """Show a saved image directly in jupyter. Make sure image_filename is in your IQN_BASE !"""
 #     display(Image(os.path.join(IQN_BASE,image_filename), width = width, height = height  ))
@@ -341,15 +340,15 @@ print(raw_test_data.shape)
 raw_test_data.describe()#unscaled
 
 ########## Generate scaled data###############
-scaled_train_data = L_scale_df(raw_train_data, title='scaled_train_data_10M_2.csv',
-                             save=True)
-print('\n\n')
-scaled_test_data = L_scale_df(raw_test_data,  title='scaled_test_data_10M_2.csv',
-                            save=True)
-print('\n\n')
+# scaled_train_data = L_scale_df(raw_train_data, title='scaled_train_data_10M_2.csv',
+#                              save=True)
+# print('\n\n')
+# scaled_test_data = L_scale_df(raw_test_data,  title='scaled_test_data_10M_2.csv',
+#                             save=True)
+# print('\n\n')
 
-scaled_valid_data = L_scale_df(raw_valid_data,  title='scaled_valid_data_10M_2.csv',
-                            save=True)
+# scaled_valid_data = L_scale_df(raw_valid_data,  title='scaled_valid_data_10M_2.csv',
+#                             save=True)
 
 # explore_data(df=scaled_train_data, title='Braden Kronheim-L-scaled Dataframe', scaled=True)
 
@@ -513,41 +512,57 @@ print(train_t_ratio.mean(), train_t_ratio.std())
 #print(BEST_PARAMS)
 
 
-n_layers =5# int(BEST_PARAMS["n_layers"]) 
-hidden_size = 50 #int(BEST_PARAMS["hidden_size"])
 dropout = 0.25 #float(BEST_PARAMS["dropout"])s
 optimizer_name ='Adam' #BEST_PARAMS["optimizer_name"]
 print(type(optimizer_name))
 #optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
 def load_untrained_model(PARAMS):
     model=RegularizedRegressionModel(nfeatures=NFEATURES, ntargets=1,
-                               nlayers=PARAMS['n_layers'], hidden_size=PARAMS['hidden_size'], dropout=PARAMS['dropout'])
+                               nlayers=PARAMS['n_layers'], hidden_size=PARAMS['hidden_size'], dropout_1=PARAMS['dropout_1'], dropout_2=PARAMS['dropout_2'],
+                               activation=PARAMS['activation'])
     # model.apply(initialize_weights)
     print(model)
     return model
 
 # optimizer_name =  'Adam'
-best_learning_rate =  3e-03 #float(BEST_PARAMS["learning_rate"])
-momentum=0.5 #float(BEST_PARAMS["momentum"]) 
+best_learning_rate =  3e-02 #float(BEST_PARAMS["learning_rate"])
+momentum=0.3 #float(BEST_PARAMS["momentum"]) 
 # best_optimizer_temp = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate,
 #                                                            momentum=momentum,
 #                                                           amsgrad=True  )
-batch_size = 512 #int(BEST_PARAMS["batch_size"])
+batch_size = int(512 * 2) #512 #int(BEST_PARAMS["batch_size"])
 # BATCHSIZE=10000
 BATCHSIZE=batch_size 
 # n_iterations=int(1e7)
-n_iterations=int(1e4)
+n_iterations=int(2e5)
 
+
+class SaveModelCheckpoint:
+    def __init__(self, best_valid_loss=np.inf):
+        self.best_valid_loss = best_valid_loss
+        
+    def __call__(self, model, current_valid_loss):
+        if current_valid_loss < self.best_valid_loss:
+            #update the best loss
+            self.best_valid_loss = current_valid_loss
+            filename_model='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
+            trained_models_dir='trained_models'
+            mkdir(trained_models_dir)
+            # on cluster, Im using another TRAIN directory
+            PATH_model = os.path.join(IQN_BASE,'JupyterBook', 'Cluster', 'TRAIN', trained_models_dir , filename_model)
+            torch.save(model.state_dict(), PATH_model)
+            print(f"saved better model at {PATH_model}")
+            
 def train(model, optimizer, avloss, getbatch,
           train_x, train_t, 
           valid_x, valid_t,
           batch_size, 
           n_iterations, traces, 
-          step=10, window=10):
+          step, window):
     
     # to keep track of average losses
     xx, yy_t, yy_v, yy_v_avg = traces
-    
+    model_checkpoint=SaveModelCheckpoint()
     n = len(valid_x)
     
     print('Iteration vs average loss')
@@ -601,7 +616,8 @@ def train(model, optimizer, avloss, getbatch,
             acc_v = validate(model, avloss, valid_x[:n], valid_t[:n])
             yy_t.append(acc_t)
             yy_v.append(acc_v)
-            
+            #save better models based on valid loss
+            model_checkpoint(model=model, current_valid_loss=acc_v)
             # compute running average for validation data
             len_yy_v = len(yy_v)
             if   len_yy_v < window:
@@ -638,10 +654,10 @@ def run(model,
 
     learning_rate= best_learning_rate
     #add weight decay (important regularization to reduce overfitting)
-    L2=1e-4
+    L2=5e-2
     # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=L2)
     optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate,     
-                                                     amsgrad=True,
+                                                     amsgrad=True, eps=1e-7,
                                                     #  momentum=momentum, 
                                                     #  weight_decay=L2
                                                      )
@@ -658,42 +674,44 @@ def run(model,
                   step=traces_step, 
                   window=traces_window)
     
-    learning_rate=learning_rate/10
-    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate, 
-                                                     amsgrad=True,
-                                                    #  momentum=momentum
-                                                     )
+    # learning_rate=learning_rate/10
+    # optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate, 
+    #                                                  amsgrad=True,
+    #                                                 #  momentum=momentum,
+    #                                                 # weight_decay=L2
+    #                                                  )
     #10^-4
-    traces = train(model, optimizer, 
-                      average_quantile_loss,
-                      get_batch,
-                      train_x, train_t, 
-                      valid_x, valid_t,
-                      n_batch, 
-                  n_iterations,
-                  traces,
-                  step=traces_step, 
-                  window=traces_window)
+    # traces = train(model, optimizer, 
+    #                   average_quantile_loss,
+    #                   get_batch,
+    #                   train_x, train_t, 
+    #                   valid_x, valid_t,
+    #                   n_batch, 
+    #               n_iterations,
+    #               traces,
+    #               step=traces_step, 
+    #               window=traces_window)
 
 
-    learning_rate=learning_rate/100
-    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate, 
-                                                     amsgrad=True,
-                                                    #  momentum=momentum
-                                                     )
-    #10^-6
-    traces = train(model, optimizer, 
-                      average_quantile_loss,
-                      get_batch,
-                      train_x, train_t, 
-                      valid_x, valid_t,
-                      n_batch, 
-                  n_iterations,
-                  traces,
-                  step=traces_step, 
-                  window=traces_window)
+    # learning_rate=learning_rate/100
+    # optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate, 
+    #                                                  amsgrad=True,
+    #                                                 #  momentum=momentum,
+    #                                                 # weight_decay=L2
+    #                                                  )
+    # #10^-6
+    # traces = train(model, optimizer, 
+    #                   average_quantile_loss,
+    #                   get_batch,
+    #                   train_x, train_t, 
+    #                   valid_x, valid_t,
+    #                   n_batch, 
+    #               n_iterations,
+    #               traces,
+    #               step=traces_step, 
+    #               window=traces_window)
 
-    # plot_average_loss(traces)
+    # plot_average_loss(traces, n_iterations,target)
 
     if save_model:
         filename='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
@@ -745,10 +763,12 @@ def load_model(PATH):
     #N_epochs X N_train_examples = N_iterations X batch_size
 N_epochs = (n_iterations * BATCHSIZE)/int(train_x.shape[0])
 print(f'training for {n_iterations} iteration, which is  {N_epochs} epochs')
-PARAMS = {'n_layers':int(5), 'hidden_size':int(50), 'dropout':float(0.25), 'optimizer_name':'SGD', }
+PARAMS = {'n_layers':int(1), 'hidden_size':int(64), 'dropout_1':float(0.9), 'dropout_2':float(0.9), 'activation':'LeakyReLU'
+        #   'optimizer_name':'SGD', 
+          }
 model=load_untrained_model(PARAMS)
 IQN_trace=([], [], [], [])
-traces_step = 800
+traces_step = 20
 traces_window=traces_step
 IQN = run(model=model,train_x=train_x, train_t=train_t_ratio, 
         valid_x=test_x, valid_t=test_t_ratio, traces=IQN_trace, n_batch=BATCHSIZE, 
@@ -759,13 +779,14 @@ IQN = run(model=model,train_x=train_x, train_t=train_t_ratio,
 # ## Save trained model (if its good, and if you haven't saved above) and load trained model (if you saved it)
 
 
+
 filename_model='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
 trained_models_dir='trained_models'
 mkdir(trained_models_dir)
 # on cluster, Im using another TRAIN directory
 PATH_model = os.path.join(IQN_BASE,'JupyterBook', 'Cluster', 'TRAIN', trained_models_dir , filename_model)
 
-save_model(IQN, PATH_model)
+# save_model(IQN, PATH_model)
 
 # if __name__ == '__main__':
 #     main()

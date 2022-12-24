@@ -55,8 +55,6 @@ except Exception:
     os.environ['IQN_BASE']=os.getcwd()""")
     pass
 
-from IQNx4_utils import *
-
 # def show_jupyter_image(image_filename, width = 1300, height = 300):
 #     """Show a saved image directly in jupyter. Make sure image_filename is in your IQN_BASE !"""
 #     display(Image(os.path.join(IQN_BASE,image_filename), width = width, height = height  ))
@@ -205,14 +203,14 @@ def write_and_run(line, cell):
     #get_ipython().run_cell(cell)
     
     
-@debug
-def get_model_params_simple():
-    dropout=0.2
-    n_layers = 2
-    n_hidden=32
-    starting_learning_rate=1e-3
-    print('n_iterations, n_layers, n_hidden, starting_learning_rate, dropout')
-    return n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
+# @debug
+# def get_model_params_simple():
+#     dropout=0.2
+#     n_layers = 2
+#     n_hidden=32
+#     starting_learning_rate=1e-3
+#     print('n_iterations, n_layers, n_hidden, starting_learning_rate, dropout')
+#     return n_iterations, n_layers, n_hidden, starting_learning_rate, dropout
 
 
 
@@ -230,8 +228,8 @@ mp.rc('font', **font)
 mp.rc('text', usetex=True)
 
 # set a seed to ensure reproducibility
-seed = 128
-rnd  = np.random.RandomState(seed)
+# seed = 128
+# rnd  = np.random.RandomState(seed)
 #sometimes jupyter doesnt initialize MathJax automatically for latex, so do this:
 
 
@@ -243,7 +241,7 @@ JUPYTER=False
 use_subsample=False
 # use_subsample=True
 if use_subsample:
-    SUBSAMPLE=int(1e5)#subsample use for development - in production use whole dataset
+    SUBSAMPLE=int(1e4)#subsample use for development - in production use whole dataset
 else:
     SUBSAMPLE=None
     
@@ -340,9 +338,19 @@ raw_train_data.describe()#unscaled
 print('\n RAW TEST DATA\n')
 print(raw_test_data.shape)
 raw_test_data.describe()#unscaled
-TRAIN_SCALE_DICT = get_scaling_info(raw_train_data);print(TRAIN_SCALE_DICT)
-print('\n\n')
-TEST_SCALE_DICT = get_scaling_info(raw_test_data);print(TEST_SCALE_DICT)
+
+########## Generate scaled data###############
+# scaled_train_data = L_scale_df(raw_train_data, title='scaled_train_data_10M_2.csv',
+#                              save=True)
+# print('\n\n')
+# scaled_test_data = L_scale_df(raw_test_data,  title='scaled_test_data_10M_2.csv',
+#                             save=True)
+# print('\n\n')
+
+# scaled_valid_data = L_scale_df(raw_valid_data,  title='scaled_valid_data_10M_2.csv',
+#                             save=True)
+
+# explore_data(df=scaled_train_data, title='Braden Kronheim-L-scaled Dataframe', scaled=True)
 
 ################ Load scaled data##############
 print('SCALED TRAIN DATA')
@@ -359,15 +367,21 @@ test_data_m= pd.read_csv(os.path.join(DATA_DIR,'scaled_test_data_10M_2.csv'),
 valid_data_m= pd.read_csv(os.path.join(DATA_DIR,'scaled_valid_data_10M_2.csv'),
                        usecols=all_cols,
                        nrows=SUBSAMPLE)
-print('\nTESTING FEATURES\n', test_data_m.head())
 
-print('\ntrain set shape:',  train_data_m.shape)
-print('\ntest set shape:  ', test_data_m.shape)
-# print('validation set shape:', valid_data.shape)
+# print('\nTESTING FEATURES\n', test_data_m.head())
+
+# print('\ntrain set shape:',  train_data_m.shape)
+# print('\ntest set shape:  ', test_data_m.shape)
+# # print('validation set shape:', valid_data.shape)
 
 scaled_train_data = train_data_m
 scaled_test_data = test_data_m
 scaled_valid_data = valid_data_m
+
+TRAIN_SCALE_DICT = get_scaling_info(scaled_train_data);print(TRAIN_SCALE_DICT)
+print('\n\n')
+TEST_SCALE_DICT = get_scaling_info(scaled_test_data);print(TEST_SCALE_DICT)
+
 #######################################
 target = 'RecoDatapT'
 source  = FIELDS[target]
@@ -383,13 +397,13 @@ def split_t_x(df, target, input_features):
     """ Get teh target as the ratio, according to the T equation"""
     
     if target=='RecoDatam':
-        t = T('m', scaled_df=train_data_m)
+        t = T('m', scaled_df=scaled_train_data)
     if target=='RecoDatapT':
-        t = T('pT', scaled_df=train_data_m)
+        t = T('pT', scaled_df=scaled_train_data)
     if target=='RecoDataeta':
-        t = T('eta', scaled_df=train_data_m)
+        t = T('eta', scaled_df=scaled_train_data)
     if target=='RecoDataphi':
-        t = T('phi', scaled_df=train_data_m)
+        t = T('phi', scaled_df=scaled_train_data)
     x = np.array(df[input_features])
     return np.array(t), x
 
@@ -408,64 +422,76 @@ print(valid_x.mean(axis=0), valid_x.std(axis=0))
 print(train_x.mean(axis=0), train_x.std(axis=0))
 print(valid_t_ratio.mean(), valid_t_ratio.std())
 print(train_t_ratio.mean(), train_t_ratio.std())
-
-
-
-
+NFEATURES=train_x.shape[1]
 
 ################ Apply Z scaling############
 def z(x):
+    """used for targets """
     eps=1e-20
     return (x - np.mean(x))/(np.std(x)+ eps)
+
+def z2(x, mean, std):
+    """
+    Args:
+        x ([type]): [description]
+        mean ([type]): [description]
+        std ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    eps=1e-20
+    return (x - mean)/(std+ eps)
 def z_inverse(xprime, x):
     return xprime * np.std(x) + np.mean(x)
 
-def apply_z_to_features():
-    """TO ensure this z scaling is only applied once to the training features, we use a generator """
+def z_inverse2(xprime, train_mean, train_std):
+    """mean original train mean, std: original. Probably not needed  """
+    return xprime * train_mean + train_std
+
+def apply_z_to_features(TRAIN_SCALE_DICT, train_x, test_x, valid_x):
+    """TO ensure this z scaling is only applied once to the training features, we use a generator. 
+    This doesn't change the shapes of anything, just applies z to all the feature columns other than tau"""
     for i in range(NFEATURES-1):
-        train_x[:,i] = z(train_x[:,i])
-        test_x[:,i] = z(test_x[:,i])
-        valid_x[:,i] = z(valid_x[:,i])
+        variable = list(TRAIN_SCALE_DICT)[i]
+        train_mean = float(TRAIN_SCALE_DICT[variable]['mean'])
+        train_std = float(TRAIN_SCALE_DICT[variable]['std'])
+        train_x[:,i] = z2(train_x[:,i], mean = train_mean, std=train_std)
+        test_x[:,i] = z2(test_x[:,i], mean = train_mean, std=train_std)
+        valid_x[:,i] = z2(valid_x[:,i], mean = train_mean, std=train_std)
     yield train_x 
     yield test_x 
     yield valid_x
+    
+    
 
-def apply_z_to_targets():
-    train_t_ratio_ = z(train_t_ratio) 
-    test_t_ratio_ = z(test_t_ratio) 
-    valid_t_ratio_ = z(valid_t_ratio)
+def apply_z_to_targets(train_t_ratio, test_t_ratio, valid_t_ratio):
+    train_mean = np.mean(train_t_ratio)
+    train_std = np.std(train_t_ratio)
+    train_t_ratio_ = z2(train_t_ratio, mean = train_mean, std = train_std) 
+    test_t_ratio_ = z2(test_t_ratio, mean = train_mean, std = train_std) 
+    valid_t_ratio_ = z2(valid_t_ratio, mean = train_mean, std = train_std)
     
     yield train_t_ratio_
     yield test_t_ratio_
     yield valid_t_ratio_
     
-NFEATURES=train_x.shape[1]
 # to features
-apply_z_generator = apply_z_to_features()
+apply_z_generator = apply_z_to_features(TRAIN_SCALE_DICT, train_x, test_x, valid_x)
 train_x = next(apply_z_generator)
 test_x = next(apply_z_generator)
 valid_x = next(apply_z_generator)
 print(valid_x.mean(axis=0), valid_x.std(axis=0))
 print(train_x.mean(axis=0), train_x.std(axis=0))
+
 #to targets
-apply_z_to_targets_generator = apply_z_to_targets()
+apply_z_to_targets_generator = apply_z_to_targets(train_t_ratio, test_t_ratio, valid_t_ratio)
 train_t_ratio = next(apply_z_to_targets_generator)
 test_t_ratio = next(apply_z_to_targets_generator)
 valid_t_ratio = next(apply_z_to_targets_generator)
 print(valid_t_ratio.mean(), valid_t_ratio.std())
 print(train_t_ratio.mean(), train_t_ratio.std())
 
-
-
-#check that it looks correct
-# fig = plt.figure(figsize=(10, 4))
-# ax = fig.add_subplot(autoscale_on=True)
-# ax.grid()
-# for i in range(NFEATURES):
-#     ax.hist(train_x[:,i], alpha=0.35, label=f'feature {i}' )
-#     # set_axes(ax=ax, xlabel="Transformed features X' ",title="training features post-z score: X'=z(L(X))")
-# ax.legend()
-# plt.show()
 
 #check that it looks correct
 # fig = plt.figure(figsize=(10, 4))
@@ -485,33 +511,30 @@ print(train_t_ratio.mean(), train_t_ratio.std())
 #BEST_PARAMS=pd.read_csv(tuned_filename)
 #print(BEST_PARAMS)
 
-n_layers =4 # int(BEST_PARAMS["n_layers"]) 
-hidden_size = 25 #int(BEST_PARAMS["hidden_size"])
-dropout = 0.25 #float(BEST_PARAMS["dropout"])
 
-optimizer_name ='SGD' #BEST_PARAMS["optimizer_name"]
+dropout = 0.25 #float(BEST_PARAMS["dropout"])s
+optimizer_name ='Adam' #BEST_PARAMS["optimizer_name"]
 print(type(optimizer_name))
 #optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
-
-def load_untrained_model():
-    model=TrainingRegularizedRegressionModel(nfeatures=NFEATURES, ntargets=1,
-                               nlayers=n_layers, hidden_size=hidden_size, dropout=dropout)
+def load_untrained_model(PARAMS):
+    model=RegularizedRegressionModel(nfeatures=NFEATURES, ntargets=1,
+                               nlayers=PARAMS['n_layers'], hidden_size=PARAMS['hidden_size'], dropout_1=PARAMS['dropout_1'], dropout_2=PARAMS['dropout_2'],
+                               activation=PARAMS['activation'])
+    # model.apply(initialize_weights)
     print(model)
     return model
 
-model=load_untrained_model()
-
-
 # optimizer_name =  'Adam'
-best_learning_rate =  0.009945 #float(BEST_PARAMS["learning_rate"])
-momentum=0.39 #float(BEST_PARAMS["momentum"]) 
-best_optimizer_temp = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate,momentum=momentum)
-batch_size = 512 #int(BEST_PARAMS["batch_size"])
-
+best_learning_rate =  3e-02 #float(BEST_PARAMS["learning_rate"])
+momentum=0.3 #float(BEST_PARAMS["momentum"]) 
+# best_optimizer_temp = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate,
+#                                                            momentum=momentum,
+#                                                           amsgrad=True  )
+batch_size = int(512 ) #512 #int(BEST_PARAMS["batch_size"])
 # BATCHSIZE=10000
 BATCHSIZE=batch_size 
 # n_iterations=int(1e7)
-n_iterations=int(4e2)
+n_iterations=int(2e5)
 
 def train(model, optimizer, avloss, getbatch,
           train_x, train_t, 
@@ -613,9 +636,11 @@ def run(model,
 
     learning_rate= best_learning_rate
     #add weight decay (important regularization to reduce overfitting)
-    L2=1e-4
+    L2=5e-2
     # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=L2)
-    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate, momentum=momentum, 
+    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate,     
+                                                     amsgrad=True, eps=1e-7,
+                                                    #  momentum=momentum, 
                                                     #  weight_decay=L2
                                                      )
     
@@ -631,8 +656,12 @@ def run(model,
                   step=traces_step, 
                   window=traces_window)
     
-    learning_rate=learning_rate/100
-    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate, momentum=momentum)
+    learning_rate=learning_rate/10
+    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate, 
+                                                     amsgrad=True,
+                                                    #  momentum=momentum,
+                                                    # weight_decay=L2
+                                                     )
     #10^-4
     traces = train(model, optimizer, 
                       average_quantile_loss,
@@ -646,21 +675,25 @@ def run(model,
                   window=traces_window)
 
 
-#     learning_rate=learning_rate/100
-#     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate) 
-#     #10^-6
-#     traces = train(model, optimizer, 
-#                       average_quantile_loss,
-#                       get_batch,
-#                       train_x, train_t, 
-#                       valid_x, valid_t,
-#                       n_batch, 
-#                   n_iterations,
-#                   traces,
-#                   step=traces_step, 
-#                   window=traces_window)
+    learning_rate=learning_rate/100
+    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate, 
+                                                     amsgrad=True,
+                                                    #  momentum=momentum,
+                                                    # weight_decay=L2
+                                                     )
+    #10^-6
+    traces = train(model, optimizer, 
+                      average_quantile_loss,
+                      get_batch,
+                      train_x, train_t, 
+                      valid_x, valid_t,
+                      n_batch, 
+                  n_iterations,
+                  traces,
+                  step=traces_step, 
+                  window=traces_window)
 
-    # plot_average_loss(traces)
+    # plot_average_loss(traces, n_iterations,target)
 
     if save_model:
         filename='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
@@ -680,6 +713,13 @@ def save_model(model, PATH):
     print('\ntrained model dictionary saved in %s' % PATH)
 
 @debug
+def save_model_params(model, PATH):
+    print(model)
+    torch.save(model.state_dict(), PATH)
+    print('\ntrained model dictionary saved in %s' % PATH)
+    
+
+@debug
 def load_model(PATH):
     # n_layers = int(BEST_PARAMS["n_layers"]) 
     # hidden_size = int(BEST_PARAMS["hidden_size"])
@@ -687,7 +727,7 @@ def load_model(PATH):
     # optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
     # learning_rate =  float(BEST_PARAMS["learning_rate"])
     # batch_size = int(BEST_PARAMS["batch_size"])
-    model =  TrainingRegularizedRegressionModel(
+    model =  RegularizedRegressionModel(
         nfeatures=train_x.shape[1], 
         ntargets=1,
         nlayers=n_layers, 
@@ -701,26 +741,33 @@ def load_model(PATH):
     print(model)
     return model
 
-def main():
-    IQN_trace=([], [], [], [])
-    traces_step = 800
-    traces_window=traces_step
-    IQN = run(model=model,train_x=train_x, train_t=train_t_ratio, 
-            valid_x=test_x, valid_t=test_t_ratio, traces=IQN_trace, n_batch=BATCHSIZE, 
-            n_iterations=n_iterations, traces_step=traces_step, traces_window=traces_window,
-            save_model=False)
+# def main():
+    #N_epochs X N_train_examples = N_iterations X batch_size
+N_epochs = (n_iterations * BATCHSIZE)/int(train_x.shape[0])
+print(f'training for {n_iterations} iteration, which is  {N_epochs} epochs')
+PARAMS = {'n_layers':int(3), 'hidden_size':int(128), 'dropout_1':float(0.6), 'dropout_2':float(0.9), 'activation':'LeakyReLU'
+        #   'optimizer_name':'SGD', 
+          }
+model=load_untrained_model(PARAMS)
+IQN_trace=([], [], [], [])
+traces_step = 800
+traces_window=traces_step
+IQN = run(model=model,train_x=train_x, train_t=train_t_ratio, 
+        valid_x=test_x, valid_t=test_t_ratio, traces=IQN_trace, n_batch=BATCHSIZE, 
+        n_iterations=n_iterations, traces_step=traces_step, traces_window=traces_window,
+        save_model=False)
 
 
-    # ## Save trained model (if its good, and if you haven't saved above) and load trained model (if you saved it)
+# ## Save trained model (if its good, and if you haven't saved above) and load trained model (if you saved it)
 
 
-    filename='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
-    trained_models_dir='trained_models'
-    mkdir(trained_models_dir)
-    # on cluster, Im using another TRAIN directory
-    PATH = os.path.join(IQN_BASE,'JupyterBook', 'Cluster', 'TRAIN', trained_models_dir , filename)
+filename_model='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
+trained_models_dir='trained_models'
+mkdir(trained_models_dir)
+# on cluster, Im using another TRAIN directory
+PATH_model = os.path.join(IQN_BASE,'JupyterBook', 'Cluster', 'TRAIN', trained_models_dir , filename_model)
 
-    save_model(IQN, PATH)
+save_model(IQN, PATH_model)
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
