@@ -530,11 +530,11 @@ momentum=0.3 #float(BEST_PARAMS["momentum"])
 # best_optimizer_temp = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate,
 #                                                            momentum=momentum,
 #                                                           amsgrad=True  )
-batch_size = int(512 * 2) #512 #int(BEST_PARAMS["batch_size"])
+batch_size = int(512 *2) #512 #int(BEST_PARAMS["batch_size"])
 # BATCHSIZE=10000
 BATCHSIZE=batch_size 
 # n_iterations=int(1e7)
-n_iterations=int(2e5)
+n_iterations=int(7e4)
 
 
 class SaveModelCheckpoint:
@@ -546,13 +546,14 @@ class SaveModelCheckpoint:
             #update the best loss
             self.best_valid_loss = current_valid_loss
             filename_model='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
+            #note that n_iterations is the total n_iterations, we dont want to save a million files for each iteration
             trained_models_dir='trained_models'
             mkdir(trained_models_dir)
             # on cluster, Im using another TRAIN directory
             PATH_model = os.path.join(IQN_BASE,'JupyterBook', 'Cluster', 'TRAIN', trained_models_dir , filename_model)
             torch.save(model.state_dict(), PATH_model)
-            print(f"saved better model at {PATH_model}")
-            
+            print(f"\nCurrent valid loss: {current_valid_loss};  saved better model at {PATH_model}")
+            #save using .pth object which if a dictionary of dicionaries, so that I can have PARAMS saved in the same file
 def train(model, optimizer, avloss, getbatch,
           train_x, train_t, 
           valid_x, valid_t,
@@ -646,11 +647,11 @@ def train(model, optimizer, avloss, getbatch,
 def run(model, 
         train_x, train_t, 
         valid_x, valid_t, traces,
-        n_batch=BATCHSIZE, 
-        n_iterations=n_iterations, 
-        traces_step=200, 
-        traces_window=200,
-        save_model=False):
+        n_batch, 
+        n_iterations, 
+        traces_step, 
+        traces_window,
+        save_model):
 
     learning_rate= best_learning_rate
     #add weight decay (important regularization to reduce overfitting)
@@ -763,12 +764,12 @@ def load_model(PATH):
     #N_epochs X N_train_examples = N_iterations X batch_size
 N_epochs = (n_iterations * BATCHSIZE)/int(train_x.shape[0])
 print(f'training for {n_iterations} iteration, which is  {N_epochs} epochs')
-PARAMS = {'n_layers':int(1), 'hidden_size':int(64), 'dropout_1':float(0.9), 'dropout_2':float(0.9), 'activation':'LeakyReLU'
+PARAMS_ = {'n_layers':int(1), 'hidden_size':int(128), 'dropout_1':float(0.9), 'dropout_2':float(0.9), 'activation':'LeakyReLU'
         #   'optimizer_name':'SGD', 
           }
-model=load_untrained_model(PARAMS)
+model=load_untrained_model(PARAMS_)
 IQN_trace=([], [], [], [])
-traces_step = 20
+traces_step = 2
 traces_window=traces_step
 IQN = run(model=model,train_x=train_x, train_t=train_t_ratio, 
         valid_x=test_x, valid_t=test_t_ratio, traces=IQN_trace, n_batch=BATCHSIZE, 
