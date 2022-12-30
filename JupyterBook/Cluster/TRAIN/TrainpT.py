@@ -525,27 +525,45 @@ def load_untrained_model(PARAMS):
     return model
 
 # optimizer_name =  'Adam'
-best_learning_rate =  3e-02 #float(BEST_PARAMS["learning_rate"])
+best_learning_rate =  3e-03 #float(BEST_PARAMS["learning_rate"])
 momentum=0.3 #float(BEST_PARAMS["momentum"]) 
 # best_optimizer_temp = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate,
 #                                                            momentum=momentum,
 #                                                           amsgrad=True  )
-batch_size = int(512 ) #512 #int(BEST_PARAMS["batch_size"])
+batch_size = int(512 * 3) #512 #int(BEST_PARAMS["batch_size"])
 # BATCHSIZE=10000
 BATCHSIZE=batch_size 
 # n_iterations=int(1e7)
-n_iterations=int(2e5)
+n_iterations=int(1e3)
 
+
+class SaveModelCheckpoint:
+    def __init__(self, best_valid_loss=np.inf):
+        self.best_valid_loss = best_valid_loss
+        
+    def __call__(self, model, current_valid_loss):
+        if current_valid_loss < self.best_valid_loss:
+            #update the best loss
+            self.best_valid_loss = current_valid_loss
+            filename_model='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
+            #note that n_iterations is the total n_iterations, we dont want to save a million files for each iteration
+            trained_models_dir='trained_models'
+            mkdir(trained_models_dir)
+            # on cluster, Im using another TRAIN directory
+            PATH_model = os.path.join(IQN_BASE,'JupyterBook', 'Cluster', 'TRAIN', trained_models_dir , filename_model)
+            torch.save(model.state_dict(), PATH_model)
+            print(f"\nCurrent valid loss: {current_valid_loss};  saved better model at {PATH_model}")
+            #save using .pth object which if a dictionary of dicionaries, so that I can have PARAMS saved in the same file
 def train(model, optimizer, avloss, getbatch,
           train_x, train_t, 
           valid_x, valid_t,
           batch_size, 
           n_iterations, traces, 
-          step=10, window=10):
+          step, window):
     
     # to keep track of average losses
     xx, yy_t, yy_v, yy_v_avg = traces
-    
+    model_checkpoint=SaveModelCheckpoint()
     n = len(valid_x)
     
     print('Iteration vs average loss')
@@ -555,6 +573,7 @@ def train(model, optimizer, avloss, getbatch,
 
         # set mode to training so that training specific 
         # operations such as dropout are enabled.
+        # time_p_start = time.perf_counter()
         model.train()
         
         # get a random sample (a batch) of data (as numpy arrays)
@@ -595,11 +614,15 @@ def train(model, optimizer, avloss, getbatch,
         #valid set (when valid loss plateaus or starts increasing when train loss keeps decreasing)
         if ii % step == 0:
             
+            
             acc_t = validate(model, avloss, train_x[:n], train_t[:n]) 
             acc_v = validate(model, avloss, valid_x[:n], valid_t[:n])
+
+             
             yy_t.append(acc_t)
             yy_v.append(acc_v)
-            
+            #save better models based on valid loss
+            model_checkpoint(model=model, current_valid_loss=acc_v)
             # compute running average for validation data
             len_yy_v = len(yy_v)
             if   len_yy_v < window:
@@ -619,7 +642,11 @@ def train(model, optimizer, avloss, getbatch,
                     
                 print("\r%10d\t%10.6f\t%10.6f\t%10.6f" %                           (xx[-1], yy_t[-1], yy_v[-1], yy_v_avg[-1]), 
                       end='')
-            
+        # time_p_end = time.perf_counter()
+        # time_for_this_iter = time_p_end-time_p_start
+        # time_per_example = time_for_this_iter/batch_size
+        # print(f'training time for one example: {time_per_example}')
+
     print()      
     return (xx, yy_t, yy_v, yy_v_avg)
 
@@ -628,20 +655,20 @@ def train(model, optimizer, avloss, getbatch,
 def run(model, 
         train_x, train_t, 
         valid_x, valid_t, traces,
-        n_batch=BATCHSIZE, 
-        n_iterations=n_iterations, 
-        traces_step=200, 
-        traces_window=200,
-        save_model=False):
+        n_batch, 
+        n_iterations, 
+        traces_step, 
+        traces_window,
+        save_model):
 
     learning_rate= best_learning_rate
     #add weight decay (important regularization to reduce overfitting)
-    L2=5e-2
+    L2=1e-4
     # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=L2)
     optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate,     
                                                      amsgrad=True, eps=1e-7,
                                                     #  momentum=momentum, 
-                                                    #  weight_decay=L2
+                                                     weight_decay=L2
                                                      )
     
     #starting at 10^-3	    
@@ -656,42 +683,61 @@ def run(model,
                   step=traces_step, 
                   window=traces_window)
     
-    learning_rate=learning_rate/10
-    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate, 
-                                                     amsgrad=True,
-                                                    #  momentum=momentum,
-                                                    # weight_decay=L2
-                                                     )
-    #10^-4
-    traces = train(model, optimizer, 
-                      average_quantile_loss,
-                      get_batch,
-                      train_x, train_t, 
-                      valid_x, valid_t,
-                      n_batch, 
-                  n_iterations,
-                  traces,
-                  step=traces_step, 
-                  window=traces_window)
+    # learning_rate=learning_rate/10
+    # optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate, 
+    #                                                  amsgrad=True,
+    #                                                 #  momentum=momentum,
+    #                                                 # weight_decay=L2
+    #                                                  )
+    # 10^-4
+    # traces = train(model, optimizer, 
+    #                   average_quantile_loss,
+    #                   get_batch,
+    #                   train_x, train_t, 
+    #                   valid_x, valid_t,
+    #                   n_batch, 
+    #               n_iterations,
+    #               traces,
+    #               step=traces_step, 
+    #               window=traces_window)
 
 
-    learning_rate=learning_rate/100
-    optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate, 
-                                                     amsgrad=True,
-                                                    #  momentum=momentum,
-                                                    # weight_decay=L2
-                                                     )
-    #10^-6
-    traces = train(model, optimizer, 
-                      average_quantile_loss,
-                      get_batch,
-                      train_x, train_t, 
-                      valid_x, valid_t,
-                      n_batch, 
-                  n_iterations,
-                  traces,
-                  step=traces_step, 
-                  window=traces_window)
+    # learning_rate=learning_rate/10
+    # optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate, 
+    #                                                  amsgrad=True,
+    #                                                 #  momentum=momentum,
+    #                                                 # weight_decay=L2
+    #                                                  )
+    # #10^-6
+    # traces = train(model, optimizer, 
+    #                   average_quantile_loss,
+    #                   get_batch,
+    #                   train_x, train_t, 
+    #                   valid_x, valid_t,
+    #                   n_batch, 
+    #               n_iterations,
+    #               traces,
+    #               step=traces_step, 
+    #               window=traces_window)
+    
+    # learning_rate=learning_rate/10
+    # optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate, 
+    #                                                  amsgrad=True,
+    #                                                 #  momentum=momentum,
+    #                                                 # weight_decay=L2
+    #                                                  )
+    # #10^-6
+    # traces = train(model, optimizer, 
+    #                   average_quantile_loss,
+    #                   get_batch,
+    #                   train_x, train_t, 
+    #                   valid_x, valid_t,
+    #                   n_batch, 
+    #               n_iterations,
+    #               traces,
+    #               step=traces_step, 
+    #               window=traces_window)
+    
 
     # plot_average_loss(traces, n_iterations,target)
 
@@ -745,29 +791,25 @@ def load_model(PATH):
     #N_epochs X N_train_examples = N_iterations X batch_size
 N_epochs = (n_iterations * BATCHSIZE)/int(train_x.shape[0])
 print(f'training for {n_iterations} iteration, which is  {N_epochs} epochs')
-PARAMS = {'n_layers':int(3), 'hidden_size':int(128), 'dropout_1':float(0.6), 'dropout_2':float(0.9), 'activation':'LeakyReLU'
+
+
+PARAMS_ = {'n_layers':int(1), 'hidden_size':int(128), 'dropout_1':float(0.95), 'dropout_2':float(0.95), 'activation':'LeakyReLU'
         #   'optimizer_name':'SGD', 
           }
-model=load_untrained_model(PARAMS)
-IQN_trace=([], [], [], [])
-traces_step = 800
-traces_window=traces_step
-IQN = run(model=model,train_x=train_x, train_t=train_t_ratio, 
-        valid_x=test_x, valid_t=test_t_ratio, traces=IQN_trace, n_batch=BATCHSIZE, 
-        n_iterations=n_iterations, traces_step=traces_step, traces_window=traces_window,
-        save_model=False)
-
-
-# ## Save trained model (if its good, and if you haven't saved above) and load trained model (if you saved it)
-
-
 filename_model='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
 trained_models_dir='trained_models'
 mkdir(trained_models_dir)
 # on cluster, Im using another TRAIN directory
 PATH_model = os.path.join(IQN_BASE,'JupyterBook', 'Cluster', 'TRAIN', trained_models_dir , filename_model)
 
-save_model(IQN, PATH_model)
-
-# if __name__ == '__main__':
-#     main()
+#to load untrained model (start training from scratch), uncomment the next line
+# model=load_untrained_model(PARAMS_)
+IQN_trace=([], [], [], [])
+traces_step = 2
+traces_window=traces_step
+#to continune training of model (pickup where the previous training left off), uncomment below
+model_trained=load_trained_model(PATH=PATH_model, PARAMS=PARAMS_)
+IQN = run(model=model_trained,train_x=train_x, train_t=train_t_ratio, 
+        valid_x=test_x, valid_t=test_t_ratio, traces=IQN_trace, n_batch=BATCHSIZE, 
+        n_iterations=n_iterations, traces_step=traces_step, traces_window=traces_window,
+        save_model=False)

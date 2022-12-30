@@ -85,32 +85,7 @@ import utils
 # whats in it so its fine
 from utils import *
 
-
-
-# def show_jupyter_image(image_filename, width = 1300, height = 300):
-#     """Show a saved image directly in jupyter. Make sure image_filename is in your IQN_BASE !"""
-#     display(Image(os.path.join(IQN_BASE,image_filename), width = width, height = height  ))
-
-
-# def use_svg_display():
-#     """Use the svg format to display a plot in Jupyter (better quality)"""
-#     from matplotlib_inline import backend_inline
-#     backend_inline.set_matplotlib_formats('svg')
-
 # from IPython.core.magic import register_cell_magic
-
-# @register_cell_magic
-def write_and_run(line, cell):
-    """write the current cell to a file (or append it with -a argument) as well as execute it
-    use with %%write_and_run at the top of a given cell"""
-    argz = line.split()
-    file = argz[-1]
-    mode = "w"
-    if len(argz) == 2 and argz[0] == "-a":
-        mode = "a"
-    with open(file, mode) as f:
-        f.write(cell)
-    # get_ipython().run_cell(cell)
 
 
 # @debug
@@ -137,8 +112,6 @@ mp.rc("text", usetex=True)
 # seed = 128
 # rnd  = np.random.RandomState(seed)
 # sometimes jupyter doesnt initialize MathJax automatically for latex, so do this:
-
-
 ################################### CONFIGURATIONS ###################################
 DATA_DIR = os.environ["DATA_DIR"]
 print(f"using DATA_DIR={DATA_DIR}")
@@ -153,6 +126,8 @@ else:
     SUBSAMPLE = None
 
 memory = Memory(DATA_DIR)
+
+USE_BRADEN_SCALING=False
 ###############################################################################################
 y_label_dict = {
     "RecoDatapT": "$p(p_T)$" + " [ GeV" + "$^{-1} $" + "]",
@@ -239,34 +214,38 @@ all_cols = [
 
 
 ################################### Load unscaled dataframes ###################################
-# print(f"SUBSAMPLE = {SUBSAMPLE}")
-# raw_train_data = pd.read_csv(
-#     os.path.join(DATA_DIR, "train_data_10M_2.csv"), usecols=all_cols, nrows=SUBSAMPLE
-# )
+################################### Load unscaled dataframes ###################################
+@memory.cache
+def load_raw_data():
+    print(f'SUBSAMPLE = {SUBSAMPLE}')
+    raw_train_data=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
+                        usecols=all_cols,
+                        nrows=SUBSAMPLE
+                        )
 
-# raw_test_data = pd.read_csv(
-#     os.path.join(DATA_DIR, "test_data_10M_2.csv"), usecols=all_cols, nrows=SUBSAMPLE
-# )
+    raw_test_data=pd.read_csv(os.path.join(DATA_DIR,'test_data_10M_2.csv'),
+                        usecols=all_cols,
+                        nrows=SUBSAMPLE
+                        )
 
-# raw_valid_data = pd.read_csv(
-#     os.path.join(DATA_DIR, "validation_data_10M_2.csv"),
-#     usecols=all_cols,
-#     nrows=SUBSAMPLE,
-# )
+    raw_valid_data=pd.read_csv(os.path.join(DATA_DIR,'validation_data_10M_2.csv'),
+                        usecols=all_cols,
+                        nrows=SUBSAMPLE
+                        )
 
-# print("\n RAW TRAIN DATA\n")
-# print(raw_train_data.shape)
-# raw_train_data.describe()  # unscaled
-# print("\n RAW TEST DATA\n")
-# print(raw_test_data.shape)
-# raw_test_data.describe()  # unscaled
-# print("\n RAW TRAIN DATA\n")
-# print(raw_train_data.shape)
-# raw_train_data.describe()  # unscaled
-# print("\n RAW TEST DATA\n")
-# print(raw_test_data.shape)
-# raw_test_data.describe()  # unscaled
 
+    print('\n RAW TRAIN DATA SHAPE\n')
+    print(raw_train_data.shape)
+    print('\n RAW TRAIN DATA\n')
+    raw_train_data.describe()#unscaled
+    print('\n RAW TEST DATA\ SHAPEn')
+    print(raw_test_data.shape)
+    print('\n RAW TEST DATA\n')
+    raw_test_data.describe()#unscaled
+
+    return raw_train_data, raw_test_data, raw_valid_data
+
+raw_train_data, raw_test_data, raw_valid_data =load_raw_data()
 ########## Generate scaled data###############
 # scaled_train_data = L_scale_df(raw_train_data, title='scaled_train_data_10M_2.csv',
 #                              save=True)
@@ -284,27 +263,27 @@ all_cols = [
 @time_type_of_func(tuning_or_training='loading')
 @memory.cache
 def load_scaled_dataframes():
-    print("SCALED TRAIN DATA")
-    train_data_m = pd.read_csv(
+    # print("SCALED TRAIN DATA")
+    scaled_train_data = pd.read_csv(
         os.path.join(DATA_DIR, "scaled_train_data_10M_2.csv"),
         usecols=all_cols,
         nrows=SUBSAMPLE,
     )
 
-    print("TRAINING FEATURES\n", train_data_m.head())
+    # print("TRAINING FEATURES\n", scaled_train_data.head())
 
-    test_data_m = pd.read_csv(
+    scaled_test_data = pd.read_csv(
         os.path.join(DATA_DIR, "scaled_test_data_10M_2.csv"),
         usecols=all_cols,
         nrows=SUBSAMPLE,
     )
 
-    valid_data_m = pd.read_csv(
+    scaled_valid_data = pd.read_csv(
         os.path.join(DATA_DIR, "scaled_valid_data_10M_2.csv"),
         usecols=all_cols,
         nrows=SUBSAMPLE,
     )
-    return train_data_m, test_data_m, valid_data_m
+    return scaled_train_data, scaled_test_data, scaled_valid_data
 
 # print('\nTESTING FEATURES\n', test_data_m.head())
 
@@ -312,18 +291,23 @@ def load_scaled_dataframes():
 # print('\ntest set shape:  ', test_data_m.shape)
 # # print('validation set shape:', valid_data.shape)
 
-train_data_m, test_data_m, valid_data_m = load_scaled_dataframes()
+scaled_train_data, scaled_test_data, scaled_valid_data = load_scaled_dataframes()
 
-scaled_train_data = train_data_m
-scaled_test_data = test_data_m
-scaled_valid_data = valid_data_m
 
-TRAIN_SCALE_DICT = get_scaling_info(scaled_train_data)
-print(TRAIN_SCALE_DICT)
-print("\n\n")
-TEST_SCALE_DICT = get_scaling_info(scaled_test_data)
-print(TEST_SCALE_DICT)
-
+if USE_BRADEN_SCALING:
+    TRAIN_SCALE_DICT = get_scaling_info(scaled_train_data)
+    print('BRADEN SCALING DICTIONARY')
+    print(TRAIN_SCALE_DICT)
+    print("\n\n")
+    # TEST_SCALE_DICT = get_scaling_info(scaled_test_data)
+    # print(TEST_SCALE_DICT)
+else:
+    print('NORMAL UNSCALED DICTIONARY')
+    TRAIN_SCALE_DICT = get_scaling_info(raw_train_data)
+    print(TRAIN_SCALE_DICT)
+    print("\n\n")
+    # TEST_SCALE_DICT = get_scaling_info(scaled_test_data)
+    # print(TEST_SCALE_DICT)
 
 #######################################
 target = "RecoDatam"
@@ -351,25 +335,54 @@ def split_t_x(df, target, input_features):
     x = np.array(df[input_features])
     return np.array(t), x
 
+@memory.cache
+def normal_split_t_x(df, target, input_features):
+    # change from pandas dataframe format to a numpy 
+    # array of the specified types
+    # t = np.array(df[target])
+    t = np.array(df[target])
+    x = np.array(df[input_features])
+    return t, x
 
-print(f"spliting data for {target}")
-train_t_ratio, train_x = split_t_x(
-    df=train_data_m, target=target, input_features=features
-)
-print("train_t shape = ", train_t_ratio.shape, "train_x shape = ", train_x.shape)
-print("\n Training features:\n")
-print(train_x)
-valid_t_ratio, valid_x = split_t_x(
-    df=valid_data_m, target=target, input_features=features
-)
-print("valid_t shape = ", valid_t_ratio.shape, "valid_x shape = ", valid_x.shape)
-test_t_ratio, test_x = split_t_x(df=test_data_m, target=target, input_features=features)
-print("test_t shape = ", test_t_ratio.shape, "test_x shape = ", test_x.shape)
+
+if USE_BRADEN_SCALING:
+    print(f"spliting data for {target}")
+    train_t, train_x = split_t_x(
+        df=scaled_train_data, target=target, input_features=features
+    )
+    print("train_t shape = ", train_t.shape, "train_x shape = ", train_x.shape)
+    print("\n Training features:\n")
+    print(train_x)
+    valid_t, valid_x = split_t_x(
+        df=scaled_valid_data, target=target, input_features=features
+    )
+    print("valid_t shape = ", valid_t.shape, "valid_x shape = ", valid_x.shape)
+    test_t, test_x = split_t_x(df=scaled_test_data, target=target, input_features=features)
+    print("test_t shape = ", test_t.shape, "test_x shape = ", test_x.shape)
+
+else:
+    print(f"spliting data for {target}")
+    train_t, train_x = normal_split_t_x(
+    df=raw_train_data, target=target, input_features=features
+    )
+    print("train_t shape = ", train_t.shape, "train_x shape = ", train_x.shape)
+    print("\n Training features:\n")
+    print(train_x)
+    valid_t, valid_x = normal_split_t_x(
+    df=raw_valid_data, target=target, input_features=features
+    )
+    print("valid_t shape = ", valid_t.shape, "valid_x shape = ", valid_x.shape)
+    test_t, test_x = normal_split_t_x(df=raw_test_data, target=target, input_features=features)
+    print("test_t shape = ", test_t.shape, "test_x shape = ", test_x.shape)
+
+
+
+
 print("no need to train_test_split since we already have the split dataframes")
 print(valid_x.mean(axis=0), valid_x.std(axis=0))
 print(train_x.mean(axis=0), train_x.std(axis=0))
-print(valid_t_ratio.mean(), valid_t_ratio.std())
-print(train_t_ratio.mean(), train_t_ratio.std())
+print(valid_t.mean(), valid_t.std())
+print(train_t.mean(), train_t.std())
 NFEATURES = train_x.shape[1]
 
 ################ Apply Z scaling############
@@ -400,7 +413,7 @@ def z_inverse(xprime, x):
 @memory.cache
 def z_inverse2(xprime, train_mean, train_std):
     """mean original train mean, std: original. Probably not needed"""
-    return xprime * train_mean + train_std
+    return xprime * train_std + train_mean
 
 @memory.cache
 def apply_z_to_features(TRAIN_SCALE_DICT, train_x, test_x, valid_x):
@@ -419,35 +432,35 @@ def apply_z_to_features(TRAIN_SCALE_DICT, train_x, test_x, valid_x):
 
 
 @memory.cache
-def apply_z_to_targets(train_t_ratio, test_t_ratio, valid_t_ratio):
-    train_mean = np.mean(train_t_ratio)
-    train_std = np.std(train_t_ratio)
-    train_t_ratio_ = z2(train_t_ratio, mean=train_mean, std=train_std)
-    test_t_ratio_ = z2(test_t_ratio, mean=train_mean, std=train_std)
-    valid_t_ratio_ = z2(valid_t_ratio, mean=train_mean, std=train_std)
+def apply_z_to_targets(train_t, test_t, valid_t):
+    train_mean = np.mean(train_t)
+    train_std = np.std(train_t)
+    train_t_ = z2(train_t, mean=train_mean, std=train_std)
+    test_t_ = z2(test_t, mean=train_mean, std=train_std)
+    valid_t_ = z2(valid_t, mean=train_mean, std=train_std)
 
-    yield train_t_ratio_
-    yield test_t_ratio_
-    yield valid_t_ratio_
+    yield train_t_
+    yield test_t_
+    yield valid_t_
 
 
 # to features
 apply_z_generator = apply_z_to_features(TRAIN_SCALE_DICT, train_x, test_x, valid_x)
-train_x = next(apply_z_generator)
-test_x = next(apply_z_generator)
-valid_x = next(apply_z_generator)
-print(valid_x.mean(axis=0), valid_x.std(axis=0))
-print(train_x.mean(axis=0), train_x.std(axis=0))
+train_x_z_scaled = next(apply_z_generator)
+test_x_z_scaled = next(apply_z_generator)
+valid_x_z_scaled = next(apply_z_generator)
+print(valid_x_z_scaled.mean(axis=0), valid_x_z_scaled.std(axis=0))
+print(train_x_z_scaled.mean(axis=0), train_x_z_scaled.std(axis=0))
 
 # to targets
 apply_z_to_targets_generator = apply_z_to_targets(
-    train_t_ratio, test_t_ratio, valid_t_ratio
+    train_t, test_t, valid_t
 )
-train_t_ratio = next(apply_z_to_targets_generator)
-test_t_ratio = next(apply_z_to_targets_generator)
-valid_t_ratio = next(apply_z_to_targets_generator)
-print(valid_t_ratio.mean(), valid_t_ratio.std())
-print(train_t_ratio.mean(), train_t_ratio.std())
+train_t_z_scaled = next(apply_z_to_targets_generator)
+test_t_z_scaled = next(apply_z_to_targets_generator)
+valid_t_z_scaled = next(apply_z_to_targets_generator)
+print(valid_t_z_scaled.mean(), valid_t_z_scaled.std())
+print(train_t_z_scaled.mean(), train_t_z_scaled.std())
 
 
 # check that it looks correct
@@ -469,7 +482,7 @@ print(train_t_ratio.mean(), train_t_ratio.std())
 # print(BEST_PARAMS)
 
 
-optimizer_name = "SGD"  # BEST_PARAMS["optimizer_name"]
+optimizer_name = "Adam"  # BEST_PARAMS["optimizer_name"]
 print(type(optimizer_name))
 # optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
 def load_untrained_model(PARAMS):
@@ -487,17 +500,16 @@ def load_untrained_model(PARAMS):
     return model
 
 
-# optimizer_name =  'Adam'
 best_learning_rate = 1e-03  # float(BEST_PARAMS["learning_rate"])
-momentum = 0.9  # float(BEST_PARAMS["momentum"])
+momentum = 0.6  # float(BEST_PARAMS["momentum"])
 # best_optimizer_temp = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate,
 #                                                            momentum=momentum,
 #                                                           amsgrad=True  )
-batch_size = int(512*1)  # 512 #int(BEST_PARAMS["batch_size"])
+batch_size = int(512)  # 512 #int(BEST_PARAMS["batch_size"])
 # BATCHSIZE=10000
 BATCHSIZE = batch_size
 # n_iterations=int(1e7)
-n_iterations = int(2e5)
+n_iterations = int(3e5)
 
 
 class SaveModelCheckpoint:
@@ -533,7 +545,7 @@ class SaveModelCheckpoint:
 
 def train(
     model,
-    optimizer,
+    # optimizer,
     avloss,
     getbatch,
     train_x,
@@ -551,11 +563,38 @@ def train(
     xx, yy_t, yy_v, yy_v_avg = traces
     model_checkpoint = SaveModelCheckpoint()
     n = len(valid_x)
-
+    
     print("Iteration vs average loss")
     print("%10s\t%10s\t%10s" % ("iteration", "train-set", "test-set"))
 
     for ii in range(n_iterations):
+        
+        learning_rate= 1e-2
+        
+        if 25000 < ii < 35000:
+            learning_rate=1e-3
+            
+        if ii > 35000:
+            learning_rate = decay_LR(ii)
+        
+        # add weight decay (important regularization to reduce overfitting)
+        L2 = 1
+        # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=L2)
+        #SGD allows for: momentum=0, dampening=0, weight_decay=0, nesterov=boolean, differentiable=boolean
+
+        optimizer = getattr(torch.optim, optimizer_name)(
+        model.parameters(),
+        lr=learning_rate,
+         amsgrad=True, 
+
+        #  weight_decay=L2,#
+        # differentiable=True,
+        #For SGD nesterov, it requires momentum and zero dampening
+        # dampening=0,
+        # momentum=momentum,
+        # nesterov=True
+        )
+
         #if ii > 1e4: learning_rate=1e-4
         # set mode to training so that training specific
         # operations such as dropout are enabled.
@@ -583,7 +622,7 @@ def train(
         # df_dtau = df_dx[:,-1]
         # x.grad.zero_()
         
-        #add noise to x
+        #add noise to training data
         # batch_x = add_noise(batch_x)
         # batch_t = add_noise(batch_t)
 
@@ -608,6 +647,7 @@ def train(
 
         if ii % step == 0:
 
+            print(f"\t\tCURRENT LEARNING RATE: {learning_rate}")
             acc_t = validate(model, avloss, train_x[:n], train_t[:n])
             acc_v = validate(model, avloss, valid_x[:n], valid_t[:n])
 
@@ -662,28 +702,10 @@ def run(
     save_model,
 ):
 
-    learning_rate = best_learning_rate
-    # add weight decay (important regularization to reduce overfitting)
-    L2 = 1
-    # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=L2)
-    #SGD allows for: momentum=0, dampening=0, weight_decay=0, nesterov=boolean, differentiable=boolean
-    optimizer = getattr(torch.optim, optimizer_name)(
-        model.parameters(),
-        lr=learning_rate,
-        #  amsgrad=True, eps=1e-7,
-        
-        #  weight_decay=L2,#
-        # differentiable=True,
-        #For SGD nesterov, it requires momentum and zero dampening
-        # dampening=0,
-         momentum=momentum,
-        nesterov=True
-    )
 
-    # starting at 10^-3
     traces = train(
         model,
-        optimizer,
+        # optimizer,
         # average_huber_quantile_loss,
         average_quantile_loss,
         get_batch,
@@ -722,35 +744,6 @@ def run(
     #                                                 #  momentum=momentum,
     #                                                 # weight_decay=L2
     #                                                  )
-    # #10^-6
-    # traces = train(model, optimizer,
-    #                   average_quantile_loss,
-    #                   get_batch,
-    #                   train_x, train_t,
-    #                   valid_x, valid_t,
-    #                   n_batch,
-    #               n_iterations,
-    #               traces,
-    #               step=traces_step,
-    #               window=traces_window)
-
-    # learning_rate=learning_rate/10
-    # optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate,
-    #                                                  amsgrad=True,
-    #                                                 #  momentum=momentum,
-    #                                                 # weight_decay=L2
-    #                                                  )
-    # #10^-6
-    # traces = train(model, optimizer,
-    #                   average_quantile_loss,
-    #                   get_batch,
-    #                   train_x, train_t,
-    #                   valid_x, valid_t,
-    #                   n_batch,
-    #               n_iterations,
-    #               traces,
-    #               step=traces_step,
-    #               window=traces_window)
 
     # plot_average_loss(traces, n_iterations,target)
 
@@ -827,11 +820,11 @@ N_epochs = (n_iterations * BATCHSIZE) / int(train_x.shape[0])
 print(f"training for {n_iterations} iteration, which is  {N_epochs} epochs")
 
 PARAMS_ = {
-    "n_layers": int(6),
+    "n_layers": int(10),
     "hidden_size": int(5),
     "dropout_1": float(0.6),
-    "dropout_2": float(0.),
-    "activation": "PReLU"
+    "dropout_2": float(0.1),
+    "activation": "LeakyReLU"
     #   'optimizer_name':'SGD',
 }
 # filename_model='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
@@ -851,14 +844,14 @@ untrained_model = load_untrained_model(PARAMS_)
 # trained_model =load_trained_model(PATH=PATH_model, PARAMS=PARAMS_)
 
 IQN_trace = ([], [], [], [])
-traces_step = 20
+traces_step = 200
 traces_window = traces_step
 IQN = run(
     model=untrained_model,
-    train_x=train_x,
-    train_t=train_t_ratio,
-    valid_x=test_x,
-    valid_t=test_t_ratio,
+    train_x=train_x_z_scaled,
+    train_t=train_t_z_scaled,
+    valid_x=test_x_z_scaled,
+    valid_t=test_t_z_scaled,
     traces=IQN_trace,
     n_batch=BATCHSIZE,
     n_iterations=n_iterations,
@@ -870,8 +863,16 @@ IQN = run(
 
 # ## Save trained model (if its good, and if you haven't saved above) and load trained model (if you saved it)
 
+final_path = "Trained_IQNx4_%s_TUNED_0lin_with_high_noise_final.dict" % target
 
-# save_model(IQN, PATH_model)
+trained_models_dir = "trained_models"
+mkdir(trained_models_dir)
+# on cluster, Im using another TRAIN directory
+PATH_final_model = os.path.join(
+    IQN_BASE, "JupyterBook", "Cluster", "TRAIN", trained_models_dir, final_path
+)
+
+# save_model(IQN, PATH_final_model)#dont save the last model, it might be worse than previous iterations,
 
 # if __name__ == '__main__':
 #     main()

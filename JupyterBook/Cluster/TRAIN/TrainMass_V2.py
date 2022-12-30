@@ -85,32 +85,7 @@ import utils
 # whats in it so its fine
 from utils import *
 
-
-
-# def show_jupyter_image(image_filename, width = 1300, height = 300):
-#     """Show a saved image directly in jupyter. Make sure image_filename is in your IQN_BASE !"""
-#     display(Image(os.path.join(IQN_BASE,image_filename), width = width, height = height  ))
-
-
-# def use_svg_display():
-#     """Use the svg format to display a plot in Jupyter (better quality)"""
-#     from matplotlib_inline import backend_inline
-#     backend_inline.set_matplotlib_formats('svg')
-
 # from IPython.core.magic import register_cell_magic
-
-# @register_cell_magic
-def write_and_run(line, cell):
-    """write the current cell to a file (or append it with -a argument) as well as execute it
-    use with %%write_and_run at the top of a given cell"""
-    argz = line.split()
-    file = argz[-1]
-    mode = "w"
-    if len(argz) == 2 and argz[0] == "-a":
-        mode = "a"
-    with open(file, mode) as f:
-        f.write(cell)
-    # get_ipython().run_cell(cell)
 
 
 # @debug
@@ -137,8 +112,6 @@ mp.rc("text", usetex=True)
 # seed = 128
 # rnd  = np.random.RandomState(seed)
 # sometimes jupyter doesnt initialize MathJax automatically for latex, so do this:
-
-
 ################################### CONFIGURATIONS ###################################
 DATA_DIR = os.environ["DATA_DIR"]
 print(f"using DATA_DIR={DATA_DIR}")
@@ -469,7 +442,7 @@ print(train_t_ratio.mean(), train_t_ratio.std())
 # print(BEST_PARAMS)
 
 
-optimizer_name = "SGD"  # BEST_PARAMS["optimizer_name"]
+optimizer_name = "Adam"  # BEST_PARAMS["optimizer_name"]
 print(type(optimizer_name))
 # optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
 def load_untrained_model(PARAMS):
@@ -487,17 +460,16 @@ def load_untrained_model(PARAMS):
     return model
 
 
-# optimizer_name =  'Adam'
 best_learning_rate = 1e-03  # float(BEST_PARAMS["learning_rate"])
-momentum = 0.9  # float(BEST_PARAMS["momentum"])
+momentum = 0.6  # float(BEST_PARAMS["momentum"])
 # best_optimizer_temp = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate,
 #                                                            momentum=momentum,
 #                                                           amsgrad=True  )
-batch_size = int(512*1)  # 512 #int(BEST_PARAMS["batch_size"])
+batch_size = int(256)  # 512 #int(BEST_PARAMS["batch_size"])
 # BATCHSIZE=10000
 BATCHSIZE = batch_size
 # n_iterations=int(1e7)
-n_iterations = int(2e5)
+n_iterations = int(1e5)
 
 
 class SaveModelCheckpoint:
@@ -533,7 +505,7 @@ class SaveModelCheckpoint:
 
 def train(
     model,
-    optimizer,
+    # optimizer,
     avloss,
     getbatch,
     train_x,
@@ -551,11 +523,38 @@ def train(
     xx, yy_t, yy_v, yy_v_avg = traces
     model_checkpoint = SaveModelCheckpoint()
     n = len(valid_x)
-
+    
     print("Iteration vs average loss")
     print("%10s\t%10s\t%10s" % ("iteration", "train-set", "test-set"))
 
     for ii in range(n_iterations):
+        
+        learning_rate= 1e-2
+        
+        if 15000 < ii < 25000:
+            learning_rate=1e-3
+            
+        if ii > 25000:
+            learning_rate = decay_LR(ii)
+        
+        # add weight decay (important regularization to reduce overfitting)
+        L2 = 1
+        # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=L2)
+        #SGD allows for: momentum=0, dampening=0, weight_decay=0, nesterov=boolean, differentiable=boolean
+
+        optimizer = getattr(torch.optim, optimizer_name)(
+        model.parameters(),
+        lr=learning_rate,
+         amsgrad=True, 
+
+        #  weight_decay=L2,#
+        # differentiable=True,
+        #For SGD nesterov, it requires momentum and zero dampening
+        # dampening=0,
+        # momentum=momentum,
+        # nesterov=True
+        )
+
         #if ii > 1e4: learning_rate=1e-4
         # set mode to training so that training specific
         # operations such as dropout are enabled.
@@ -608,6 +607,7 @@ def train(
 
         if ii % step == 0:
 
+            print(f"\t\tCURRENT LEARNING RATE: {learning_rate}")
             acc_t = validate(model, avloss, train_x[:n], train_t[:n])
             acc_v = validate(model, avloss, valid_x[:n], valid_t[:n])
 
@@ -662,30 +662,12 @@ def run(
     save_model,
 ):
 
-    learning_rate = best_learning_rate
-    # add weight decay (important regularization to reduce overfitting)
-    L2 = 1
-    # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=L2)
-    #SGD allows for: momentum=0, dampening=0, weight_decay=0, nesterov=boolean, differentiable=boolean
-    optimizer = getattr(torch.optim, optimizer_name)(
-        model.parameters(),
-        lr=learning_rate,
-        #  amsgrad=True, eps=1e-7,
-        
-        #  weight_decay=L2,#
-        # differentiable=True,
-        #For SGD nesterov, it requires momentum and zero dampening
-        # dampening=0,
-         momentum=momentum,
-        nesterov=True
-    )
 
-    # starting at 10^-3
     traces = train(
         model,
-        optimizer,
+        # optimizer,
         # average_huber_quantile_loss,
-        average_quantile_loss,
+        average_huber_quantile_loss,
         get_batch,
         train_x,
         train_t,
@@ -827,11 +809,11 @@ N_epochs = (n_iterations * BATCHSIZE) / int(train_x.shape[0])
 print(f"training for {n_iterations} iteration, which is  {N_epochs} epochs")
 
 PARAMS_ = {
-    "n_layers": int(6),
+    "n_layers": int(20),
     "hidden_size": int(5),
     "dropout_1": float(0.6),
-    "dropout_2": float(0.),
-    "activation": "PReLU"
+    "dropout_2": float(0.1),
+    "activation": "LeakyReLU"
     #   'optimizer_name':'SGD',
 }
 # filename_model='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
@@ -846,15 +828,15 @@ PATH_model = os.path.join(
 
 #LOAD EITHER TRAINED OR UNTRAINED MODEL
 # to load untrained model (start training from scratch), uncomment the next line
-untrained_model = load_untrained_model(PARAMS_)
+# untrained_model = load_untrained_model(PARAMS_)
 # to continune training of model (pickup where the previous training left off), uncomment below
-# trained_model =load_trained_model(PATH=PATH_model, PARAMS=PARAMS_)
+trained_model =load_trained_model(PATH=PATH_model, PARAMS=PARAMS_)
 
 IQN_trace = ([], [], [], [])
-traces_step = 20
+traces_step = 2
 traces_window = traces_step
 IQN = run(
-    model=untrained_model,
+    model=trained_model,
     train_x=train_x,
     train_t=train_t_ratio,
     valid_x=test_x,
@@ -870,8 +852,16 @@ IQN = run(
 
 # ## Save trained model (if its good, and if you haven't saved above) and load trained model (if you saved it)
 
+final_path = "Trained_IQNx4_%s_TUNED_0lin_with_high_noise_final.dict" % target
 
-# save_model(IQN, PATH_model)
+trained_models_dir = "trained_models"
+mkdir(trained_models_dir)
+# on cluster, Im using another TRAIN directory
+PATH_final_model = os.path.join(
+    IQN_BASE, "JupyterBook", "Cluster", "TRAIN", trained_models_dir, final_path
+)
+
+save_model(IQN, PATH_final_model)
 
 # if __name__ == '__main__':
 #     main()
