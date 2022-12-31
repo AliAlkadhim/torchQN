@@ -1,0 +1,1144 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>IQNx4: 2. Tune Hyperparameters of all IQNs &#8212; torchIQNx4</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">torchIQNx4</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to the torchIQNx4
+                </a>
+            </li>
+        </ul>
+        
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/AliAlkadhim/torchQN/HEAD?labpath=JupyterBook/v2/gh/AliAlkadhim/torchQN/master?urlpath=tree/JupyterBook/2_Tune_all_hyperparameters.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/2_Tune_all_hyperparameters.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   IQNx4: 2. Tune Hyperparameters of all IQNs
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#if-you-want-to-generate-the-scaled-data-frames-run-the-cell-below">
+     If you want to generate the Scaled data frames, run the cell below
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#if-you-want-to-load-the-previously-generated-scaled-dataframe-run-the-cell-below">
+     If you want to load the previously generated scaled dataframe, run the cell below
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ml">
+   ML
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#batches-validation-losses-and-plotting-of-losses-functions">
+     Batches, validation, losses, and plotting of losses functions
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#get-training-and-testing-features-and-targets">
+   Get training and testing features and targets
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#aplly-final-z-to-the-train-and-test-set-features-but-run-it-only-once-generator">
+     Aplly final
+     <span class="math notranslate nohighlight">
+      \(z\)
+     </span>
+     to the train and test set features, but run it only once! (generator)
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>IQNx4: 2. Tune Hyperparameters of all IQNs</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   IQNx4: 2. Tune Hyperparameters of all IQNs
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#if-you-want-to-generate-the-scaled-data-frames-run-the-cell-below">
+     If you want to generate the Scaled data frames, run the cell below
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#if-you-want-to-load-the-previously-generated-scaled-dataframe-run-the-cell-below">
+     If you want to load the previously generated scaled dataframe, run the cell below
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ml">
+   ML
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#batches-validation-losses-and-plotting-of-losses-functions">
+     Batches, validation, losses, and plotting of losses functions
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#get-training-and-testing-features-and-targets">
+   Get training and testing features and targets
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#aplly-final-z-to-the-train-and-test-set-features-but-run-it-only-once-generator">
+     Aplly final
+     <span class="math notranslate nohighlight">
+      \(z\)
+     </span>
+     to the train and test set features, but run it only once! (generator)
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="iqnx4-2-tune-hyperparameters-of-all-iqns">
+<h1>IQNx4: 2. Tune Hyperparameters of all IQNs<a class="headerlink" href="#iqnx4-2-tune-hyperparameters-of-all-iqns" title="Permalink to this headline">#</a></h1>
+<p>There is a live executable version of this notebook on binder, just click this link : <a class="reference external" href="https://mybinder.org/v2/gh/AliAlkadhim/torchQN/HEAD?labpath=JupyterBook"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a></p>
+<p>Note that the binder will take a while to build, and you’d have to navigate through the files yourself (not as easy or nice as just going to <a class="reference external" href="https://alialkadhim.github.io/torchQN/">https://alialkadhim.github.io/torchQN/</a>)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="c1"># import scipy as sp; import scipy.stats as st</span>
+<span class="kn">import</span> <span class="nn">torch</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span><span class="p">;</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;using torch version </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1">#use numba&#39;s just-in-time compiler to speed things up</span>
+<span class="c1"># from numba import njit</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">;</span> <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mp</span><span class="p">;</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;matplotlib version= &#39;</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span><span class="p">;</span> 
+<span class="c1">#reset matplotlib stle/parameters</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="c1">#reset matplotlib parameters to their defaults</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParamsDefault</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;seaborn-deep&#39;</span><span class="p">)</span>
+<span class="n">mp</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;agg.path.chunksize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">font_legend</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span> <span class="n">font_axes</span><span class="o">=</span><span class="mi">15</span>
+<span class="c1"># %matplotlib inline</span>
+<span class="kn">import</span> <span class="nn">sys</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">display</span>
+<span class="c1"># from importlib import import_module</span>
+<span class="kn">import</span> <span class="nn">plotly</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">optuna</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;using (optional) optuna version </span><span class="si">{</span><span class="n">optuna</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;optuna is only used for hyperparameter tuning, not critical!&#39;</span><span class="p">)</span>
+    <span class="k">pass</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="c1"># import sympy as sy</span>
+<span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="nn">wid</span><span class="p">;</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>using torch version 1.9.0
+matplotlib version=  3.5.1
+using (optional) optuna version 2.8.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># env = {}</span>
+<span class="c1"># env.update(os.environ)</span>
+<span class="c1"># env.update(source(os.environ[&quot;IQN_BASE&quot;])) </span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">IQN_BASE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;IQN_BASE&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;BASE directoy properly set = &#39;</span><span class="p">,</span> <span class="n">IQN_BASE</span><span class="p">)</span>
+    <span class="n">utils_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span> <span class="s1">&#39;utils/&#39;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">utils_dir</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">utils</span>
+    <span class="c1">#usually its not recommended to import everything from a module, but we know</span>
+    <span class="c1">#whats in it so its fine</span>
+    <span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="o">*</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;DATA directory also properly set, in </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DATA_DIR&#39;</span><span class="p">])</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="c1"># IQN_BASE=os.getcwd()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\n</span><span class="s2">BASE directory not properly set. Read repo README.</span><span class="se">\</span>
+<span class="s2">    If you need a function from utils, use the decorator below, or add utils to sys.path</span><span class="se">\n</span><span class="s2"></span>
+<span class="s2">    You can also do </span>
+<span class="s2">    os.environ[&#39;IQN_BASE&#39;]=&lt;ABSOLUTE PATH FOR THE IQN REPO&gt;</span>
+<span class="s2">    or</span>
+<span class="s2">    os.environ[&#39;IQN_BASE&#39;]=os.getcwd()&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>BASE directoy properly set =  /home/ali/Desktop/Pulled_Github_Repositories/torchQN
+DATA directory also properly set, in /home/ali/Desktop/Pulled_Github_Repositories/IQN_HEP/Davidson/data
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># update fonts</span>
+<span class="n">FONTSIZE</span> <span class="o">=</span> <span class="mi">14</span>
+<span class="n">font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;family&#39;</span> <span class="p">:</span> <span class="s1">&#39;serif&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;weight&#39;</span> <span class="p">:</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;size&#39;</span>   <span class="p">:</span> <span class="n">FONTSIZE</span><span class="p">}</span>
+<span class="n">mp</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">font</span><span class="p">)</span>
+
+<span class="c1"># set usetex = False if LaTex is not </span>
+<span class="c1"># available on your system or if the </span>
+<span class="c1"># rendering is too slow</span>
+<span class="n">mp</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="n">usetex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># set a seed to ensure reproducibility</span>
+<span class="n">seed</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">rnd</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+<span class="c1">#sometimes jupyter doesnt initialize MathJax automatically for latex, so do this:</span>
+<span class="n">wid</span><span class="o">.</span><span class="n">HTMLMath</span><span class="p">(</span><span class="s1">&#39;$\LaTeX$&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "a2fae0988c79432dbdee8e6a03cab6d2", "version_major": 2, "version_minor": 0}
+</script></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">################################### CONFIGURATIONS ###################################</span>
+<span class="n">DATA_DIR</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DATA_DIR&#39;</span><span class="p">]</span>
+<span class="n">JUPYTER</span><span class="o">=</span><span class="kc">True</span>
+<span class="n">use_subsample</span><span class="o">=</span><span class="kc">False</span>
+<span class="k">if</span> <span class="n">use_subsample</span><span class="p">:</span>
+    <span class="n">SUBSAMPLE</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e5</span><span class="p">)</span><span class="c1">#subsample use for development - in production use whole dataset</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">SUBSAMPLE</span><span class="o">=</span><span class="kc">None</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">################################### SET DATA CONFIGURATIONS ###################################</span>
+<span class="n">X</span>       <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;genDatapT&#39;</span><span class="p">,</span> <span class="s1">&#39;genDataeta&#39;</span><span class="p">,</span> <span class="s1">&#39;genDataphi&#39;</span><span class="p">,</span> <span class="s1">&#39;genDatam&#39;</span><span class="p">,</span> <span class="s1">&#39;tau&#39;</span><span class="p">]</span>
+
+<span class="c1">#set order of training:</span>
+<span class="c1">#pT_first: pT-&gt;&gt;m-&gt;eta-&gt;phi</span>
+<span class="c1">#m_first: m-&gt;pT-&gt;eta-&gt;phi</span>
+
+
+
+
+<span class="n">ORDER</span><span class="o">=</span><span class="s1">&#39;m_First&#39;</span>
+
+<span class="k">if</span> <span class="n">ORDER</span><span class="o">==</span><span class="s1">&#39;m_First&#39;</span><span class="p">:</span>
+    <span class="n">FIELDS</span>  <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;RecoDatam&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="n">X</span><span class="p">,</span> 
+                               <span class="s1">&#39;xlabel&#39;</span><span class="p">:</span>  <span class="sa">r</span><span class="s1">&#39;$m$ (GeV)&#39;</span><span class="p">,</span> 
+                              <span class="s1">&#39;ylabel&#39;</span><span class="p">:</span><span class="s1">&#39;$m^</span><span class="si">{reco}</span><span class="s1">$&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;xmin&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> 
+                               <span class="s1">&#39;xmax&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">},</span>
+                           
+
+               <span class="s1">&#39;RecoDatapT&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;RecoDatam&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">X</span><span class="p">,</span> 
+                               <span class="s1">&#39;xlabel&#39;</span><span class="p">:</span>  <span class="sa">r</span><span class="s1">&#39;$p_T$ (GeV)&#39;</span> <span class="p">,</span> 
+                              <span class="s1">&#39;ylabel&#39;</span><span class="p">:</span> <span class="s1">&#39;$p_T^</span><span class="si">{reco}</span><span class="s1">$&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;xmin&#39;</span>  <span class="p">:</span> <span class="mi">20</span><span class="p">,</span> 
+                               <span class="s1">&#39;xmax&#39;</span>  <span class="p">:</span>  <span class="mi">80</span><span class="p">},</span>
+
+               <span class="s1">&#39;RecoDataeta&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;RecoDatam&#39;</span><span class="p">,</span><span class="s1">&#39;RecoDatapT&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">X</span><span class="p">,</span> 
+                               <span class="s1">&#39;xlabel&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\eta$&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;ylabel&#39;</span><span class="p">:</span><span class="s1">&#39;$\eta^</span><span class="si">{reco}</span><span class="s1">$&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;xmin&#39;</span>  <span class="p">:</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span>
+                               <span class="s1">&#39;xmax&#39;</span>  <span class="p">:</span>  <span class="mi">5</span><span class="p">},</span>
+
+               <span class="s1">&#39;RecoDataphi&#39;</span>  <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;RecoDatam&#39;</span><span class="p">,</span> <span class="s1">&#39;RecodatapT&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDataeta&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">X</span><span class="p">,</span>
+                               <span class="s1">&#39;xlabel&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\phi$&#39;</span> <span class="p">,</span>
+                                <span class="s1">&#39;ylabel&#39;</span> <span class="p">:</span><span class="s1">&#39;$\phi^</span><span class="si">{reco}</span><span class="s1">$&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;xmin&#39;</span>  <span class="p">:</span> <span class="o">-</span><span class="mf">3.2</span><span class="p">,</span> 
+                               <span class="s1">&#39;xmax&#39;</span>  <span class="p">:</span><span class="mf">3.2</span><span class="p">}</span>
+              <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_variable_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;genDatapT&#39;</span><span class="p">,</span> <span class="s1">&#39;genDataeta&#39;</span><span class="p">,</span> <span class="s1">&#39;genDataphi&#39;</span><span class="p">,</span> <span class="s1">&#39;genDatam&#39;</span><span class="p">,</span><span class="s1">&#39;RecoDatapT&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDataeta&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDataphi&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDatam&#39;</span><span class="p">]</span>
+<span class="n">all_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;genDatapT&#39;</span><span class="p">,</span> <span class="s1">&#39;genDataeta&#39;</span><span class="p">,</span> <span class="s1">&#39;genDataphi&#39;</span><span class="p">,</span> <span class="s1">&#39;genDatam&#39;</span><span class="p">,</span><span class="s1">&#39;RecoDatapT&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDataeta&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDataphi&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDatam&#39;</span><span class="p">,</span> <span class="s1">&#39;tau&#39;</span><span class="p">]</span>
+<span class="c1">################################### Load unscaled dataframes ###################################</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SUBSAMPLE = </span><span class="si">{</span><span class="n">SUBSAMPLE</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">raw_train_data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;train_data_10M_2.csv&#39;</span><span class="p">),</span>
+                      <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
+                      <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span>
+                      <span class="p">)</span>
+
+<span class="n">raw_test_data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;test_data_10M_2.csv&#39;</span><span class="p">),</span>
+                      <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
+                     <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span>
+                     <span class="p">)</span>
+
+<span class="n">raw_valid_data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;validation_data_10M_2.csv&#39;</span><span class="p">),</span>
+                      <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
+                      <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span>
+                      <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SUBSAMPLE = None
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">explore_data</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">raw_train_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Unscaled Dataframe&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;]
+[&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;, &#39;tau&#39;]
+Reco_var:  RecoDatapT , 	 gen_var:  genDatapT
+Reco_var:  RecoDataeta , 	 gen_var:  genDataeta
+Reco_var:  RecoDataphi , 	 gen_var:  genDataphi
+Reco_var:  RecoDatam , 	 gen_var:  genDatam
+</pre></div>
+</div>
+<img alt="_images/2_Tune_all_hyperparameters_7_1.svg" src="_images/2_Tune_all_hyperparameters_7_1.svg" /></div>
+</div>
+<section id="if-you-want-to-generate-the-scaled-data-frames-run-the-cell-below">
+<h2>If you want to generate the Scaled data frames, run the cell below<a class="headerlink" href="#if-you-want-to-generate-the-scaled-data-frames-run-the-cell-below" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># scaled_train_data = L_scale_df(raw_train_data, title=&#39;scaled_train_data_10M_2.csv&#39;,</span>
+<span class="c1">#                              save=True)</span>
+<span class="c1"># print(&#39;\n\n&#39;)</span>
+<span class="c1"># scaled_test_data = L_scale_df(raw_test_data,  title=&#39;scaled_test_data_10M_2.csv&#39;,</span>
+<span class="c1">#                             save=True)</span>
+<span class="c1"># print(&#39;\n\n&#39;)</span>
+
+<span class="c1"># scaled_valid_data = L_scale_df(raw_valid_data,  title=&#39;scaled_valid_data_10M_2.csv&#39;,</span>
+<span class="c1">#                             save=True)</span>
+
+<span class="c1"># explore_data(df=scaled_train_data, title=&#39;Braden Kronheim-L-scaled Dataframe&#39;, scaled=True)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>          genDatapT    RecoDatapT    genDataeta   RecoDataeta    genDataphi  \
+count  8.000000e+06  8.000000e+06  8.000000e+06  8.000000e+06  8.000000e+06   
+mean   3.421245e+00  3.412002e+00 -1.781882e-03 -1.789886e-03 -3.830903e-04   
+std    3.348063e-01  3.804798e-01  2.204310e+00  2.197969e+00  1.813825e+00   
+min    2.995732e+00  2.437457e+00 -5.227320e+00 -5.006930e+00 -3.141590e+00   
+25%    3.168285e+00  3.156336e+00 -1.654600e+00 -1.651130e+00 -1.571320e+00   
+50%    3.346474e+00  3.366927e+00 -2.726765e-03 -3.001240e-03  6.159285e-05   
+75%    3.591181e+00  3.624294e+00  1.651250e+00  1.647990e+00  1.570300e+00   
+max    6.733142e+00  6.703041e+00  5.188200e+00  5.005230e+00  3.141590e+00   
+
+        RecoDataphi      genDatam     RecoDatam           tau  
+count  8.000000e+06  8.000000e+06  8.000000e+06  8.000000e+06  
+mean  -4.719170e-04  2.150564e+00  1.967802e+00  4.999153e-01  
+std    1.814474e+00  2.880059e-01  3.271235e-01  2.886730e-01  
+min   -3.480195e+00  6.927950e-01  6.931040e-01  5.075658e-08  
+25%   -1.571500e+00  1.962371e+00  1.758816e+00  2.498142e-01  
+50%   -4.192835e-05  2.144482e+00  1.963023e+00  4.999874e-01  
+75%    1.570142e+00  2.330413e+00  2.171810e+00  7.500011e-01  
+max    3.482885e+00  4.729545e+00  4.753357e+00  9.999999e-01  
+
+
+
+            genDatapT      RecoDatapT      genDataeta     RecoDataeta  \
+count  1000000.000000  1000000.000000  1000000.000000  1000000.000000   
+mean         3.420882        3.412147        0.002822        0.002815   
+std          0.334051        0.379574        2.202514        2.196167   
+min          2.995732        2.440197       -5.159990       -4.999270   
+25%          3.167969        3.156549       -1.648685       -1.644865   
+50%          3.346231        3.367048        0.000701        0.001701   
+75%          3.591675        3.626037        1.654850        1.651652   
+max          6.316704        6.246308        5.143080        5.005660   
+
+           genDataphi     RecoDataphi        genDatam       RecoDatam  \
+count  1000000.000000  1000000.000000  1000000.000000  1000000.000000   
+mean        -0.000512       -0.000550        2.150071        1.967908   
+std          1.814159        1.814699        0.287706        0.326501   
+min         -3.141590       -3.477685        0.692864        0.693117   
+25%         -1.571470       -1.571400        1.961780        1.758928   
+50%         -0.001251       -0.000872        2.143930        1.962890   
+75%          1.571060        1.570125        2.329985        2.171973   
+max          3.141590        3.478095        4.370456        4.356084   
+
+                tau  
+count  1.000000e+06  
+mean   4.997935e-01  
+std    2.888304e-01  
+min    2.595965e-07  
+25%    2.496069e-01  
+50%    4.996784e-01  
+75%    7.503565e-01  
+max    9.999998e-01  
+
+
+
+            genDatapT      RecoDatapT      genDataeta     RecoDataeta  \
+count  1000000.000000  1000000.000000  1000000.000000  1000000.000000   
+mean         3.421223        3.411684        0.000698        0.000735   
+std          0.336185        0.381671        2.204255        2.197915   
+min          2.995732        2.438330       -5.184830       -5.000600   
+25%          3.167410        3.155224       -1.652290       -1.647702   
+50%          3.345898        3.366547        0.001781        0.000949   
+75%          3.591019        3.623741        1.652180        1.648922   
+max          6.518423        6.374464        5.139480        4.999840   
+
+           genDataphi     RecoDataphi        genDatam       RecoDatam  \
+count  1000000.000000  1000000.000000  1000000.000000  1000000.000000   
+mean        -0.000896       -0.000819        2.150291        1.967158   
+std          1.813629        1.814279        0.288274        0.327415   
+min         -3.141580       -3.480465        0.693135        0.693121   
+25%         -1.569685       -1.570240        1.962370        1.758022   
+50%         -0.000836       -0.001184        2.144196        1.961933   
+75%          1.568172        1.568535        2.329907        2.171459   
+max          3.141590        3.483175        4.110044        4.258457   
+
+                tau  
+count  1.000000e+06  
+mean   5.004851e-01  
+std    2.885275e-01  
+min    5.130061e-07  
+25%    2.507914e-01  
+50%    5.007886e-01  
+75%    7.504558e-01  
+max    9.999994e-01  
+[&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;]
+[&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;, &#39;tau&#39;]
+Reco_var:  RecoDatapT , 	 gen_var:  genDatapT
+Reco_var:  RecoDataeta , 	 gen_var:  genDataeta
+Reco_var:  RecoDataphi , 	 gen_var:  genDataphi
+Reco_var:  RecoDatam , 	 gen_var:  genDatam
+</pre></div>
+</div>
+<img alt="_images/2_Tune_all_hyperparameters_9_1.svg" src="_images/2_Tune_all_hyperparameters_9_1.svg" /></div>
+</div>
+</section>
+<section id="if-you-want-to-load-the-previously-generated-scaled-dataframe-run-the-cell-below">
+<h2>If you want to load the previously generated scaled dataframe, run the cell below<a class="headerlink" href="#if-you-want-to-load-the-previously-generated-scaled-dataframe-run-the-cell-below" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;USING NEW DATASET</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="c1">#UNSCALED</span>
+<span class="c1"># train_data_m=pd.read_csv(os.path.join(DATA_DIR,&#39;train_data_10M_2.csv&#39;),</span>
+<span class="c1">#                        usecols=features,</span>
+<span class="c1">#                        nrows=SUBSAMPLE)</span>
+
+<span class="c1"># print(&#39;TRAINING FEATURES\n&#39;, train_data.head())</span>
+
+<span class="c1"># test_data_m= pd.read_csv(os.path.join(DATA_DIR,&#39;test_data_10M_2.csv&#39;),</span>
+<span class="c1">#                        usecols=features,</span>
+<span class="c1">#                        nrows=SUBSAMPLE)</span>
+<span class="c1"># print(&#39;\nTESTING FEATURES\n&#39;, test_data.head())</span>
+<span class="c1"># valid_data= pd.read_csv(os.path.join(DATA_DIR,&#39;valid_data_10M_2.csv&#39;),</span>
+<span class="c1">#                        usecols=features,</span>
+<span class="c1">#                        nrows=SUBSAMPLE)</span>
+
+
+<span class="c1"># SCALED</span>
+<span class="n">train_data_m</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;scaled_train_data_10M_2.csv&#39;</span><span class="p">),</span>
+                       <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
+                       <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;TRAINING FEATURES</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">train_data_m</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+<span class="n">test_data_m</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;scaled_test_data_10M_2.csv&#39;</span><span class="p">),</span>
+                       <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
+                       <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span><span class="p">)</span>
+
+<span class="n">valid_data_m</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;scaled_valid_data_10M_2.csv&#39;</span><span class="p">),</span>
+                       <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
+                       <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">TESTING FEATURES</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">test_data_m</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">train set shape:&#39;</span><span class="p">,</span>  <span class="n">train_data_m</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">test set shape:  &#39;</span><span class="p">,</span> <span class="n">test_data_m</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="c1"># print(&#39;validation set shape:&#39;, valid_data.shape)</span>
+
+<span class="n">scaled_train_data</span> <span class="o">=</span> <span class="n">train_data_m</span>
+<span class="n">scaled_test_data</span> <span class="o">=</span> <span class="n">test_data_m</span>
+<span class="n">scaled_valid_data</span> <span class="o">=</span> <span class="n">valid_data_m</span>
+
+<span class="n">explore_data</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">scaled_train_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Braden Kronheim-L-scaled Dataframe&#39;</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>USING NEW DATASET
+
+TRAINING FEATURES
+    genDatapT  RecoDatapT  genDataeta  RecoDataeta  genDataphi  RecoDataphi  \
+0   3.382531    3.463020    0.828187     0.817082    2.902130     2.919510   
+1   3.191270    3.308764   -1.163510    -1.151020    0.636469     0.652153   
+2   3.191270    3.308764   -1.163510    -1.151020    0.636469     0.652153   
+3   3.191270    3.308764   -1.163510    -1.151020    0.636469     0.652153   
+4   3.004211    3.187005    1.844410     1.837910   -0.186685    -0.160621   
+
+   genDatam  RecoDatam       tau  
+0  1.579696   1.525158  0.361310  
+1  2.058837   1.995432  0.126899  
+2  2.058837   1.995432  0.962307  
+3  2.058837   1.995432  0.457282  
+4  2.040038   1.886115  0.840862  
+
+TESTING FEATURES
+    genDatapT  RecoDatapT  genDataeta  RecoDataeta  genDataphi  RecoDataphi  \
+0   3.775316    3.791603    0.824891     0.824645    -1.26949     -1.26117   
+1   3.775316    3.791603    0.824891     0.824645    -1.26949     -1.26117   
+2   3.258685    3.313277    3.529970     3.590390     1.55495      1.52062   
+3   3.349708    3.522816   -1.159650    -1.139940     1.82602      1.76254   
+4   3.090315    3.149058    2.747660     2.775790     2.03085      2.10209   
+
+   genDatam  RecoDatam       tau  
+0  2.071044   2.054470  0.250046  
+1  2.071044   2.054470  0.847493  
+2  2.242060   1.918984  0.851995  
+3  2.286615   2.204338  0.052378  
+4  1.971738   1.805105  0.542549  
+
+train set shape: (8000000, 9)
+
+test set shape:   (1000000, 9)
+[&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;]
+[&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;, &#39;tau&#39;]
+Reco_var:  RecoDatapT , 	 gen_var:  genDatapT
+Reco_var:  RecoDataeta , 	 gen_var:  genDataeta
+Reco_var:  RecoDataphi , 	 gen_var:  genDataphi
+Reco_var:  RecoDatam , 	 gen_var:  genDatam
+</pre></div>
+</div>
+<img alt="_images/2_Tune_all_hyperparameters_11_1.svg" src="_images/2_Tune_all_hyperparameters_11_1.svg" /></div>
+</div>
+<hr class="docutils" />
+</section>
+</section>
+<hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="ml">
+<h1>ML<a class="headerlink" href="#ml" title="Permalink to this headline">#</a></h1>
+<p>Note that this ideas is very powerful and has the potential to replace the use of Delphes/GEANT for most people. According to the <a class="reference external" href="https://arxiv.org/pdf/2111.11415.pdf">previous paper</a> this method already works for a single IQN, and we know it works reasonably well for autoregressive IQNx4, <a class="reference external" href="#Results_prior">as we said above</a> .</p>
+<p>It’s important to remember “the master formula” of all of machine learning:</p>
+<div class="math notranslate nohighlight">
+\[\int \frac{\partial L}{\partial f} p(y|x) dy  = 0 \tag{1}\]</div>
+<p>or, equivalently,</p>
+<div class="math notranslate nohighlight">
+\[ \frac{\delta R}{\delta f}=0,\]</div>
+<p>where <span class="math notranslate nohighlight">\(L\)</span> is the loss function, <span class="math notranslate nohighlight">\(f\)</span> is the model (neural network/classifier/regressor, etc. In this case it’s an IQN) (implicitly parameterized by potentially a  gazillion parameters),</p>
+<p>and <span class="math notranslate nohighlight">\(p(y|x)\)</span> the PDF of targets <span class="math notranslate nohighlight">\(y\)</span> that we want to estimate, given (set of) features <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(R\)</span> is the risk functional (sometime called objective function or cost function):</p>
+<div class="math notranslate nohighlight">
+\[ R[f] =E_{(\mathbf{x},t) \sim p} [L(f(\mathbf{x}, \theta), y)]  =\int \int \, p(y, \mathbf{x}) \, L(f(\mathbf{x}, \theta), y) \, dy \, d\mathbf{x}\]</div>
+<p>As can be seen with the equation above, the risk function, or generalization error <span class="math notranslate nohighlight">\(R[f]\)</span>, is an expectation taken with respect with the underlying distribution <span class="math notranslate nohighlight">\(p(\mathbf{x},y)\)</span>. This means that the training data and the test data drawn independently distributed (iid) from the underlying distribution <span class="math notranslate nohighlight">\(p(\mathbf{x},y)\)</span>. Since it impossibly to calculate <span class="math notranslate nohighlight">\(R[f]\)</span> exactly, since nobody can tell us the exact form of <span class="math notranslate nohighlight">\(p(\mathbf{x},y)\)</span> (from an infinite stream of data points), <span class="math notranslate nohighlight">\(R[f]\)</span> is approximated using the training error (or empirical risk) <span class="math notranslate nohighlight">\(R_\text{emp}\)</span>, which is a statistic calculated only on the training set</p>
+<div class="math notranslate nohighlight">
+\[ R_{\text{emp}} [\mathbf{x},y,f] = \frac{1}{n} \sum_{i=1}^{n} L \left( f(\mathbf{x}^{(i)}, \theta), y^{(i)} \right) \]</div>
+<p>So, for IQNs,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split} L_{\text{IQN}}(f, y)=\left\{\begin{array}{ll}
+\tau(y-f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})) &amp; y \geq f(\boldsymbol{x}, \tau ; \boldsymbol{\theta}) \\
+(1-\tau)(f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})-y) &amp; y&lt;f(\boldsymbol{x}, \tau ; \boldsymbol{\theta})
+\end{array},\right.\end{split}\]</div>
+<p>Means that what was done previously is that the risk functional, which could be a functional of many models <span class="math notranslate nohighlight">\(f\)</span>, was a only a functional of a single model: <span class="math notranslate nohighlight">\(R[f_1,..., f_n] = R[f_1]\)</span>. Here we have 4 models</p>
+<div class="math notranslate nohighlight">
+\[R_{\text{IQN}x4} =R_{\text{IQN}}[f_m, f_{p_T}, f_\eta, f_\phi], \]</div>
+<p>and since we’re choosing the evaluation order:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+    p(\mathbf{y} | \mathbf{x}) &amp; = 
+    p(m'|\mathbf{x} )\nonumber\\
+    &amp; \times p(p_T'|\mathbf{x}, m' )\nonumber\\
+    &amp; \times p(\eta'| \mathbf{x}, m', p_T' )\nonumber\\
+      &amp; \times p(\phi' |  \mathbf{x}, m', p_T', \eta' ) ,
+\end{align}
+\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split} \begin{align}
+R_{\text{IQN}x4} &amp;= \int L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathbf{y_m} \right) p(\mathbf{x_m, y_m})  d \mathbf{x_m} d \mathbf{y_m} \\
+&amp;\times \  ... \times \\ 
+&amp;\times \int L_\text{IQN} \left( f_\phi (\mathbf{x_\phi},\tau), \mathbf{y_\phi} \right) p(\mathbf{x_\phi, y_\phi})  d \mathbf{x_\phi} d \mathbf{y_\phi}
+\end{align}\end{split}\]</div>
+<p>where, again, each model <span class="math notranslate nohighlight">\(f_i\)</span> is also dependent on a set of parameters <span class="math notranslate nohighlight">\(\theta_i\)</span> (dropped for simplicity).</p>
+<section id="batches-validation-losses-and-plotting-of-losses-functions">
+<h2>Batches, validation, losses, and plotting of losses functions<a class="headerlink" href="#batches-validation-losses-and-plotting-of-losses-functions" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_batch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+    <span class="c1"># the numpy function choice(length, number)</span>
+    <span class="c1"># selects at random &quot;batch_size&quot; integers from </span>
+    <span class="c1"># the range [0, length-1] corresponding to the</span>
+    <span class="c1"># row indices.</span>
+    <span class="n">rows</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">)</span>
+    <span class="n">batch_x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">rows</span><span class="p">]</span>
+    <span class="n">batch_t</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">rows</span><span class="p">]</span>
+    <span class="c1"># batch_x.T[-1] = np.random.uniform(0, 1, batch_size)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_t</span><span class="p">)</span>
+
+<span class="c1"># Note: there are several average loss functions available </span>
+<span class="c1"># in pytorch, but it&#39;s useful to know how to create your own.</span>
+<span class="k">def</span> <span class="nf">average_quadratic_loss</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="c1"># f and t must be of the same shape</span>
+    <span class="k">return</span>  <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">f</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">average_cross_entropy_loss</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="c1"># f and t must be of the same shape</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">f</span><span class="p">))</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">average_quantile_loss</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="c1"># f and t must be of the same shape</span>
+    <span class="n">tau</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># last column is tau.</span>
+    <span class="c1">#Eq (2)</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="n">f</span><span class="p">,</span> 
+                                  <span class="n">tau</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="n">f</span><span class="p">),</span> 
+                                  <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">tau</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">f</span> <span class="o">-</span> <span class="n">t</span><span class="p">)))</span>
+
+<span class="c1"># function to validate model during training.</span>
+<span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">avloss</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
+    <span class="c1"># make sure we set evaluation mode so that any training specific</span>
+    <span class="c1"># operations are disabled.</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span> <span class="c1"># evaluation mode</span>
+    
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span> <span class="c1"># no need to compute gradients wrt. x and t</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="c1"># remember to reshape!</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">avloss</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">plot_average_loss</span><span class="p">(</span><span class="n">traces</span><span class="p">,</span> <span class="n">ftsize</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span><span class="n">save_loss_plots</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_loss_plots</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    
+    <span class="n">xx</span><span class="p">,</span> <span class="n">yy_t</span><span class="p">,</span> <span class="n">yy_v</span><span class="p">,</span> <span class="n">yy_v_avg</span> <span class="o">=</span> <span class="n">traces</span>
+    
+    <span class="c1"># create an empty figure</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">))</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    
+    <span class="c1"># add a subplot to it</span>
+    <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span>
+    <span class="n">ax</span>  <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">nrows</span><span class="p">,</span><span class="n">ncols</span><span class="p">,</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Average loss&quot;</span><span class="p">)</span>
+    
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy_t</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Training&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy_v</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Validation&#39;</span><span class="p">)</span>
+    <span class="c1">#ax.plot(xx, yy_v_avg, &#39;g&#39;, lw=2, label=&#39;Running average&#39;)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Iterations&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">ftsize</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;average loss&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">ftsize</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">save_loss_plots</span><span class="p">:</span>
+        <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;IQNx4_</span><span class="si">%s</span><span class="s1">_Loss.png&#39;</span> <span class="o">%</span> <span class="n">target</span> 
+        <span class="n">mkdir</span><span class="p">(</span><span class="s1">&#39;images/loss_plots&#39;</span><span class="p">)</span>
+        <span class="n">PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span> <span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="s1">&#39;loss_plots&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">PATH</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">loss curve saved in </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">PATH</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">show_loss_plots</span><span class="p">:</span>
+        <span class="n">show_plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="get-training-and-testing-features-and-targets">
+<h1>Get training and testing features and targets<a class="headerlink" href="#get-training-and-testing-features-and-targets" title="Permalink to this headline">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">split_t_x</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Get teh target as the ratio, according to the T equation&quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">target</span><span class="o">==</span><span class="s1">&#39;RecoDatam&#39;</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="n">scaled_df</span><span class="o">=</span><span class="n">train_data_m</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">target</span><span class="o">==</span><span class="s1">&#39;RecoDatapT&#39;</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="s1">&#39;pT&#39;</span><span class="p">,</span> <span class="n">scaled_df</span><span class="o">=</span><span class="n">train_data_m</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">target</span><span class="o">==</span><span class="s1">&#39;RecoDataeta&#39;</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="s1">&#39;eta&#39;</span><span class="p">,</span> <span class="n">scaled_df</span><span class="o">=</span><span class="n">train_data_m</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">target</span><span class="o">==</span><span class="s1">&#39;RecoDataphi&#39;</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="n">scaled_df</span><span class="o">=</span><span class="n">train_data_m</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">input_features</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Features = &#39;</span><span class="p">,</span> <span class="n">features</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Target = &#39;</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Features =  [&#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;, &#39;tau&#39;]
+
+Target =  RecoDatam
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;spliting data for </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">train_t_ratio</span><span class="p">,</span> <span class="n">train_x</span> <span class="o">=</span> <span class="n">split_t_x</span><span class="p">(</span><span class="n">df</span><span class="o">=</span> <span class="n">train_data_m</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;train_t shape = &#39;</span><span class="p">,</span><span class="n">train_t_ratio</span><span class="o">.</span><span class="n">shape</span> <span class="p">,</span> <span class="s1">&#39;train_x shape = &#39;</span><span class="p">,</span> <span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> Training features:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">train_x</span><span class="p">)</span>
+<span class="n">valid_t_ratio</span><span class="p">,</span> <span class="n">valid_x</span> <span class="o">=</span> <span class="n">split_t_x</span><span class="p">(</span><span class="n">df</span><span class="o">=</span> <span class="n">valid_data_m</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;valid_t shape = &#39;</span><span class="p">,</span><span class="n">valid_t_ratio</span><span class="o">.</span><span class="n">shape</span> <span class="p">,</span> <span class="s1">&#39;valid_x shape = &#39;</span><span class="p">,</span> <span class="n">valid_x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">test_t_ratio</span><span class="p">,</span> <span class="n">test_x</span> <span class="o">=</span> <span class="n">split_t_x</span><span class="p">(</span><span class="n">df</span><span class="o">=</span> <span class="n">test_data_m</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;test_t shape = &#39;</span><span class="p">,</span><span class="n">test_t_ratio</span><span class="o">.</span><span class="n">shape</span> <span class="p">,</span> <span class="s1">&#39;test_x shape = &#39;</span><span class="p">,</span> <span class="n">test_x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;no need to train_test_split since we already have the split dataframes&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>spliting data for RecoDatam
+train_t shape =  (8000000,) train_x shape =  (8000000, 5)
+
+ Training features:
+
+[[ 3.38253091  0.828187    2.90213     1.57969597  0.36130954]
+ [ 3.19127027 -1.16351     0.636469    2.05883697  0.12689925]
+ [ 3.19127027 -1.16351     0.636469    2.05883697  0.96230681]
+ ...
+ [ 3.72374454 -2.23358    -2.81921     2.21849454  0.08421659]
+ [ 3.56850964 -1.12318     0.356494    2.08765398  0.05535172]
+ [ 3.27935361 -1.09427    -1.49334     1.83323565  0.07489863]]
+valid_t shape =  (8000000,) valid_x shape =  (1000000, 5)
+test_t shape =  (8000000,) test_x shape =  (1000000, 5)
+no need to train_test_split since we already have the split dataframes
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">valid_x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">valid_x</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">train_x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">train_x</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[ 3.42122253e+00  6.98189368e-04 -8.95543973e-04  2.15029052e+00
+  5.00485136e-01] [0.33618462 2.20425356 1.81362773 0.28827428 0.28852734]
+[ 3.42124491e+00 -1.78188172e-03 -3.83090331e-04  2.15056416e+00
+  4.99915289e-01] [0.33480629 2.20430976 1.81382516 0.28800584 0.28867295]
+</pre></div>
+</div>
+</div>
+</div>
+<p>we expect the targets to have mean 0 and variance=1, since theyre the only things standarized</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">valid_t_ratio</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">valid_t_ratio</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">train_t_ratio</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">train_t_ratio</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.9850983334720613 0.02124600582704668
+0.9850983334720613 0.02124600582704668
+</pre></div>
+</div>
+</div>
+</div>
+<section id="aplly-final-z-to-the-train-and-test-set-features-but-run-it-only-once-generator">
+<h2>Aplly final <span class="math notranslate nohighlight">\(z\)</span> to the train and test set features, but run it only once! (generator)<a class="headerlink" href="#aplly-final-z-to-the-train-and-test-set-features-but-run-it-only-once-generator" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># def z__scale_targets(train_t_ratio, valid_t_ratio):</span>
+<span class="c1">#     print(&#39;##########################################\n&#39;)</span>
+<span class="c1">#     print(&#39;BEFORE SCALING&#39;)</span>
+    
+<span class="c1">#     #yield train_t_ratio, valid_t_ratio</span>
+    
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">NFEATURES</span><span class="o">=</span><span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">apply_z_to_features</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;TO ensure this z scaling is only applied once to the training features, we use a generator &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NFEATURES</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">train_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span><span class="n">train_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">test_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span><span class="n">test_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">valid_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span><span class="n">valid_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">yield</span> <span class="n">train_x</span> 
+    <span class="k">yield</span> <span class="n">test_x</span> 
+    <span class="k">yield</span> <span class="n">valid_x</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;RecoDatapT&#39;</span>
+<span class="n">source</span>  <span class="o">=</span> <span class="n">FIELDS</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
+<span class="n">features</span><span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span>
+<span class="c1">########</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Ali Al Kadhim<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
