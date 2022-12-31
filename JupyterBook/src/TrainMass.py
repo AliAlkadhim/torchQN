@@ -310,7 +310,7 @@ else:
     # print(TEST_SCALE_DICT)
 
 #######################################
-target = "RecoDatapT"
+target = "RecoDatam"
 source = FIELDS[target]
 features = source["inputs"]
 print("Training Features:\n", features)
@@ -625,8 +625,8 @@ def train(
         # x.grad.zero_()
         
         #add noise to training data
-        # batch_x = add_noise(batch_x)
-        # batch_t = add_noise(batch_t)
+        batch_x = add_noise(batch_x)
+        batch_t = add_noise(batch_t)
 
         with torch.no_grad():  # no need to compute gradients
             # wrt. x and t
@@ -656,7 +656,7 @@ def train(
             yy_t.append(acc_t)
             yy_v.append(acc_v)
             # save better models based on valid loss
-            filename_model="Trained_IQNx4_%s_TUNED_0lin_with_high_noise.dict" % target
+            filename_model="Trained_IQNx4_%s_TUNED_0lin_with_high_noise2.dict" % target
             model_checkpoint(model=model, filename_model =filename_model ,current_valid_loss=acc_v)
             # compute running average for validation data
             len_yy_v = len(yy_v)
