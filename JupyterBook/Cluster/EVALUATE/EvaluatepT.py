@@ -185,10 +185,21 @@ def load_raw_data():
 
     return raw_train_data, raw_test_data, raw_valid_data
 
-raw_train_data, raw_test_data, raw_valid_data =load_raw_data()
 
 
 
+########## Generate scaled data###############
+# scaled_train_data = L_scale_df(raw_train_data, title='scaled_train_data_10M_2.csv',
+#                              save=True)
+# print('\n\n')
+# scaled_test_data = L_scale_df(raw_test_data,  title='scaled_test_data_10M_2.csv',
+#                             save=True)
+# print('\n\n')
+
+# scaled_valid_data = L_scale_df(raw_valid_data,  title='scaled_valid_data_10M_2.csv',
+#                             save=True)
+
+# explore_data(df=scaled_train_data, title='Braden Kronheim-L-scaled Dataframe', scaled=True)
 
 ################ Load scaled data##############
 @time_type_of_func(tuning_or_training='loading')
@@ -216,22 +227,34 @@ def load_scaled_dataframes():
     )
     return scaled_train_data, scaled_test_data, scaled_valid_data
 
-# print('\nTESTING FEATURES\n', scaled_test_data.head())
+
+#######################################
+# 
+# # print('\nTESTING FEATURES\n', scaled_test_data.head())
 
 # print('\ntrain set shape:',  scaled_train_data.shape)
 # print('\ntest set shape:  ', scaled_test_data.shape)
 # # print('validation set shape:', valid_data.shape)
 
-# scaled_train_data, scaled_test_data, scaled_valid_data = load_scaled_dataframes()
+def get_train_scale_dict(USE_BRADEN_SCALING):
+    if USE_BRADEN_SCALING:
+        TRAIN_SCALE_DICT = get_scaling_info(scaled_train_data)
+        print('BRADEN SCALING DICTIONARY')
+        print(TRAIN_SCALE_DICT)
+        print("\n\n")
+        # TEST_SCALE_DICT = get_scaling_info(scaled_test_data)
+        # print(TEST_SCALE_DICT)
+    else:
+        print('NORMAL UNSCALED DICTIONARY')
+        TRAIN_SCALE_DICT = get_scaling_info(raw_train_data)
+        print(TRAIN_SCALE_DICT)
+        print("\n\n")
+        # TEST_SCALE_DICT = get_scaling_info(scaled_test_data)
+        # print(TEST_SCALE_DICT)
+        return TRAIN_SCALE_DICT
+    
+    
 
-#######################################
-target = 'RecoDatapT'
-source  = FIELDS[target]
-features= source['inputs']
-print('Training Features:\n', features)
-print('\nTarget = ', target)
-
-print('USING NEW DATASET\n')
 
 ################################ SPLIT###########
 # Currently need the split function again here
@@ -296,44 +319,13 @@ def normal_split_t_x(df, target, input_features):
     return t, x
 
 
-if USE_BRADEN_SCALING:
-    print(f"spliting data for {target}")
-    train_t, train_x = split_t_x(
-        df=scaled_train_data, target=target, input_features=features
-    )
-    print("train_t shape = ", train_t.shape, "train_x shape = ", train_x.shape)
-    print("\n Training features:\n")
-    print(train_x)
-    valid_t, valid_x = split_t_x(
-        df=scaled_valid_data, target=target, input_features=features
-    )
-    print("valid_t shape = ", valid_t.shape, "valid_x shape = ", valid_x.shape)
-    test_t, test_x = split_t_x(df=scaled_test_data, target=target, input_features=features)
-    print("test_t shape = ", test_t.shape, "test_x shape = ", test_x.shape)
-
-else:
-    print(f"spliting data for {target}")
-    train_t, train_x = normal_split_t_x(
-    df=raw_train_data, target=target, input_features=features
-    )
-    print("train_t shape = ", train_t.shape, "train_x shape = ", train_x.shape)
-    print("\n Training features:\n")
-    print(train_x)
-    valid_t, valid_x = normal_split_t_x(
-    df=raw_valid_data, target=target, input_features=features
-    )
-    print("valid_t shape = ", valid_t.shape, "valid_x shape = ", valid_x.shape)
-    test_t, test_x = normal_split_t_x(df=raw_test_data, target=target, input_features=features)
-    print("test_t shape = ", test_t.shape, "test_x shape = ", test_x.shape)
 
 
 
 
-print("no need to train_test_split since we already have the split dataframes")
-print(valid_x.mean(axis=0), valid_x.std(axis=0))
-print(train_x.mean(axis=0), train_x.std(axis=0))
-print(valid_t.mean(), valid_t.std())
-print(train_t.mean(), train_t.std())
+
+
+
 
 ################ Apply Z scaling############
 def z(x):
@@ -436,122 +428,19 @@ def simple_eval(model, test_x_z_scaled):
     return p
     
     
-# def main():
-n_iterations=int(1e4)
 
 
-
-PARAMS_ = {
-    "n_layers": int(8),
-    "hidden_size": int(5),
-    "dropout_1": float(0.6),
-    "dropout_2": float(0.1),
-    "activation": "LeakyReLU"
-    #   'optimizer_name':'SGD',
-}
-
-if USE_BRADEN_SCALING:
-    TRAIN_SCALE_DICT = get_scaling_info(scaled_train_data)
-    print(TRAIN_SCALE_DICT)
-    print("\n\n")
-    # TEST_SCALE_DICT = get_scaling_info(scaled_test_data)
-    # print(TEST_SCALE_DICT)
-else:
-    TRAIN_SCALE_DICT = get_scaling_info(raw_train_data)
-    print(TRAIN_SCALE_DICT)
-    print("\n\n")
-    # TEST_SCALE_DICT = get_scaling_info(scaled_test_data)
-    # print(TEST_SCALE_DICT)
     
-NFEATURES=train_x.shape[1]
-# to features
-apply_z_generator = apply_z_to_features(TRAIN_SCALE_DICT, train_x, test_x, valid_x)
-train_x_z_scaled = next(apply_z_generator)
-test_x_z_scaled = next(apply_z_generator)
-valid_x_z_scaled = next(apply_z_generator)
-print(valid_x_z_scaled.mean(axis=0), valid_x_z_scaled.std(axis=0))
-print(train_x_z_scaled.mean(axis=0), train_x_z_scaled.std(axis=0))
-#to targets
-apply_z_to_targets_generator = apply_z_to_targets(train_t, test_t, valid_t)
-train_t_z_scaled = next(apply_z_to_targets_generator)
-test_t_z_scaled = next(apply_z_to_targets_generator)
-valid_t_z_scaled = next(apply_z_to_targets_generator)
-print(valid_t_z_scaled.mean(), valid_t_z_scaled.std())
-print(train_t_z_scaled.mean(), train_t_z_scaled.std())
 
 
-# filename='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
-filename ="Trained_IQNx4_%s_TUNED_0lin_with_high_noise.dict" % target
 
-# 'Trained_IQNx4_%s_TUNED.dict' % target
 
-# filename='Trained_IQNx4_RecoDatam_10K_iter.dict'
-# print(f'model file name: {filename}')
-trained_models_dir='trained_models'
-mkdir(trained_models_dir)
-PATH = os.path.join(IQN_BASE,'JupyterBook', 'Cluster', 'TRAIN', trained_models_dir , filename)
-IQN_m = load_model(PATH, PARAMS_)
-
-p = simple_eval(IQN_m, test_x_z_scaled)
-# plt.show()
-    
-# if __name__=='__main__':
-#     main()
 def z_inverse(xprime, mean, std):
     return xprime * std + mean
 
 
-range_=[20,80]
-bins=50
-REAL_RAW_DATA=raw_test_data
-
-YLIM=(0.8,1.2)
-###########GET REAL DIST###########
-REAL_RAW_DATA = REAL_RAW_DATA[['RecoDatapT','RecoDataeta','RecoDataphi','RecoDatam']]
-REAL_RAW_DATA.columns = ['realpT','realeta','realphi','realm']
-REAL_DIST=REAL_RAW_DATA['realpT']
-norm_data=REAL_RAW_DATA.shape[0]
-#############GET EVALUATION DIST#############
-
-raw_test_data.describe()
-# m_reco = raw_test_data['RecoDatam']
-# m_gen = raw_test_data['genDatam']
-# plt.hist(m_reco,label=r'$m_{gen}^{test \ data}$');plt.legend();plt.show()
-
-if USE_BRADEN_SCALING:
-    orig_ratio = T('m', scaled_df=scaled_train_data)
-    z_inv_f =z_inverse(xprime=p, mean=np.mean(orig_ratio), std=np.std(orig_ratio))
-    L_obs = L(orig_observable=m_gen, label='m')
-    z_inv_f = z_inv_f.flatten();print(z_inv_f.shape)
-
-    factor = (z_inv_f * (L_obs  + 10) )-10
-    m_pred = L_inverse(L_observable=factor, label='m')
-
-else:
-    m_pred =  z_inverse2(xprime = p, train_mean = TRAIN_SCALE_DICT[target]['mean']
-                         , train_std=TRAIN_SCALE_DICT[target]['std'])
-    m_pred=m_pred.flatten()
-    
-# eval_data=pd.read_csv(DATA_DIR+'/test_data_10M_2.csv')
-eval_data=pd.read_csv('AUTOREGRESSIVE_m_Prime.csv')
-ev_features=features #['RecoDatam']+X
-eval_data=eval_data[ev_features]
-eval_data['RecoDatapT']=m_pred
-#save new distribution (m) in the eval data as autoregressive eval for next IQN
-new_cols=['RecoDatam', 'RecoDatapT']+X
-eval_data=eval_data.reindex(columns=new_cols)
-print('EVALUATION DATA NEW INDEX\n', eval_data.head())
-
-eval_data.to_csv(os.path.join(IQN_BASE,'JupyterBook', 'Cluster','EVALUATE', 'AUTOREGRESSIVE_m_Prime_pT_Prime.csv'))
-
-AUTOREGRESSIVE_DIST=pd.read_csv(os.path.join(IQN_BASE,'JupyterBook', 'Cluster','EVALUATE', 'AUTOREGRESSIVE_m_Prime_pT_Prime.csv'))
 
 
-# norm_IQN=AUTOREGRESSIVE_DIST.shape[0]
-
-norm_autoregressive=AUTOREGRESSIVE_DIST.shape[0]
-norm_IQN=norm_autoregressive
-print('norm_data',norm_data,'\nnorm IQN',norm_IQN,'\nnorm_autoregressive', norm_autoregressive)
 
 def get_hist(label):
     """label could be "pT", "eta", "phi", "m"
@@ -564,30 +453,30 @@ def get_hist(label):
 
     return real_label_counts, predicted_label_counts, label_edges
 
-def get_hist_simple(label):
-    predicted_label_counts, label_edges = np.histogram(m_pred , range=range_, bins=bins)
+def get_hist_simple(predicted_dist):
+    predicted_label_counts, label_edges = np.histogram(predicted_dist, range=range_, bins=bins)
     real_label_counts, _ = np.histogram(REAL_DIST, range=range_, bins=bins)
     label_edges = label_edges[1:]/2+label_edges[:-1]/2
     return real_label_counts, predicted_label_counts, label_edges
 
 
-real_label_counts_m, predicted_label_counts_m, label_edges_m = get_hist_simple('m')
 
-def plot_one_m():
+
+def plot_one_m(real_edges, real_counts, predicted_counts):
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(3.5*3/2.5,3.8), gridspec_kw={'height_ratios': [2,0.5]})
-    ax1.step(label_edges_m, real_label_counts_m/norm_data, where="mid", color="k", linewidth=0.5)# step real_count_pt
-    ax1.step(label_edges_m, predicted_label_counts_m/norm_IQN, where="mid", color="#D7301F", linewidth=0.5)# step predicted_count_pt
-    ax1.scatter(label_edges_m, real_label_counts_m/norm_data, label="reco",  color="k",facecolors='none', marker="o", s=5, linewidth=0.5)
-    ax1.scatter(label_edges_m,predicted_label_counts_m/norm_IQN, label="predicted", color="#D7301F", marker="x", s=5, linewidth=0.5)
+    ax1.step(real_edges, real_counts/norm_data, where="mid", color="k", linewidth=0.5)# step real_count_pt
+    ax1.step(real_edges, predicted_label_counts_m/norm_IQN, where="mid", color="#D7301F", linewidth=0.5)# step predicted_count_pt
+    ax1.scatter(real_edges, real_counts/norm_data, label="reco",  color="k",facecolors='none', marker="o", s=5, linewidth=0.5)
+    ax1.scatter(real_edges, predicted_counts/norm_IQN, label="predicted", color="#D7301F", marker="x", s=5, linewidth=0.5)
     ax1.set_xlim(range_)
-    ax1.set_ylim(0, max(predicted_label_counts_m/norm_IQN)*1.1)
+    ax1.set_ylim(0, max(predicted_counts/norm_IQN)*1.1)
     ax1.set_ylabel("counts")
     ax1.set_xticklabels([])
     ax1.legend(loc='upper right')
 
-    ratio=(predicted_label_counts_m/norm_IQN)/(real_label_counts_m/norm_data)
-    ax2.scatter(label_edges_m, ratio, color="r", marker="x", s=5, linewidth=0.5)#PREDICTED (IQN)/Reco (Data)
-    ax2.scatter(label_edges_m, ratio/ratio, color="k", marker="o",facecolors="none", s=5, linewidth=0.5)
+    ratio=(predicted_counts/norm_IQN)/(real_counts/norm_data)
+    ax2.scatter(real_edges, ratio, color="r", marker="x", s=5, linewidth=0.5)#PREDICTED (IQN)/Reco (Data)
+    ax2.scatter(real_edges, ratio/ratio, color="k", marker="o",facecolors="none", s=5, linewidth=0.5)
     ax2.set_xlim(range_)
     # ax2.set_xlabel(labels[3])
     # ax2.set_ylab el(r"$\\frac{\\textnormal{predicted}}{\\textnormal{reco}}$")
@@ -606,4 +495,214 @@ def plot_one_m():
     
     plt.gca().set_position([0, 0, 1, 1])
     
-plot_one_m()
+
+
+
+if __name__ == '__main__':
+    target = 'RecoDatam'
+    source  = FIELDS[target]
+    features= source['inputs']
+    print('Training Features:\n', features)
+    print('\nTarget = ', target)
+    AUTOREGRESSIVE_DIST_NAME='AUTOREGRESSIVE_m_Prime.csv'
+    print('USING NEW DATASET\n')
+     ######################################
+    USE_BRADEN_SCALING=False
+    #####################################
+    ################################### CONFIGURATIONS ###################################
+
+    JUPYTER = False
+    use_subsample = False
+    # use_subsample = True
+    if use_subsample:
+        SUBSAMPLE = int(
+            1e5
+        )  # subsample use for development - in production use whole dataset
+    else:
+        SUBSAMPLE = None
+
+
+    ########################################################################################
+    raw_train_data, raw_test_data, raw_valid_data =load_raw_data()
+    # Load scaled data
+    scaled_train_data, scaled_test_data, scaled_valid_data = load_scaled_dataframes()
+    
+    
+
+    # Get targets and features
+    if USE_BRADEN_SCALING:
+        print(f"spliting data for {target}")
+        train_t, train_x = split_t_x(
+            df=scaled_train_data, target=target, input_features=features
+        )
+        print("train_t shape = ", train_t.shape, "train_x shape = ", train_x.shape)
+        print("\n Training features:\n")
+        print(train_x)
+        valid_t, valid_x = split_t_x(
+            df=scaled_valid_data, target=target, input_features=features
+        )
+        print("valid_t shape = ", valid_t.shape, "valid_x shape = ", valid_x.shape)
+        test_t, test_x = split_t_x(df=scaled_test_data, target=target, input_features=features)
+        print("test_t shape = ", test_t.shape, "test_x shape = ", test_x.shape)
+
+    else:
+        print(f"spliting data for {target}")
+        train_t, train_x = normal_split_t_x(
+        df=raw_train_data, target=target, input_features=features
+        )
+        print("train_t shape = ", train_t.shape, "train_x shape = ", train_x.shape)
+        print("\n Training features:\n")
+        print(train_x)
+        valid_t, valid_x = normal_split_t_x(
+        df=raw_valid_data, target=target, input_features=features
+        )
+        print("valid_t shape = ", valid_t.shape, "valid_x shape = ", valid_x.shape)
+        test_t, test_x = normal_split_t_x(df=raw_test_data, target=target, input_features=features)
+        print("test_t shape = ", test_t.shape, "test_x shape = ", test_x.shape)
+
+    print("no need to train_test_split since we already have the split dataframes")
+    print(valid_x.mean(axis=0), valid_x.std(axis=0))
+    print(train_x.mean(axis=0), train_x.std(axis=0))
+    print(valid_t.mean(), valid_t.std())
+    print(train_t.mean(), train_t.std())
+        ######################################################
+
+    # Apply z scaling to features and targets
+    # to features
+    
+    NFEATURES=train_x.shape[1]
+    TRAIN_SCALE_DICT=get_train_scale_dict(USE_BRADEN_SCALING)
+    # to features
+    apply_z_generator = apply_z_to_features(TRAIN_SCALE_DICT, train_x, test_x, valid_x)
+    train_x_z_scaled = next(apply_z_generator)
+    test_x_z_scaled = next(apply_z_generator)
+    valid_x_z_scaled = next(apply_z_generator)
+    print(valid_x_z_scaled.mean(axis=0), valid_x_z_scaled.std(axis=0))
+    print(train_x_z_scaled.mean(axis=0), train_x_z_scaled.std(axis=0))
+    #to targets
+    apply_z_to_targets_generator = apply_z_to_targets(train_t, test_t, valid_t)
+    train_t_z_scaled = next(apply_z_to_targets_generator)
+    test_t_z_scaled = next(apply_z_to_targets_generator)
+    valid_t_z_scaled = next(apply_z_to_targets_generator)
+    print(valid_t_z_scaled.mean(), valid_t_z_scaled.std())
+    print(train_t_z_scaled.mean(), train_t_z_scaled.std())
+    
+    ###########################################################
+    # Get the  parameters for this model and training
+    PARAMS_m = {
+    "n_layers": int(11),
+    "hidden_size": int(5),
+    "dropout_1": float(0.6),
+    "dropout_2": float(0.1),
+    "activation": "LeakyReLU",
+        'optimizer_name':'Adam',
+        'starting_learning_rate':float(1e-3),
+        'momentum':float(0.6),
+        'batch_size':int(1024),
+        'n_iterations': int(2e5),
+    }
+    
+    optimizer_name=PARAMS_m['optimizer_name']
+    print(type(optimizer_name))
+    # optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
+    NITERATIONS=PARAMS_m['n_iterations']
+    BATCHSIZE=PARAMS_m['batch_size']
+    comment=''
+
+
+
+    # N_epochs X N_train_examples = N_iterations X batch_size
+    N_epochs = (NITERATIONS * BATCHSIZE) / int(train_x.shape[0])
+    print(f"This model was trained for {NITERATIONS} iteration, which is  {N_epochs} epochs")
+    
+
+# 'Trained_IQNx4_%s_TUNED.dict' % target
+    filename_model = get_model_filename(target, PARAMS_m)
+    trained_models_dir = "trained_models"
+    mkdir(trained_models_dir)
+    # on cluster, Im using another TRAIN directory
+    PATH_model = os.path.join(
+        IQN_BASE, #the loaction of the repo
+        "JupyterBook", #up tp TRAIN could be combined in a srs dicretory
+        "Cluster", 
+        "TRAIN",
+        trained_models_dir, #/trained_models 
+        filename_model # utils.get_model_filename has the saved file format 
+    )
+
+    #Load trained model
+    IQN_m = load_model(PATH_model, PARAMS_m)
+    # Get predicted distribution
+    p = simple_eval(IQN_m, test_x_z_scaled)
+
+
+    range_= (FIELDS[target]['xmin'] , FIELDS[target]['xmax'])
+    bins=50
+    REAL_RAW_DATA=raw_test_data
+
+    YLIM=(0.8,1.2)
+    ###########GET REAL DIST###########
+    REAL_RAW_DATA = REAL_RAW_DATA[['RecoDatapT','RecoDataeta','RecoDataphi','RecoDatam']]
+    REAL_RAW_DATA.columns = ['realpT','realeta','realphi','realm']
+    REAL_DIST=REAL_RAW_DATA['realm']
+    norm_data=REAL_RAW_DATA.shape[0]
+    #############GET EVALUATION DIST#############
+    raw_test_data.describe()
+    m_reco = raw_test_data['RecoDatam']
+    m_gen = raw_test_data['genDatam']
+    # plt.hist(m_reco,label=r'$m_{gen}^{test \ data}$');plt.legend();plt.show()
+
+    if USE_BRADEN_SCALING:
+        orig_ratio = T('m', scaled_df=scaled_train_data)
+        z_inv_f =z_inverse(xprime=p, mean=np.mean(orig_ratio), std=np.std(orig_ratio))
+        L_obs = L(orig_observable=m_gen, label='m')
+        z_inv_f = z_inv_f.flatten();print(z_inv_f.shape)
+
+        factor = (z_inv_f * (L_obs  + 10) )-10
+        m_pred = L_inverse(L_observable=factor, label='m')
+
+    else:
+        m_pred =  z_inverse2(xprime = p, train_mean = TRAIN_SCALE_DICT[target]['mean']
+                                , train_std=TRAIN_SCALE_DICT[target]['std'])
+        m_pred=m_pred.flatten()
+
+
+
+    # Get histogram of predicted distribution
+    real_label_counts_m, predicted_label_counts_m, label_edges_m = get_hist_simple(predicted_dist=m_pred)
+    # eval_data=pd.read_csv(DATA_DIR+'/test_data_10M_2.csv')
+    #Get evaluation data
+    eval_data=pd.read_csv(DATA_DIR+'/test_data_10M_2.csv')
+    ev_features=features
+    eval_data=eval_data[ev_features]
+    #save new distribution (m) in the eval data as autoregressive eval for next IQN
+    eval_data[target]=m_pred
+
+    new_cols= [target] + features
+    eval_data=eval_data.reindex(columns=new_cols)
+    print('EVALUATION DATA NEW INDEX\n', eval_data.head())
+    
+    
+    eval_data.to_csv(os.path.join(IQN_BASE,
+                                  'JupyterBook', 
+                                  'Cluster',
+                                  'EVALUATE', 
+                                  AUTOREGRESSIVE_DIST_NAME))
+
+    # Load this saved predited autoregressive distribution
+    AUTOREGRESSIVE_DIST=pd.read_csv(os.path.join(IQN_BASE,
+                                                 'JupyterBook',
+                                                 'Cluster',
+                                                 'EVALUATE', 
+                                                 AUTOREGRESSIVE_DIST_NAME))
+
+
+    # norm_IQN=AUTOREGRESSIVE_DIST.shape[0]
+    #get normalization values
+    norm_autoregressive=AUTOREGRESSIVE_DIST.shape[0]
+    norm_IQN=norm_autoregressive
+    print('norm_data',norm_data,'\nnorm IQN',norm_IQN,'\nnorm_autoregressive', norm_autoregressive)
+    
+    #Finally, plot predicted distribution
+    plot_one_m(real_edges=label_edges_m, real_counts=real_label_counts_m,
+               predicted_counts=predicted_label_counts_m)
