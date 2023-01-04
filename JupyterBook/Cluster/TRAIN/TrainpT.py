@@ -75,15 +75,7 @@ import time
 #     pass
 
 
-IQN_BASE = os.environ["IQN_BASE"]
-print("BASE directoy properly set = ", IQN_BASE)
-utils_dir = os.path.join(IQN_BASE, "utils/")
-sys.path.append(utils_dir)
-import utils
 
-# usually its not recommended to import everything from a module, but we know
-# whats in it so its fine
-from utils import *
 
 # from IPython.core.magic import register_cell_magic
 
@@ -112,23 +104,26 @@ mp.rc("text", usetex=True)
 # seed = 128
 # rnd  = np.random.RandomState(seed)
 # sometimes jupyter doesnt initialize MathJax automatically for latex, so do this:
-################################### CONFIGURATIONS ###################################
+#######
+
+
+IQN_BASE = os.environ["IQN_BASE"]
+print("BASE directoy properly set = ", IQN_BASE)
+utils_dir = os.path.join(IQN_BASE, "utils/")
+sys.path.append(utils_dir)
+import utils
+
+# usually its not recommended to import everything from a module, but we know
+# whats in it so its fine
+# from utils import *
+
+
 DATA_DIR = os.environ["DATA_DIR"]
 print(f"using DATA_DIR={DATA_DIR}")
-JUPYTER = False
-use_subsample = False
-# use_subsample = True
-if use_subsample:
-    SUBSAMPLE = int(
-        1e5
-    )  # subsample use for development - in production use whole dataset
-else:
-    SUBSAMPLE = None
 
 memory = Memory(DATA_DIR)
+################################### SET DATA CONFIGURATIONS ###################################
 
-USE_BRADEN_SCALING=False
-###############################################################################################
 y_label_dict = {
     "RecoDatapT": "$p(p_T)$" + " [ GeV" + "$^{-1} $" + "]",
     "RecoDataeta": "$p(\eta)$",
@@ -143,8 +138,6 @@ loss_y_label_dict = {
     "RecoDatam": "$m^{reco}$",
 }
 
-
-################################### SET DATA CONFIGURATIONS ###################################
 X = ["genDatapT", "genDataeta", "genDataphi", "genDatam", "tau"]
 
 # set order of training:
@@ -214,8 +207,7 @@ all_cols = [
 
 
 ################################### Load unscaled dataframes ###################################
-################################### Load unscaled dataframes ###################################
-@memory.cache
+# @memory.cache
 def load_raw_data():
     print(f'SUBSAMPLE = {SUBSAMPLE}')
     raw_train_data=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
@@ -245,7 +237,7 @@ def load_raw_data():
 
     return raw_train_data, raw_test_data, raw_valid_data
 
-raw_train_data, raw_test_data, raw_valid_data =load_raw_data()
+
 ########## Generate scaled data###############
 # scaled_train_data = L_scale_df(raw_train_data, title='scaled_train_data_10M_2.csv',
 #                              save=True)
@@ -260,8 +252,8 @@ raw_train_data, raw_test_data, raw_valid_data =load_raw_data()
 # explore_data(df=scaled_train_data, title='Braden Kronheim-L-scaled Dataframe', scaled=True)
 
 ################ Load scaled data##############
-@time_type_of_func(tuning_or_training='loading')
-@memory.cache
+@utils.time_type_of_func(tuning_or_training='loading')
+# @memory.cache
 def load_scaled_dataframes():
     # print("SCALED TRAIN DATA")
     scaled_train_data = pd.read_csv(
@@ -291,36 +283,30 @@ def load_scaled_dataframes():
 # print('\ntest set shape:  ', test_data_m.shape)
 # # print('validation set shape:', valid_data.shape)
 
-scaled_train_data, scaled_test_data, scaled_valid_data = load_scaled_dataframes()
 
 
-if USE_BRADEN_SCALING:
-    TRAIN_SCALE_DICT = get_scaling_info(scaled_train_data)
-    print('BRADEN SCALING DICTIONARY')
-    print(TRAIN_SCALE_DICT)
-    print("\n\n")
-    # TEST_SCALE_DICT = get_scaling_info(scaled_test_data)
-    # print(TEST_SCALE_DICT)
-else:
-    print('NORMAL UNSCALED DICTIONARY')
-    TRAIN_SCALE_DICT = get_scaling_info(raw_train_data)
-    print(TRAIN_SCALE_DICT)
-    print("\n\n")
-    # TEST_SCALE_DICT = get_scaling_info(scaled_test_data)
-    # print(TEST_SCALE_DICT)
+def get_train_scale_dict(USE_BRADEN_SCALING):
+    if USE_BRADEN_SCALING==True:
+        TRAIN_SCALE_DICT = utils.get_scaling_info(scaled_train_data)
+        print('BRADEN SCALING DICTIONARY')
+        print(TRAIN_SCALE_DICT)
+        print("\n\n")
+        # TEST_SCALE_DICT = get_scaling_info(scaled_test_data)
+        # print(TEST_SCALE_DICT)
+    else:
+        print('NORMAL UNSCALED DICTIONARY')
+        TRAIN_SCALE_DICT = utils.get_scaling_info(raw_train_data)
+        print(TRAIN_SCALE_DICT)
+        print("\n\n")
+        # TEST_SCALE_DICT = get_scaling_info(scaled_test_data)
+        # print(TEST_SCALE_DICT)
+    return TRAIN_SCALE_DICT
 
-#######################################
-target = "RecoDatapT"
-source = FIELDS[target]
-features = source["inputs"]
-print("Training Features:\n", features)
-print("\nTarget = ", target)
 
-print("USING NEW DATASET\n")
 
 ################################ SPLIT###########
 # Currently need the split function again here
-@memory.cache
+# @memory.cache
 def split_t_x(df, target, input_features):
     """Get teh target as the ratio, according to the T equation"""
 
@@ -335,7 +321,7 @@ def split_t_x(df, target, input_features):
     x = np.array(df[input_features])
     return np.array(t), x
 
-@memory.cache
+# @memory.cache
 def normal_split_t_x(df, target, input_features):
     # change from pandas dataframe format to a numpy 
     # array of the specified types
@@ -345,45 +331,7 @@ def normal_split_t_x(df, target, input_features):
     return t, x
 
 
-if USE_BRADEN_SCALING:
-    print(f"spliting data for {target}")
-    train_t, train_x = split_t_x(
-        df=scaled_train_data, target=target, input_features=features
-    )
-    print("train_t shape = ", train_t.shape, "train_x shape = ", train_x.shape)
-    print("\n Training features:\n")
-    print(train_x)
-    valid_t, valid_x = split_t_x(
-        df=scaled_valid_data, target=target, input_features=features
-    )
-    print("valid_t shape = ", valid_t.shape, "valid_x shape = ", valid_x.shape)
-    test_t, test_x = split_t_x(df=scaled_test_data, target=target, input_features=features)
-    print("test_t shape = ", test_t.shape, "test_x shape = ", test_x.shape)
 
-else:
-    print(f"spliting data for {target}")
-    train_t, train_x = normal_split_t_x(
-    df=raw_train_data, target=target, input_features=features
-    )
-    print("train_t shape = ", train_t.shape, "train_x shape = ", train_x.shape)
-    print("\n Training features:\n")
-    print(train_x)
-    valid_t, valid_x = normal_split_t_x(
-    df=raw_valid_data, target=target, input_features=features
-    )
-    print("valid_t shape = ", valid_t.shape, "valid_x shape = ", valid_x.shape)
-    test_t, test_x = normal_split_t_x(df=raw_test_data, target=target, input_features=features)
-    print("test_t shape = ", test_t.shape, "test_x shape = ", test_x.shape)
-
-
-
-
-print("no need to train_test_split since we already have the split dataframes")
-print(valid_x.mean(axis=0), valid_x.std(axis=0))
-print(train_x.mean(axis=0), train_x.std(axis=0))
-print(valid_t.mean(), valid_t.std())
-print(train_t.mean(), train_t.std())
-NFEATURES = train_x.shape[1]
 
 ################ Apply Z scaling############
 def z(x):
@@ -391,7 +339,7 @@ def z(x):
     eps = 1e-20
     return (x - np.mean(x)) / (np.std(x) + eps)
 
-@memory.cache
+# @memory.cache
 def z2(x, mean, std):
     """
     Args:
@@ -407,15 +355,15 @@ def z2(x, mean, std):
     return np.array(scaled, dtype=np.float64)
 
 
-def z_inverse(xprime, x):
-    return xprime * np.std(x) + np.mean(x)
+# def z_inverse(xprime, x):
+#     return xprime * np.std(x) + np.mean(x)
 
-@memory.cache
+# @memory.cache
 def z_inverse2(xprime, train_mean, train_std):
     """mean original train mean, std: original. Probably not needed"""
     return xprime * train_std + train_mean
 
-@memory.cache
+# @memory.cache
 def apply_z_to_features(TRAIN_SCALE_DICT, train_x, test_x, valid_x):
     """TO ensure this z scaling is only applied once to the training features, we use a generator.
     This doesn't change the shapes of anything, just applies z to all the feature columns other than tau"""
@@ -431,7 +379,7 @@ def apply_z_to_features(TRAIN_SCALE_DICT, train_x, test_x, valid_x):
     yield valid_x
 
 
-@memory.cache
+# @memory.cache
 def apply_z_to_targets(train_t, test_t, valid_t):
     train_mean = np.mean(train_t)
     train_std = np.std(train_t)
@@ -443,24 +391,6 @@ def apply_z_to_targets(train_t, test_t, valid_t):
     yield test_t_
     yield valid_t_
 
-
-# to features
-apply_z_generator = apply_z_to_features(TRAIN_SCALE_DICT, train_x, test_x, valid_x)
-train_x_z_scaled = next(apply_z_generator)
-test_x_z_scaled = next(apply_z_generator)
-valid_x_z_scaled = next(apply_z_generator)
-print(valid_x_z_scaled.mean(axis=0), valid_x_z_scaled.std(axis=0))
-print(train_x_z_scaled.mean(axis=0), train_x_z_scaled.std(axis=0))
-
-# to targets
-apply_z_to_targets_generator = apply_z_to_targets(
-    train_t, test_t, valid_t
-)
-train_t_z_scaled = next(apply_z_to_targets_generator)
-test_t_z_scaled = next(apply_z_to_targets_generator)
-valid_t_z_scaled = next(apply_z_to_targets_generator)
-print(valid_t_z_scaled.mean(), valid_t_z_scaled.std())
-print(train_t_z_scaled.mean(), train_t_z_scaled.std())
 
 
 # check that it looks correct
@@ -482,11 +412,9 @@ print(train_t_z_scaled.mean(), train_t_z_scaled.std())
 # print(BEST_PARAMS)
 
 
-optimizer_name = "Adam"  # BEST_PARAMS["optimizer_name"]
-print(type(optimizer_name))
-# optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
+
 def load_untrained_model(PARAMS):
-    model = RegularizedRegressionModel(
+    model = utils.RegularizedRegressionModel(
         nfeatures=NFEATURES,
         ntargets=1,
         nlayers=PARAMS["n_layers"],
@@ -500,16 +428,6 @@ def load_untrained_model(PARAMS):
     return model
 
 
-best_learning_rate = 1e-03  # float(BEST_PARAMS["learning_rate"])
-momentum = 0.6  # float(BEST_PARAMS["momentum"])
-# best_optimizer_temp = getattr(torch.optim, optimizer_name)(model.parameters(), lr=best_learning_rate,
-#                                                            momentum=momentum,
-#                                                           amsgrad=True  )
-batch_size = int(1024)  # 512 #int(BEST_PARAMS["batch_size"])
-# BATCHSIZE=10000
-BATCHSIZE = batch_size
-# n_iterations=int(1e7)
-n_iterations = int(3e5)
 
 
 class SaveModelCheckpoint:
@@ -526,7 +444,7 @@ class SaveModelCheckpoint:
 
             # note that n_iterations is the total n_iterations, we dont want to save a million files for each iteration
             trained_models_dir = "trained_models"
-            mkdir(trained_models_dir)
+            utils.mkdir(trained_models_dir)
             # on cluster, Im using another TRAIN directory
             PATH_model = os.path.join(
                 IQN_BASE,
@@ -544,21 +462,22 @@ class SaveModelCheckpoint:
 
 
 def train(
+    target,
     model,
-    # optimizer,
     avloss,
     getbatch,
     train_x,
     train_t,
     valid_x,
     valid_t,
-    batch_size,
-    n_iterations,
+    PARAMS,
     traces,
     step,
     window,
 ):
 
+    batch_size = PARAMS['batch_size']
+    n_iterations = PARAMS['n_iterations']
     # to keep track of average losses
     xx, yy_t, yy_v, yy_v_avg = traces
     model_checkpoint = SaveModelCheckpoint()
@@ -574,10 +493,11 @@ def train(
         if 25000 < ii < 55000:
             learning_rate=1e-2
             
-        if 55000 < ii < 75000:
+        if 55000 < ii < 100000:
             learning_rate=1e-3
-        if ii > 75000:
+        if ii > 100000:
             learning_rate = decay_LR(ii)
+            
         
         # add weight decay (important regularization to reduce overfitting)
         L2 = 1
@@ -595,6 +515,7 @@ def train(
         # dampening=0,
         # momentum=momentum,
         # nesterov=True
+        # BUT no one should ever use SGD in 2022! Adam converges much better and faster.
         )
 
         #if ii > 1e4: learning_rate=1e-4
@@ -635,28 +556,25 @@ def train(
 
         outputs = model(x).reshape(t.shape)
 
-        # compute a noisy approximation to the average loss
         empirical_risk = avloss(outputs, t, x)
 
-        # use automatic differentiation to compute a
-        # noisy approximation of the local gradient
         optimizer.zero_grad()  # clear previous gradients
         empirical_risk.backward()  # compute gradients
 
-        # finally, advance one step in the direction of steepest
-        # descent, using the noisy local gradient.
-        optimizer.step()  # move one step
+        optimizer.step()  # move one step towards the minimum of the loss function using an SGD-like algorithm.
 
         if ii % step == 0:
 
             print(f"\t\tCURRENT LEARNING RATE: {learning_rate}")
-            acc_t = validate(model, avloss, train_x[:n], train_t[:n])
-            acc_v = validate(model, avloss, valid_x[:n], valid_t[:n])
+            acc_t = utils.validate(model, avloss, train_x[:n], train_t[:n])
+            acc_v = utils.validate(model, avloss, valid_x[:n], valid_t[:n])
 
             yy_t.append(acc_t)
             yy_v.append(acc_v)
             # save better models based on valid loss
-            filename_model="Trained_IQNx4_%s_TUNED_0lin_with_high_noise.dict" % target
+            # filename_model="Trained_IQNx4_%s_TUNED_0lin_with_high_noise3.dict" % target
+            filename_model=utils.get_model_filename(target, PARAMS)
+             
             model_checkpoint(model=model, filename_model =filename_model ,current_valid_loss=acc_v)
             # compute running average for validation data
             len_yy_v = len(yy_v)
@@ -689,16 +607,16 @@ def train(
     return (xx, yy_t, yy_v, yy_v_avg)
 
 
-@time_type_of_func(tuning_or_training="training")
+@utils.time_type_of_func(tuning_or_training="training")
 def run(
+    target,
     model,
     train_x,
     train_t,
     valid_x,
     valid_t,
     traces,
-    n_batch,
-    n_iterations,
+    PARAMS,
     traces_step,
     traces_window,
     save_model,
@@ -706,48 +624,19 @@ def run(
 
 
     traces = train(
+        target,
         model,
-        # optimizer,
-        # average_huber_quantile_loss,
-        average_quantile_loss,
-        get_batch,
+        utils.average_quantile_loss,
+        utils.get_batch,
         train_x,
         train_t,
         valid_x,
         valid_t,
-        n_batch,
-        n_iterations,
+        PARAMS,
         traces,
         step=traces_step,
         window=traces_window,
     )
-
-    # learning_rate=learning_rate/10
-    # optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate,
-    #                                                  amsgrad=True,
-    #                                                 #  momentum=momentum,
-    #                                                 # weight_decay=L2
-    #                                                  )
-    # 10^-4
-    # traces = train(model, optimizer,
-    #                   average_quantile_loss,
-    #                   get_batch,
-    #                   train_x, train_t,
-    #                   valid_x, valid_t,
-    #                   n_batch,
-    #               n_iterations,
-    #               traces,
-    #               step=traces_step,
-    #               window=traces_window)
-
-    # learning_rate=learning_rate/10
-    # optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=learning_rate,
-    #                                                  amsgrad=True,
-    #                                                 #  momentum=momentum,
-    #                                                 # weight_decay=L2
-    #                                                  )
-
-    # plot_average_loss(traces, n_iterations,target)
 
     if save_model:
         filename = "Trained_IQNx4_%s_%sK_iter.dict" % (
@@ -763,21 +652,21 @@ def run(
 # ## See if trainig works on T ratio
 
 
-@debug
+@utils.debug
 def save_model(model, PATH):
     print(model)
     torch.save(model.state_dict(), PATH)
     print("\ntrained model dictionary saved in %s" % PATH)
 
 
-@debug
+@utils.debug
 def save_model_params(model, PATH):
     print(model)
     torch.save(model.state_dict(), PATH)
     print("\ntrained model dictionary saved in %s" % PATH)
 
 
-@debug
+@utils.debug
 def load_model(PATH):
     # n_layers = int(BEST_PARAMS["n_layers"])
     # hidden_size = int(BEST_PARAMS["hidden_size"])
@@ -785,7 +674,7 @@ def load_model(PATH):
     # optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
     # learning_rate =  float(BEST_PARAMS["learning_rate"])
     # batch_size = int(BEST_PARAMS["batch_size"])
-    model = RegularizedRegressionModel(
+    model = utils.RegularizedRegressionModel(
         nfeatures=train_x.shape[1],
         ntargets=1,
         nlayers=n_layers,
@@ -801,7 +690,7 @@ def load_model(PATH):
 
 
 def load_trained_model(PATH, PARAMS):
-    model = RegularizedRegressionModel(
+    model = utils.RegularizedRegressionModel(
         nfeatures=NFEATURES,
         ntargets=1,
         nlayers=PARAMS["n_layers"],
@@ -816,65 +705,200 @@ def load_trained_model(PATH, PARAMS):
     return model
 
 
-# def main():
-# N_epochs X N_train_examples = N_iterations X batch_size
-N_epochs = (n_iterations * BATCHSIZE) / int(train_x.shape[0])
-print(f"training for {n_iterations} iteration, which is  {N_epochs} epochs")
 
-PARAMS_ = {
-    "n_layers": int(8),
+
+
+
+if __name__=="__main__":
+        
+    #######################################
+    target = "RecoDatapT"
+    source = FIELDS[target]
+    features = source["inputs"]
+    print("Training Features:\n", features)
+    print("\nTarget = ", target)
+
+    print("USING NEW DATASET\n")
+    ######################################
+    USE_BRADEN_SCALING=False
+    #####################################
+    ################################### CONFIGURATIONS ###################################
+
+    JUPYTER = False
+    use_subsample = False
+    # use_subsample = True
+    if use_subsample:
+        SUBSAMPLE = int(
+            1e5
+        )  # subsample use for development - in production use whole dataset
+    else:
+        SUBSAMPLE = None
+
+
+
+
+    ########################################################################################
+    raw_train_data, raw_test_data, raw_valid_data =load_raw_data()
+    # Load scaled data
+    scaled_train_data, scaled_test_data, scaled_valid_data = load_scaled_dataframes()
+
+
+    # Get targets and features
+    # if USE_BRADEN_SCALING:
+    #     print(f"spliting data for {target}")
+    #     train_t, train_x = split_t_x(
+    #         df=scaled_train_data, target=target, input_features=features
+    #     )
+    #     print("train_t shape = ", train_t.shape, "train_x shape = ", train_x.shape)
+    #     print("\n Training features:\n")
+    #     print(train_x)
+    #     valid_t, valid_x = split_t_x(
+    #         df=scaled_valid_data, target=target, input_features=features
+    #     )
+    #     print("valid_t shape = ", valid_t.shape, "valid_x shape = ", valid_x.shape)
+    #     test_t, test_x = split_t_x(df=scaled_test_data, target=target, input_features=features)
+    #     print("test_t shape = ", test_t.shape, "test_x shape = ", test_x.shape)
+
+    # else:
+    #     print(f"spliting data for {target}")
+    #     train_t, train_x = normal_split_t_x(
+    #     df=raw_train_data, target=target, input_features=features
+    #     )
+    #     print("train_t shape = ", train_t.shape, "train_x shape = ", train_x.shape)
+    #     print("\n Training features:\n")
+    #     print(train_x)
+    #     valid_t, valid_x = normal_split_t_x(
+    #     df=raw_valid_data, target=target, input_features=features
+    #     )
+    #     print("valid_t shape = ", valid_t.shape, "valid_x shape = ", valid_x.shape)
+    #     test_t, test_x = normal_split_t_x(df=raw_test_data, target=target, input_features=features)
+    #     print("test_t shape = ", test_t.shape, "test_x shape = ", test_x.shape)
+    
+    
+    print(f"spliting data for {target}")
+    train_t, train_x = normal_split_t_x(
+    df=raw_train_data, target=target, input_features=features
+    )
+    print("train_t shape = ", train_t.shape, "train_x shape = ", train_x.shape)
+    print("\n Training features:\n")
+    print(train_x)
+    valid_t, valid_x = normal_split_t_x(
+    df=raw_valid_data, target=target, input_features=features
+    )
+    print("valid_t shape = ", valid_t.shape, "valid_x shape = ", valid_x.shape)
+    test_t, test_x = normal_split_t_x(df=raw_test_data, target=target, input_features=features)
+    print("test_t shape = ", test_t.shape, "test_x shape = ", test_x.shape)
+
+
+    print("no need to train_test_split since we already have the split dataframes")
+    print(valid_x.mean(axis=0), valid_x.std(axis=0))
+    print(train_x.mean(axis=0), train_x.std(axis=0))
+    print(valid_t.mean(), valid_t.std())
+    print(train_t.mean(), train_t.std())
+    NFEATURES = train_x.shape[1]
+    ######################################################
+
+    # Apply z scaling to features and targets
+    # to features
+    TRAIN_SCALE_DICT=get_train_scale_dict(USE_BRADEN_SCALING)
+    apply_z_generator = apply_z_to_features(TRAIN_SCALE_DICT, train_x, test_x, valid_x)
+    train_x_z_scaled = next(apply_z_generator)
+    test_x_z_scaled = next(apply_z_generator)
+    valid_x_z_scaled = next(apply_z_generator)
+    print(valid_x_z_scaled.mean(axis=0), valid_x_z_scaled.std(axis=0))
+    print(train_x_z_scaled.mean(axis=0), train_x_z_scaled.std(axis=0))
+
+    # to targets
+    apply_z_to_targets_generator = apply_z_to_targets(
+        train_t, test_t, valid_t
+    )
+    train_t_z_scaled = next(apply_z_to_targets_generator)
+    test_t_z_scaled = next(apply_z_to_targets_generator)
+    valid_t_z_scaled = next(apply_z_to_targets_generator)
+    print(valid_t_z_scaled.mean(), valid_t_z_scaled.std())
+    print(train_t_z_scaled.mean(), train_t_z_scaled.std())
+
+
+
+    ###########################################################
+    # Decide on parameters for this model and training
+    PARAMS_m = {
+    "n_layers": int(5),
     "hidden_size": int(5),
     "dropout_1": float(0.6),
     "dropout_2": float(0.1),
-    "activation": "LeakyReLU"
-    #   'optimizer_name':'SGD',
-}
-# filename_model='Trained_IQNx4_%s_%sK_iter.dict' % (target, str(int(n_iterations/1000)) )
-filename_model = "Trained_IQNx4_%s_TUNED_0lin_with_high_noise.dict" % target
-
-trained_models_dir = "trained_models"
-mkdir(trained_models_dir)
-# on cluster, Im using another TRAIN directory
-PATH_model = os.path.join(
-    IQN_BASE, "JupyterBook", "Cluster", "TRAIN", trained_models_dir, filename_model
-)
-
-#LOAD EITHER TRAINED OR UNTRAINED MODEL
-# to load untrained model (start training from scratch), uncomment the next line
-untrained_model = load_untrained_model(PARAMS_)
-# to continune training of model (pickup where the previous training left off), uncomment below
-# trained_model =load_trained_model(PATH=PATH_model, PARAMS=PARAMS_)
-
-IQN_trace = ([], [], [], [])
-traces_step = 20
-traces_window = traces_step
-IQN = run(
-    model=untrained_model,
-    train_x=train_x_z_scaled,
-    train_t=train_t_z_scaled,
-    valid_x=test_x_z_scaled,
-    valid_t=test_t_z_scaled,
-    traces=IQN_trace,
-    n_batch=BATCHSIZE,
-    n_iterations=n_iterations,
-    traces_step=traces_step,
-    traces_window=traces_window,
-    save_model=False,
-)
+    "activation": "LeakyReLU",
+        'optimizer_name':'Adam',
+        'starting_learning_rate':float(1e-3),
+        'momentum':float(0.6),
+        'batch_size':int(1024),
+        'n_iterations': int(2e5),
+    }
+        
+    optimizer_name=PARAMS_m['optimizer_name']
+    print(type(optimizer_name))
+    # optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
+    NITERATIONS=PARAMS_m['n_iterations']
+    BATCHSIZE=PARAMS_m['batch_size']
+    comment=''
 
 
-# ## Save trained model (if its good, and if you haven't saved above) and load trained model (if you saved it)
 
-final_path = "Trained_IQNx4_%s_TUNED_0lin_with_high_noise_final.dict" % target
+    # N_epochs X N_train_examples = N_iterations X batch_size
+    N_epochs = (NITERATIONS * BATCHSIZE) / int(train_x.shape[0])
+    print(f"training for {NITERATIONS} iteration, which is  {N_epochs} epochs")
 
-trained_models_dir = "trained_models"
-mkdir(trained_models_dir)
-# on cluster, Im using another TRAIN directory
-PATH_final_model = os.path.join(
-    IQN_BASE, "JupyterBook", "Cluster", "TRAIN", trained_models_dir, final_path
-)
 
-# save_model(IQN, PATH_final_model)#dont save the last model, it might be worse than previous iterations,
+    filename_model = utils.get_model_filename(target, PARAMS_m)
+    trained_models_dir = "trained_models"
+    utils.mkdir(trained_models_dir)
+    # on cluster, Im using another TRAIN directory
+    PATH_model = os.path.join(
+        IQN_BASE, #the loaction of the repo
+        "JupyterBook", #up tp TRAIN could be combined in a srs dicretory
+        "Cluster", 
+        "TRAIN",
+        trained_models_dir, #/trained_models 
+        filename_model # utils.get_model_filename has the saved file format 
+    )
 
-# if __name__ == '__main__':
-#     main()
+    #LOAD EITHER TRAINED OR UNTRAINED MODEL
+    # to load untrained model (start training from scratch), uncomment the next line
+    untrained_model = load_untrained_model(PARAMS_m)
+    # to continune training of model (pickup where the previous training left off), uncomment below
+    # trained_model =load_trained_model(PATH=PATH_model, PARAMS=PARAMS_m)
+
+    IQN_trace = ([], [], [], [])
+    traces_step = 200
+    traces_window = traces_step
+    IQN = run(
+        target=target,
+        model=untrained_model,
+        train_x=train_x_z_scaled,
+        train_t=train_t_z_scaled,
+        valid_x=test_x_z_scaled,
+        valid_t=test_t_z_scaled,
+        traces=IQN_trace,
+        PARAMS=PARAMS_m,
+        traces_step=traces_step,
+        traces_window=traces_window,
+        save_model=False,
+    )
+
+
+    
+    SAVE_LAST_MODEL=False
+    if SAVE_LAST_MODEL:
+        # ## Save last iteration of trained model 
+        #dont save the last model, it might be worse than previous iterations, which were automatically savedby model checkpoints
+
+        final_path = utils.get_model_filename(target, PARAMS_m).split('.dict')[0]+'_FINAL.dict'
+
+        trained_models_dir = "trained_models"
+        utils.mkdir(trained_models_dir)
+        # on cluster, Im using another TRAIN directory
+        PATH_final_model = os.path.join(
+        IQN_BASE, "JupyterBook", "Cluster", "TRAIN", trained_models_dir, final_path
+        )
+
+        save_model(IQN, PATH_final_model)

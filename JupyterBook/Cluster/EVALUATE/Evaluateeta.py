@@ -402,7 +402,7 @@ def load_model(PATH, PARAMS):
     # optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
     # learning_rate =  float(BEST_PARAMS["learning_rate"])
     # batch_size = int(BEST_PARAMS["batch_size"])
-    model=utils.RegularizedRegressionModel(nfeatures=NFEATURES, ntargets=1,
+    model=RegularizedRegressionModel(nfeatures=NFEATURES, ntargets=1,
                                nlayers=PARAMS['n_layers'], hidden_size=PARAMS['hidden_size'], dropout_1=PARAMS['dropout_1'], dropout_2=PARAMS['dropout_2'],
                                activation=PARAMS['activation'])
     model.load_state_dict(torch.load(PATH) )
@@ -486,9 +486,7 @@ def plot_one(target,real_edges, real_counts, predicted_counts, save_plot=False, 
     ax2.scatter(real_edges, ratio/ratio, color="k", marker="o",facecolors="none", s=5, linewidth=0.5)
     ax2.set_xlim(range_)
     ax2.set_xlabel(FIELDS[target]['xlabel'])
-    ax2.set_ylabel(r"$\frac{\textnormal{predicted}}{\textnormal{reco}}$"
-                #    , fontsize=10
-                   )
+    ax2.set_ylabel(r"$\frac{\textnormal{predicted}}{\textnormal{reco}}$", fontsize=10)
     ax2.set_ylim((YLIM))
     ax2.set_xlim(range_)
     ax2.set_yticklabels([])

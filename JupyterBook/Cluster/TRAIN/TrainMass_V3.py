@@ -301,7 +301,7 @@ def get_train_scale_dict(USE_BRADEN_SCALING):
         print("\n\n")
         # TEST_SCALE_DICT = get_scaling_info(scaled_test_data)
         # print(TEST_SCALE_DICT)
-        return TRAIN_SCALE_DICT
+    return TRAIN_SCALE_DICT
 
 
 
@@ -494,10 +494,11 @@ def train(
         if 25000 < ii < 55000:
             learning_rate=1e-2
             
-        if 55000 < ii < 75000:
+        if 55000 < ii < 100000:
             learning_rate=1e-3
-        if ii > 75000:
+        if ii > 100000:
             learning_rate = decay_LR(ii)
+            
         
         # add weight decay (important regularization to reduce overfitting)
         L2 = 1
@@ -726,7 +727,7 @@ if __name__=="__main__":
 
     JUPYTER = False
     use_subsample = False
-    use_subsample = True
+    # use_subsample = True
     if use_subsample:
         SUBSAMPLE = int(
             1e5
@@ -807,8 +808,8 @@ if __name__=="__main__":
 
     ###########################################################
     # Decide on parameters for this model and training
-    PARAMS_ = {
-    "n_layers": int(8),
+    PARAMS_m = {
+    "n_layers": int(11),
     "hidden_size": int(5),
     "dropout_1": float(0.6),
     "dropout_2": float(0.1),
@@ -817,39 +818,44 @@ if __name__=="__main__":
         'starting_learning_rate':float(1e-3),
         'momentum':float(0.6),
         'batch_size':int(1024),
-        'n_iterations': int(3e5),
+        'n_iterations': int(2e5),
     }
         
-    optimizer_name=PARAMS_['optimizer_name']
+    optimizer_name=PARAMS_m['optimizer_name']
     print(type(optimizer_name))
     # optimizer_name = BEST_PARAMS["optimizer_name"].to_string().split()[1]
-    NITERATIONS=PARAMS_['n_iterations']
-    BATCHSIZE=PARAMS_['batch_size']
+    NITERATIONS=PARAMS_m['n_iterations']
+    BATCHSIZE=PARAMS_m['batch_size']
     comment=''
 
-    filename_model = get_model_filename(target, PARAMS_)
+
 
     # N_epochs X N_train_examples = N_iterations X batch_size
     N_epochs = (NITERATIONS * BATCHSIZE) / int(train_x.shape[0])
     print(f"training for {NITERATIONS} iteration, which is  {N_epochs} epochs")
 
 
-
+    filename_model = get_model_filename(target, PARAMS_m)
     trained_models_dir = "trained_models"
     mkdir(trained_models_dir)
     # on cluster, Im using another TRAIN directory
     PATH_model = os.path.join(
-        IQN_BASE, "JupyterBook", "Cluster", "TRAIN", trained_models_dir, filename_model
+        IQN_BASE, #the loaction of the repo
+        "JupyterBook", #up tp TRAIN could be combined in a srs dicretory
+        "Cluster", 
+        "TRAIN",
+        trained_models_dir, #/trained_models 
+        filename_model # utils.get_model_filename has the saved file format 
     )
 
     #LOAD EITHER TRAINED OR UNTRAINED MODEL
     # to load untrained model (start training from scratch), uncomment the next line
-    untrained_model = load_untrained_model(PARAMS_)
+    untrained_model = load_untrained_model(PARAMS_m)
     # to continune training of model (pickup where the previous training left off), uncomment below
-    # trained_model =load_trained_model(PATH=PATH_model, PARAMS=PARAMS_)
+    # trained_model =load_trained_model(PATH=PATH_model, PARAMS=PARAMS_m)
 
     IQN_trace = ([], [], [], [])
-    traces_step = 20
+    traces_step = 2
     traces_window = traces_step
     IQN = run(
         target=target,
@@ -859,22 +865,26 @@ if __name__=="__main__":
         valid_x=test_x_z_scaled,
         valid_t=test_t_z_scaled,
         traces=IQN_trace,
-        PARAMS=PARAMS_,
+        PARAMS=PARAMS_m,
         traces_step=traces_step,
         traces_window=traces_window,
         save_model=False,
     )
 
 
-    # ## Save trained model (if its good, and if you haven't saved above) and load trained model (if you saved it)
+    
+    SAVE_LAST_MODEL=False
+    if SAVE_LAST_MODEL:
+        # ## Save last iteration of trained model 
+        #dont save the last model, it might be worse than previous iterations, which were automatically savedby model checkpoints
 
-    final_path = "Trained_IQNx4_%s_TUNED_0lin_with_high_noise_final.dict" % target
+        final_path = get_model_filename(target, PARAMS_m).split('.dict')[0]+'_FINAL.dict'
 
-    trained_models_dir = "trained_models"
-    mkdir(trained_models_dir)
-    # on cluster, Im using another TRAIN directory
-    PATH_final_model = os.path.join(
+        trained_models_dir = "trained_models"
+        mkdir(trained_models_dir)
+        # on cluster, Im using another TRAIN directory
+        PATH_final_model = os.path.join(
         IQN_BASE, "JupyterBook", "Cluster", "TRAIN", trained_models_dir, final_path
-    )
+        )
 
-    # save_model(IQN, PATH_final_model)#dont save the last model, it might be worse than previous iterations,
+        save_model(IQN, PATH_final_model)
