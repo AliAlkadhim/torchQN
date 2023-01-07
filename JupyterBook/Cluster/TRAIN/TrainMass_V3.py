@@ -210,6 +210,11 @@ all_cols = [
 ################################### Load unscaled dataframes ###################################
 @memory.cache
 def load_raw_data():
+    """Load raw train, test, and validation raw (unscaled) dataframes, in that order.
+
+    Returns:
+        list(pandas.DataFrame): train, test, valid raw datafranes
+    """
     print(f'SUBSAMPLE = {SUBSAMPLE}')
     raw_train_data=pd.read_csv(os.path.join(DATA_DIR,'train_data_10M_2.csv'),
                         usecols=all_cols,
@@ -256,6 +261,11 @@ def load_raw_data():
 @time_type_of_func(tuning_or_training='loading')
 @memory.cache
 def load_scaled_dataframes():
+    """Load L-scaled train, test and validation according to Braden scaling, in that order.
+
+    Returns:
+        list(pandas.DataFarme): L-scaled train, test, validation dataframes, in that order.
+    """
     # print("SCALED TRAIN DATA")
     scaled_train_data = pd.read_csv(
         os.path.join(DATA_DIR, "scaled_train_data_10M_2.csv"),
@@ -287,6 +297,14 @@ def load_scaled_dataframes():
 
 
 def get_train_scale_dict(USE_BRADEN_SCALING):
+    """Get a dictionary containing mean and standard deviation of each gen and reco feature. 
+
+    Args:
+        USE_BRADEN_SCALING (bool): Whether you wish to use the Braden scaling. If True, it uses the L-scaled train dataframe. If False, it uses the unscaled dataframe.
+
+    Returns:
+        dict: dictionary of floats containing mean and standard deviation of each gen and reco feature. 
+    """
     if USE_BRADEN_SCALING:
         TRAIN_SCALE_DICT = get_scaling_info(scaled_train_data)
         print('BRADEN SCALING DICTIONARY')
@@ -309,7 +327,10 @@ def get_train_scale_dict(USE_BRADEN_SCALING):
 # Currently need the split function again here
 @memory.cache
 def split_t_x(df, target, input_features):
-    """Get teh target as the ratio, according to the T equation"""
+    """Get the target as the ratio, according to the T equation.
+    
+    Returns:
+    list(numpy.array): list of numpy array of target and training features"""
 
     if target == "RecoDatam":
         t = T("m", scaled_df=scaled_train_data)
@@ -324,6 +345,16 @@ def split_t_x(df, target, input_features):
 
 @memory.cache
 def normal_split_t_x(df, target, input_features):
+    """splot dataframe into targets and feature arrays.
+
+    Args:
+        df (pandas.DataFrame): Dataframe of train, test or validation data.
+        target (str): Choice of "RecoDatapT", "RecoDataeta", "RecoDataphi","RecoDatam" as target.
+        input_features (list(str)): list of training features labels
+
+    Returns:
+    list(numpy.array): list of numpy array of target and training features
+ """
     # change from pandas dataframe format to a numpy 
     # array of the specified types
     # t = np.array(df[target])
@@ -336,38 +367,53 @@ def normal_split_t_x(df, target, input_features):
 
 ################ Apply Z scaling############
 def z(x):
-    """used for targets"""
+    """Simple z-score standardization. Used for targets"""
     eps = 1e-20
     return (x - np.mean(x)) / (np.std(x) + eps)
+def z_inverse(xprime, x):
+    return xprime * np.std(x) + np.mean(x)
 
 @memory.cache
 def z2(x, mean, std):
     """
-    Args:
-        x ([type]): [description]
-        mean ([type]): [description]
-        std ([type]): [description]
+    The main z score function. Args:
+        x (numpy.array): feature 1-D array
+        mean (float): mean of the feature (in the training set)
+        std (float): standard deviation of the feature (in the training set)
 
     Returns:
-        [type]: [description]
+        numpy.array: z-score-scaled 1-D feature
     """
     eps = 1e-20
     scaled = (x - mean) / (std + eps)
     return np.array(scaled, dtype=np.float64)
 
 
-def z_inverse(xprime, x):
-    return xprime * np.std(x) + np.mean(x)
+
 
 @memory.cache
 def z_inverse2(xprime, train_mean, train_std):
-    """mean original train mean, std: original. Probably not needed"""
+    """
+        The main z score de-scaling function. 
+        
+        Args:
+        xprime (numpy.array): z-score-scaled feature 1-D array
+        train_mean (float): mean of the feature (in the training set)
+        train_std (float): standard deviation of the feature (in the training set)
+        """
     return xprime * train_std + train_mean
 
 @memory.cache
 def apply_z_to_features(TRAIN_SCALE_DICT, train_x, test_x, valid_x):
     """TO ensure this z scaling is only applied once to the training features, we use a generator.
-    This doesn't change the shapes of anything, just applies z to all the feature columns other than tau"""
+    This doesn't change the shapes of anything, just applies z to all the feature columns other than tau.
+    
+    Args:
+    TRAIN_SCALE_DICT (dict(float)): dictionary of train set mean and standard deviation values
+    train_x (numpy.array): 2-D numpy array of training features
+    test_x (numpy.array):  2-D numpy array of test features
+    valid_x (numpy.array):  2-D numpy array of validation features
+    """
     for i in range(NFEATURES - 1):
         variable = list(TRAIN_SCALE_DICT)[i]
         train_mean = float(TRAIN_SCALE_DICT[variable]["mean"])
@@ -382,6 +428,16 @@ def apply_z_to_features(TRAIN_SCALE_DICT, train_x, test_x, valid_x):
 
 @memory.cache
 def apply_z_to_targets(train_t, test_t, valid_t):
+    """apply z-score scaling to target columns
+
+    Args:
+        train_t (numpy.array): target column in the training set
+        test_t (numpy.array): target column in the test set
+        valid_t (numpy.array): target column in the validation set
+
+    Yields:
+        [type]: [description]
+    """
     train_mean = np.mean(train_t)
     train_std = np.std(train_t)
     train_t_ = z2(train_t, mean=train_mean, std=train_std)
@@ -415,6 +471,15 @@ def apply_z_to_targets(train_t, test_t, valid_t):
 
 
 def load_untrained_model(PARAMS):
+    """Load an untrained model (with weights initiatted) according to model paramateters in the 
+    PARAMS dictionary
+
+    Args:
+        PARAMS (dict): dictionary of model/training parameters: i.e. hyperparameters and training parameters.
+
+    Returns:
+        utils.RegularizedRegressionModel object
+    """
     model = RegularizedRegressionModel(
         nfeatures=NFEATURES,
         ntargets=1,
@@ -432,11 +497,26 @@ def load_untrained_model(PARAMS):
 
 
 class SaveModelCheckpoint:
+    """Continuous model-checkpointing class. Updates the latest checkpoint of an object based o validation loss each time its called. 
+    """
     def __init__(self, best_valid_loss=np.inf):
+        """Initiate an instance of the class based on filename and best_valid_loss/
+
+        Args:
+            best_valid_loss (float, optional): Best possible validation loss of a checkpoint object. Defaults to np.inf.
+        """
         self.best_valid_loss = best_valid_loss
         self.filename_model=filename_model
 
     def __call__(self, model, current_valid_loss, filename_model):
+        """When an object of the calss is called, its validation loss gets updated and the model based 
+        on the latest validation loss is saved.
+
+        Args:
+            model: utils.RegularizedRegressionModel object.
+            current_valid_loss (float): current (latest) validation loss of this model during the training process.
+            filename_model (str): filename in which the latest model will be saved. Can be a relative or local path. 
+        """
         if current_valid_loss < self.best_valid_loss:
             # update the best loss
             self.best_valid_loss = current_valid_loss
@@ -476,7 +556,25 @@ def train(
     step,
     window,
 ):
+    """Training Function. 
 
+    Args:
+        target (str): hoice of "RecoDatapT", "RecoDataeta", "RecoDataphi","RecoDatam" as target.
+        model a torch NN model, e.g utils.RegularizedRegressionModel.
+        avloss (float): average training losss
+        getbatch (function): a get_batch function
+        train_x (numpy.DataFrame): 2-D numpy array of training features
+        train_t (numpy.DataFrame:  1-D numpy array of training targets
+        valid_x (numpy.DataFrame): 2-D numpy array of validation features
+        valid_t (numpy.DataFrame: 1-D numpy array of validation targets
+        PARAMS (dict): dictionary of model/training parameters 
+        traces (tuple): tuple of  (xx, yy_t, yy_v, yy_v_avg)
+        step (): [description]
+        window ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     batch_size = PARAMS['batch_size']
     n_iterations = PARAMS['n_iterations']
     # to keep track of average losses
@@ -568,8 +666,9 @@ def train(
 
             print(f"\t\tCURRENT LEARNING RATE: {learning_rate}")
             acc_t = validate(model, avloss, train_x[:n], train_t[:n])
+            #acc_t: list of training losses
             acc_v = validate(model, avloss, valid_x[:n], valid_t[:n])
-
+            #acc_v: list of validation losses
             yy_t.append(acc_t)
             yy_v.append(acc_v)
             # save better models based on valid loss

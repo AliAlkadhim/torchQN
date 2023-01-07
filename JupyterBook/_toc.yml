@@ -4,8 +4,6 @@ root: intro
 chapters:
 #- file: Braden_Scaling_TrainEval_Mass.ipynb
 - file: 1_Setup_and_Preprocess.ipynb
-#- file: 2_Two_Parameter_Problem_and_Pivotal_p_Value.ipynb
-#- file: 3_Replacing_Data_with_Lambda_and_2D_Inference.ipynb
-#- file: 4_Imposing_Pivotal_Conditions_on_Lambda.ipynb
-#- file: 5_Mapping_Confidence_Sets_to_Confidence_Intervals.ipynb
-#- file: 6_More_Ideas.ipynb
+- file: 2_Train_all_IQNs.ipynb
+- file: 3_Autoregressive_Evaluation.ipynb
+- file: 4_SupplementaryMaterials_OptunaTuning_Theory_ML_Background.ipynb
