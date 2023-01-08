@@ -305,7 +305,7 @@ def get_train_scale_dict(USE_BRADEN_SCALING):
     Returns:
         dict: dictionary of floats containing mean and standard deviation of each gen and reco feature. 
     """
-    if USE_BRADEN_SCALING:
+    if USE_BRADEN_SCALING==True:
         TRAIN_SCALE_DICT = get_scaling_info(scaled_train_data)
         print('BRADEN SCALING DICTIONARY')
         print(TRAIN_SCALE_DICT)
@@ -844,7 +844,7 @@ if __name__=="__main__":
 
 
     # Get targets and features
-    if USE_BRADEN_SCALING:
+    if USE_BRADEN_SCALING==True:
         print(f"spliting data for {target}")
         train_t, train_x = split_t_x(
             df=scaled_train_data, target=target, input_features=features
@@ -907,18 +907,18 @@ if __name__=="__main__":
 
     ###########################################################
     # Decide on parameters for this model and training
-    PARAMS_m = {
-    "n_layers": int(11),
-    "hidden_size": int(5),
-    "dropout_1": float(0.6),
-    "dropout_2": float(0.1),
-    "activation": "LeakyReLU",
-        'optimizer_name':'Adam',
-        'starting_learning_rate':float(1e-3),
-        'momentum':float(0.6),
-        'batch_size':int(1024),
-        'n_iterations': int(2e5),
-    }
+    PARAMS_m ={
+"n_layers": int(10),
+"hidden_size": int(5),
+"dropout_1": float(0.6),
+"dropout_2": float(0.1),
+"activation": "LeakyReLU",
+    'optimizer_name':'Adam',
+    'starting_learning_rate':float(1e-3),
+    'momentum':float(0.6),
+    'batch_size':int(1024),
+    'n_iterations': int(5e5),
+}
         
     optimizer_name=PARAMS_m['optimizer_name']
     print(type(optimizer_name))
@@ -954,7 +954,7 @@ if __name__=="__main__":
     # trained_model =load_trained_model(PATH=PATH_model, PARAMS=PARAMS_m)
 
     IQN_trace = ([], [], [], [])
-    traces_step = 2
+    traces_step = 200
     traces_window = traces_step
     IQN = run(
         target=target,

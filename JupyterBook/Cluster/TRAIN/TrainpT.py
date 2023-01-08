@@ -744,7 +744,7 @@ if __name__=="__main__":
 
 
     # Get targets and features
-    # if USE_BRADEN_SCALING:
+    # if USE_BRADEN_SCALING==True:
     #     print(f"spliting data for {target}")
     #     train_t, train_x = split_t_x(
     #         df=scaled_train_data, target=target, input_features=features

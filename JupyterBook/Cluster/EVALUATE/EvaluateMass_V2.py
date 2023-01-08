@@ -62,13 +62,12 @@ mp.rcParams["text.latex.preamble"] = [r"\usepackage{amsmath}"]  # for \text comm
 try:
     IQN_BASE = os.environ["IQN_BASE"]
     print("BASE directoy properly set = ", IQN_BASE)
-    utils_dir = os.path.join(IQN_BASE, "utils/")
+    utils_dir = os.path.join(IQN_BASE, 'utils/')
     sys.path.append(utils_dir)
     import utils
 
     # usually its not recommended to import everything from a module, but we know
     # whats in it so its fine
-    from utils import *
 
     print("DATA directory also properly set, in %s" % os.environ["DATA_DIR"])
 except Exception:
@@ -89,12 +88,10 @@ utils_dir = os.path.join(IQN_BASE, "utils/")
 sys.path.append(utils_dir)
 # usually its not recommended to import everything from a module, but we know
 # whats in it so its fine
-from utils import *
 
 # or use joblib for caching on disk
 from joblib import Memory
 
-USE_BRADEN_SCALING = False
 
 ################################### CONFIGURATIONS ###################################
 DATA_DIR = os.environ["DATA_DIR"]
@@ -198,7 +195,7 @@ all_cols = [
 
 
 ################################### Load unscaled dataframes ###################################
-@memory.cache
+# @memory.cache
 def load_raw_data():
     print(f"\nSUBSAMPLE = {SUBSAMPLE}\n")
     raw_train_data = pd.read_csv(
@@ -241,8 +238,8 @@ def load_raw_data():
 # explore_data(df=scaled_train_data, title='Braden Kronheim-L-scaled Dataframe', scaled=True)
 
 ################ Load scaled data##############
-@time_type_of_func(tuning_or_training="loading")
-@memory.cache
+@utils.time_type_of_func(tuning_or_training="loading")
+# @memory.cache
 def load_scaled_dataframes():
     print("SCALED TRAIN DATA")
     scaled_train_data = pd.read_csv(
@@ -274,10 +271,10 @@ def load_scaled_dataframes():
 # print('\ntrain set shape:',  scaled_train_data.shape)
 # print('\ntest set shape:  ', scaled_test_data.shape)
 # # print('validation set shape:', valid_data.shape)
-@memory.cache
+# @memory.cache
 def get_train_scale_dict(USE_BRADEN_SCALING):
-    if USE_BRADEN_SCALING:
-        TRAIN_SCALE_DICT = get_scaling_info(scaled_train_data)
+    if USE_BRADEN_SCALING==True:
+        TRAIN_SCALE_DICT = utils.get_scaling_info(scaled_train_data)
         print("BRADEN SCALING DICTIONARY")
         print(TRAIN_SCALE_DICT)
         print("\n\n")
@@ -285,17 +282,17 @@ def get_train_scale_dict(USE_BRADEN_SCALING):
         # print(TEST_SCALE_DICT)
     else:
         print("NORMAL UNSCALED DICTIONARY")
-        TRAIN_SCALE_DICT = get_scaling_info(raw_train_data)
+        TRAIN_SCALE_DICT = utils.get_scaling_info(raw_train_data)
         print(TRAIN_SCALE_DICT)
         print("\n\n")
         # TEST_SCALE_DICT = get_scaling_info(scaled_test_data)
         # print(TEST_SCALE_DICT)
-        return TRAIN_SCALE_DICT
+    return TRAIN_SCALE_DICT
 
 
 ################################ SPLIT###########
 # Currently need the split function again here
-@memory.cache
+# @memory.cache
 def T(variable, scaled_df):
     if variable == "pT":
         L_pT_gen = scaled_df["genDatapT"]
@@ -317,7 +314,7 @@ def T(variable, scaled_df):
     return target
 
 
-@memory.cache
+# @memory.cache
 def split_t_x(df, target, input_features):
     """Get teh target as the ratio, according to the T equation"""
 
@@ -333,7 +330,7 @@ def split_t_x(df, target, input_features):
     return np.array(t), x
 
 
-@memory.cache
+# @memory.cache
 def split_t_x_test(df, target, input_features):
     """Get teh target as the ratio, according to the T equation"""
 
@@ -350,7 +347,7 @@ def split_t_x_test(df, target, input_features):
 
 
 #########################################################################
-@memory.cache
+# @memory.cache
 def normal_split_t_x(df, target, input_features):
     # change from pandas dataframe format to a numpy
     # array of the specified types
@@ -370,7 +367,7 @@ def z_inverse(xprime, x):
     return xprime * np.std(x) + np.mean(x)
 
 
-@memory.cache
+# @memory.cache
 def z2(x, mean, std):
     """
     Args:
@@ -391,13 +388,13 @@ def z_inverse(xprime, x):
     return np.array(unscaled, dtype=np.float64)
 
 
-@memory.cache
+# @memory.cache
 def z_inverse2(xprime, train_mean, train_std):
     """mean original train mean, std: original. Probably not needed"""
     return xprime * train_std + train_mean
 
 
-@memory.cache
+# @memory.cache
 def apply_z_to_features(TRAIN_SCALE_DICT, train_x, test_x, valid_x):
     """TO ensure this z scaling is only applied once to the training features, we use a generator.
     This doesn't change the shapes of anything, just applies z to all the feature columns other than tau"""
@@ -414,7 +411,7 @@ def apply_z_to_features(TRAIN_SCALE_DICT, train_x, test_x, valid_x):
     yield valid_x
 
 
-@memory.cache
+# @memory.cache
 def apply_z_to_targets(train_t, test_t, valid_t):
     train_mean = np.mean(train_t)
     train_std = np.std(train_t)
@@ -427,14 +424,14 @@ def apply_z_to_targets(train_t, test_t, valid_t):
     yield valid_t_
 
 
-@debug
+# @utils.debug
 def save_model(model, PATH):
     print(model)
     torch.save(model.state_dict(), PATH)
     print("\ntrained model dictionary saved in %s" % PATH)
 
 
-@debug
+# @utils.debug
 def load_model(PATH, PARAMS):
     # n_layers = int(BEST_PARAMS["n_layers"])
     # hidden_size = int(BEST_PARAMS["hidden_size"])
@@ -459,7 +456,7 @@ def load_model(PATH, PARAMS):
     return model
 
 
-@memory.cache
+# @memory.cache
 def simple_eval(model, test_x_z_scaled):
     model.eval()
     # evaluate on the scaled features
@@ -485,7 +482,7 @@ def z_inverse(xprime, mean, std):
     return xprime * std + mean
 
 
-@memory.cache
+# @memory.cache
 def get_hist(label):
     """label could be "pT", "eta", "phi", "m" """
     predicted_label_counts, label_edges = np.histogram(
@@ -503,7 +500,7 @@ def get_hist(label):
     return real_label_counts, predicted_label_counts, label_edges
 
 
-@memory.cache
+# @memory.cache
 def get_hist_simple(predicted_dist):
     predicted_label_counts, label_edges = np.histogram(
         predicted_dist, range=range_, bins=bins
@@ -584,7 +581,7 @@ def plot_one(
 
     # plt.gca().set_position([0, 0, 1, 1])
     if save_plot:
-        plot_filename = get_model_filename(target, PARAMS).split(".dict")[0] + ".png"
+        plot_filename = utils.get_model_filename(target, PARAMS).split(".dict")[0] + ".png"
         plt.savefig(
             os.path.join(IQN_BASE, "JupyterBook", "Cluster", "EVALUATE", plot_filename)
         )
@@ -624,7 +621,7 @@ if __name__ == "__main__":
     # scaled_train_data, scaled_test_data, scaled_valid_data = load_scaled_dataframes()
 
     # Get targets and features
-    if USE_BRADEN_SCALING:
+    if USE_BRADEN_SCALING==True:
         print(f"spliting data for {target}")
         train_t, train_x = split_t_x(
             df=scaled_train_data, target=target, input_features=features
@@ -688,17 +685,17 @@ if __name__ == "__main__":
     ###########################################################
     # Get the  parameters for this model and training
     PARAMS_m = {
-        "n_layers": int(11),
-        "hidden_size": int(5),
-        "dropout_1": float(0.6),
-        "dropout_2": float(0.1),
-        "activation": "LeakyReLU",
-        "optimizer_name": "Adam",
-        "starting_learning_rate": float(1e-3),
-        "momentum": float(0.6),
-        "batch_size": int(1024),
-        "n_iterations": int(2e5),
-    }
+"n_layers": int(15),
+"hidden_size": int(5),
+"dropout_1": float(0.6),
+"dropout_2": float(0.1),
+"activation": "LeakyReLU",
+    'optimizer_name':'Adam',
+    'starting_learning_rate':float(1e-3),
+    'momentum':float(0.6),
+    'batch_size':int(1024),
+    'n_iterations': int(5e5),
+}
 
     optimizer_name = PARAMS_m["optimizer_name"]
     print(type(optimizer_name))
@@ -714,9 +711,9 @@ if __name__ == "__main__":
     )
 
     # 'Trained_IQNx4_%s_TUNED.dict' % target
-    filename_model = get_model_filename(target, PARAMS_m)
+    filename_model = utils.get_model_filename(target, PARAMS_m)
     trained_models_dir = "trained_models"
-    mkdir(trained_models_dir)
+    utils.mkdir(trained_models_dir)
     # on cluster, Im using another TRAIN directory
     PATH_model = os.path.join(
         IQN_BASE,  # the loaction of the repo
@@ -750,7 +747,7 @@ if __name__ == "__main__":
     m_gen = raw_test_data["genDatam"]
     # plt.hist(m_reco,label=r'$m_{gen}^{test \ data}$');plt.legend();plt.show()
 
-    if USE_BRADEN_SCALING:
+    if USE_BRADEN_SCALING==True:
         orig_ratio = T("m", scaled_df=scaled_train_data)
         z_inv_f = z_inverse(xprime=p, mean=np.mean(orig_ratio), std=np.std(orig_ratio))
         L_obs = L(orig_observable=m_gen, label="m")

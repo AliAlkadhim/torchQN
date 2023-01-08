@@ -1,0 +1,997 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Chapter 4: Optional Supplementary Material &#8212; torchIQNx4</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="IQNx4: Chapter 3: Autoregressive Evaluation" href="3_Autoregressive_Evaluation.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">torchIQNx4</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to the torchIQNx4
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="1_Setup_and_Preprocess.html">
+   IQNx4: Chapter 1. Setup and Preprocess
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2_Train_all_IQNs.html">
+   2.1 Imports and Configurations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="3_Autoregressive_Evaluation.html">
+   IQNx4: Chapter 3: Autoregressive Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Chapter 4: Optional Supplementary Material
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/AliAlkadhim/torchQN/HEAD?labpath=JupyterBook/v2/gh/AliAlkadhim/torchQN/master?urlpath=tree/JupyterBook/4_SupplementaryMaterials_OptunaTuning_Theory_ML_Background.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/4_SupplementaryMaterials_OptunaTuning_Theory_ML_Background.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Chapter 4: Optional Supplementary Material
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scaling">
+   4.1: Scaling
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#basically-a-standard-scaling-procedure-is-the-following-background">
+     Basically a “standard scaling procedure” is the following (background):
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#auto-tuning-with-optuna">
+   4.2: Auto-Tuning with Optuna
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#hyperparameter-training-workflow">
+     Hyperparameter Training Workflow
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Chapter 4: Optional Supplementary Material</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Chapter 4: Optional Supplementary Material
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scaling">
+   4.1: Scaling
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#basically-a-standard-scaling-procedure-is-the-following-background">
+     Basically a “standard scaling procedure” is the following (background):
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#auto-tuning-with-optuna">
+   4.2: Auto-Tuning with Optuna
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#hyperparameter-training-workflow">
+     Hyperparameter Training Workflow
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="chapter-4-optional-supplementary-material">
+<h1>Chapter 4: Optional Supplementary Material<a class="headerlink" href="#chapter-4-optional-supplementary-material" title="Permalink to this headline">#</a></h1>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="scaling">
+<h1>4.1: Scaling<a class="headerlink" href="#scaling" title="Permalink to this headline">#</a></h1>
+<p>scaling (or standarization, normalization) is someimes done in the following way:
+$<span class="math notranslate nohighlight">\( X' = \frac{X-X_{min}}{X_{max}-X_{min}} \qquad \rightarrow \qquad X= X' (X_{max}-X_{min}) + X_{min}\)</span>$</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># def standarize(values):</span>
+<span class="c1">#     expected_min, expected_max = values.min(), values.max()</span>
+<span class="c1">#     scale_factor = expected_max - expected_min</span>
+<span class="c1">#     offset = expected_min</span>
+<span class="c1">#     standarized_values = (values - offset)/scale_factor </span>
+<span class="c1">#     return standarized_values</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Or by taking z-score:</p>
+<div class="math notranslate nohighlight">
+\[ X'=z(X)=\frac{X-E[X]}{\sigma_{X}}  \qquad \rightarrow \qquad X = z^{-1}(X')= X' \sigma_{X} + E[X].\]</div>
+<hr class="docutils" />
+<section id="basically-a-standard-scaling-procedure-is-the-following-background">
+<h2>Basically a “standard scaling procedure” is the following (background):<a class="headerlink" href="#basically-a-standard-scaling-procedure-is-the-following-background" title="Permalink to this headline">#</a></h2>
+<ol class="simple">
+<li><p>Split the data into train and test dataframes</p></li>
+<li><p>Fit on the train set, and transform everything according to the train set, that is, get the mean and std, ( optionally and min and max or other quantities) of each feature (column) of each of the train set, and standarize everything according to that.</p></li>
+<li><p>transform each of the train and test sets independently. That is, use the means and stds of each column to transform a column <span class="math notranslate nohighlight">\(X\)</span> into a column <span class="math notranslate nohighlight">\(X'\)</span> e.g. according to
+$<span class="math notranslate nohighlight">\( X'=z(X)= \frac{X-E[X]}{\sigma_{X}}\)</span>$</p></li>
+<li><p>Train NN on transformed features <span class="math notranslate nohighlight">\(X_{train}'\)</span> (and target <span class="math notranslate nohighlight">\(y_{train}'\)</span>) (in train df, but validate on test set, which will not influence the weights of NN ( just used for observation that it doesnt overfit) )</p></li>
+<li><p>Once the training is done, <em>evaluate the NN on transformed features of the test set</em> <span class="math notranslate nohighlight">\(X_{test}'\)</span>, i.e. do <span class="math notranslate nohighlight">\(NN(X_{test}')\)</span>, which will result in a scaled prediction of the target <span class="math notranslate nohighlight">\(y_{pred}'\)</span></p></li>
+<li><p>Unscale the <span class="math notranslate nohighlight">\(y_{pred}'\)</span>, i.e. apply the inverse of the scaling operation, e.g.
+$<span class="math notranslate nohighlight">\( y_{pred}=z^{-1}(y_{pred}')= y_{pred}' \sigma_{y} + E[y]\)</span>$,
+where</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\sigma_y\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[E[y]\]</div>
+<p>are attained from the test set <em>prior to training and scaling</em>.</p>
+<ol class="simple">
+<li><p>Compare to <span class="math notranslate nohighlight">\(y\)</span> (the actual distribution you’re trying to estimate) one-to-one</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">use_svg_display</span><span class="p">()</span>
+<span class="n">show_jupyter_image</span><span class="p">(</span><span class="s1">&#39;images/scaling_forNN.jpg&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/4_SupplementaryMaterials_OptunaTuning_Theory_ML_Background_6_0.jpg" src="_images/4_SupplementaryMaterials_OptunaTuning_Theory_ML_Background_6_0.jpg" />
+</div>
+</div>
+<p>Our risk functional is minimized for</p>
+<div class="math notranslate nohighlight">
+\[\frac{\delta R_{\text{IQN}x4} }{\delta f_m}=0\tag{5}\]</div>
+<p>(which is basically what’s done in the training process to get <span class="math notranslate nohighlight">\(f_m^{*}\)</span> whose weights/parameters minimize the loss). Suppose we factorize the risk as</p>
+<div class="math notranslate nohighlight">
+\[ R_{\text{IQN}x4}  = R_{\text{IQN}}^m \ R_{\text{IQN}}^{p_T}  \ R_{\text{IQN}}^\eta \ R_{\text{IQN}}^\phi \tag{6},\]</div>
+<p>then, by Eq (4),</p>
+<div class="math notranslate nohighlight">
+\[R_{\text{IQN}}^m \equiv \int L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathbf{y_m} \right) p(\mathbf{x_m, y_m,\tau})  d \mathbf{x_m} d \mathbf{y_m} d \mathbf{\tau},
+\]</div>
+<p>and by Eq (5)</p>
+<div class="math notranslate nohighlight">
+\[\int d \mathbf{x_m} d \mathbf{y_m} d \mathbf{\tau} \ p(\mathbf{x_m, y_m,\tau})   \ \frac{ \delta L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathbf{y_m} \right) }{\delta f_m} = 0\]</div>
+<p>and by Eq (2)</p>
+<div class="math notranslate nohighlight">
+\[
+\int d \mathbf{x_m} d \mathbf{y_m} d \mathbf{\tau} \ p(\mathbf{x_m, y_m,\tau})   \ \frac{ \delta L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathbf{y_m} \right) }{\delta f_m} = 0 \tag{7}
+\]</div>
+<blockquote>
+<div><blockquote>
+<div><p>…
+<br></p>
+</div></blockquote>
+</div></blockquote>
+<p>Expand Eq (2) in Eq (7) and integrate wrt y over the appropriate limits to see that  <span class="math notranslate nohighlight">\(f(\mathbf{x},\mathbf{\tau})\)</span> is the quantile function for <span class="math notranslate nohighlight">\(p(\mathbf{y}|\mathbf{x})\)</span>, i.e. (I believe) that IQNx4 should work basically exactly.</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="auto-tuning-with-optuna">
+<h1>4.2: Auto-Tuning with Optuna<a class="headerlink" href="#auto-tuning-with-optuna" title="Permalink to this headline">#</a></h1>
+<hr class="docutils" />
+<hr class="docutils" />
+<section id="hyperparameter-training-workflow">
+<h2>Hyperparameter Training Workflow<a class="headerlink" href="#hyperparameter-training-workflow" title="Permalink to this headline">#</a></h2>
+<p>We should not touch our test set until we have chosen our hyperparameters (have done model selection) using the valid set (also, we can’t tune the model using the train set since it obviously will just overfit the train set). Then in the training process we evaluate on test set to keep ourselves honest and to see if we are overfitting the train set.</p>
+<p>It seems that one of the big challenges in this project is generalization (or overfitting). ways to reduce overfitting and improve generalization (that is, make the generalization error <span class="math notranslate nohighlight">\(R[f]\)</span> closer to the training error <span class="math notranslate nohighlight">\(R_{\text{emp}}\)</span> is:</p>
+<ol class="simple">
+<li><p>Reducing model complexity (e.g. using a linear model instead of a non-linear model, and user fewer model parameters). 2. using more training data. 3. feature selecting (i.e. using fewer features, since some of the features might be irrelevant or redundant). 4. Data augmentation, i.e. generating additional training examples through e.g. horizontal flipping/random cropping for images, or adding noise to training examples, all of which increase the size and diversity of the training set. 5. Regularization techniques, such as adding a penalty to the weights of the model during training (weight decay). This penalty could be e.g. L1 or L2 norm of the weights. 5. Cross valudation: dividing the training set into several smaller sets, training the model on one set, and evaluating it on the others. (can use e.g. <code class="docutils literal notranslate"><span class="pre">sklearn.model_selection.KFold</span></code> instead of doing it from scratch).</p></li>
+</ol>
+<p>Other than overfitting, the name of the game for training of course is to minimize the loss with respect to the weights. INPUT (features) is forward propagated (meaning each layer is basically a matrix of the size of the weights is a matrix of <span class="math notranslate nohighlight">\(( N_inputs + 1) X (N_outputs)\)</span> (and the inputs) is <span class="math notranslate nohighlight">\(w[N_inputs]+b\)</span> which is the rows, and the outputs (<span class="math notranslate nohighlight">\(y=\mathbf{w}+b\)</span>) will have shape <span class="math notranslate nohighlight">\([N_outputs]\)</span>  through each layer into the OUTPUT (target). More explicitly the shape of output <span class="math notranslate nohighlight">\(y\)</span> of each layer will be</p>
+<div class="math notranslate nohighlight">
+\[[y] = [1 \times (N_{input}+1) ] \cdot [(N_{input} +1) \times N_{output}] = [1\times N_{output}]  \]</div>
+<p>Where <span class="math notranslate nohighlight">\(N_{input}\)</span> and <span class="math notranslate nohighlight">\(N_{output}\)</span> are the numbers of input and output features, taken to be rows and columns of the matrices, respectively. The <span class="math notranslate nohighlight">\(+1\)</span> in <span class="math notranslate nohighlight">\( (N_{input}+1) \)</span> is for the bias column.</p>
+<p>Forward Prop: pass.
+INPUT <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> -&gt; … -&gt; a bunch of layers … -&gt; OUTPUT <span class="math notranslate nohighlight">\(y\)</span></p>
+<p>Backprop.: Going backward from the output layer to the input layer. Basically, for one layer, <span class="math notranslate nohighlight">\(Backprop(dLoss/dy) = dLoss/dx\)</span>, where <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> are the inputs and outputs for one layer. This will use, in the simplest case, <span class="math notranslate nohighlight">\(dLoss/dx = dLoss/dy \ dy/dx\)</span> where <span class="math notranslate nohighlight">\( dy/dx\)</span> will be in terms of the weights of the current layer. <span class="math notranslate nohighlight">\(dLoss/dw = dLoss/dy \ dy/dw\)</span>, and then the weights are updated as to minimize the loss, e.g. for SGD: <span class="math notranslate nohighlight">\(w \leftarrow w - (dLoss/dw \ \eta\)</span> where <span class="math notranslate nohighlight">\(\eta\)</span> is the learning rate.</p>
+<p>the dLoss/dx becomes the dLoss/dy of the next layer:</p>
+<p>X layer1 - &gt; layer_2 … -&gt; layer_n -&gt; y
+&lt;-…  dL/dx  &lt;- BP dL/dy  &lt;- dL/dx   &lt;-BP  dL/dy</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_tuning_sample</span><span class="p">():</span>
+    <span class="n">sample</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mi">200000</span><span class="p">)</span>
+    <span class="c1"># train_x_sample, train_t_ratio_sample, valid_x_sample, valid_t_ratio_sample</span>
+    <span class="n">get_whole</span><span class="o">=</span><span class="kc">True</span>
+    <span class="k">if</span> <span class="n">get_whole</span><span class="p">:</span>
+        <span class="n">train_x_sample</span><span class="p">,</span> <span class="n">train_t_ratio_sample</span><span class="p">,</span> <span class="n">valid_x_sample</span><span class="p">,</span> <span class="n">valid_t_ratio_sample</span> <span class="o">=</span> <span class="n">train_x</span><span class="p">,</span> <span class="n">train_t_ratio</span><span class="p">,</span> <span class="n">valid_x</span><span class="p">,</span> <span class="n">valid_t_ratio</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">train_x_sample</span><span class="p">,</span> <span class="n">train_t_ratio_sample</span><span class="p">,</span> <span class="n">valid_x_sample</span><span class="p">,</span> <span class="n">valid_t_ratio_sample</span><span class="o">=</span><span class="n">train_x</span><span class="p">[:</span><span class="n">sample</span><span class="p">],</span> <span class="n">train_t_ratio</span><span class="p">[:</span><span class="n">sample</span><span class="p">],</span> <span class="n">valid_x</span><span class="p">[:</span><span class="n">sample</span><span class="p">],</span> <span class="n">valid_t_ratio</span><span class="p">[:</span><span class="n">sample</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">train_x_sample</span><span class="p">,</span> <span class="n">train_t_ratio_sample</span><span class="p">,</span> <span class="n">valid_x_sample</span><span class="p">,</span> <span class="n">valid_t_ratio_sample</span>
+
+<span class="n">train_x_sample</span><span class="p">,</span> <span class="n">train_t_ratio_sample</span><span class="p">,</span> <span class="n">valid_x_sample</span><span class="p">,</span> <span class="n">valid_t_ratio_sample</span> <span class="o">=</span> <span class="n">get_tuning_sample</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">train_x_sample</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(8000000, 5)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Need to use test set <em>and</em> validation set for tuning.</p>
+<p>Note that hyperparameters are usually not directly transferrable across architectures and datasets.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">HyperTrainer</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;loss, training and evaluation&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+                 <span class="c1">#, device):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="c1">#self.device= device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_iterations_tune</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+
+        <span class="c1">#the loss function returns the loss function. It is a static method so it doesn&#39;t need self</span>
+        <span class="c1"># @staticmethod</span>
+        <span class="c1"># def loss_fun(targets, outputs):</span>
+        <span class="c1">#   tau = torch.rand(outputs.shape)</span>
+        <span class="c1">#   return torch.mean(torch.where(targets &gt;= outputs, </span>
+        <span class="c1">#                                   tau * (targets - outputs), </span>
+        <span class="c1">#                                   (1 - tau)*(outputs - targets)))</span>
+
+        <span class="c1">#     This loss combines a Sigmoid layer and the BCELoss in one single class. This version is more numerically stable than using a plain Sigmoid followed by a BCELoss as, </span>
+        <span class="c1">#     by combining the operations into one layer</span>
+
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+        <span class="n">final_loss</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_iterations_tune</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+            <span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_t</span> <span class="o">=</span> <span class="n">get_batch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span><span class="c1">#x and t are train_x and train_t</span>
+
+            <span class="c1"># with torch.no_grad():</span>
+            <span class="n">inputs</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">batch_x</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+            <span class="n">targets</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">batch_t</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">average_quantile_loss</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
+            <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+            <span class="n">final_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">final_loss</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span>
+
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="n">final_loss</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_iterations_tune</span><span class="p">):</span>
+            <span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_t</span> <span class="o">=</span> <span class="n">get_batch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span><span class="c1">#x and t are train_x and train_t</span>
+
+            <span class="c1"># with torch.no_grad():            </span>
+            <span class="n">inputs</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">batch_x</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+            <span class="n">targets</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">batch_t</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+            <span class="n">loss</span> <span class="o">=</span><span class="n">average_quantile_loss</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
+            <span class="n">final_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">final_loss</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span>
+
+    
+<span class="n">EPOCHS</span><span class="o">=</span><span class="mi">1</span>
+<span class="k">def</span> <span class="nf">run_train</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">save_model</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;For tuning the parameters&quot;&quot;&quot;</span>
+
+    <span class="n">model</span> <span class="o">=</span>  <span class="n">RegularizedRegressionModel</span><span class="p">(</span>
+              <span class="n">nfeatures</span><span class="o">=</span><span class="n">train_x_sample</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> 
+                <span class="n">ntargets</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">nlayers</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;nlayers&quot;</span><span class="p">],</span> 
+                <span class="n">hidden_size</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">],</span>
+                <span class="n">dropout</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;dropout&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+    <span class="c1"># print(model)</span>
+    
+
+    <span class="n">learning_rate</span><span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">]</span>
+    <span class="n">optimizer_name</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;optimizer_name&quot;</span><span class="p">]</span>
+    
+    <span class="c1"># optimizer = torch.optim.Adam(model.parameters(), lr=params[&quot;learning_rate&quot;]) </span>
+    
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="p">,</span> <span class="n">optimizer_name</span><span class="p">)(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> 
+                            <span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">momentum</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;momentum&quot;</span><span class="p">])</span>
+    
+    <span class="n">trainer</span><span class="o">=</span><span class="n">HyperTrainer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">])</span>
+    <span class="n">best_loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+    <span class="n">early_stopping_iter</span><span class="o">=</span><span class="mi">10</span><span class="c1">#stop after 10 iteractions of not improving loss</span>
+    <span class="n">early_stopping_coutner</span><span class="o">=</span><span class="mi">0</span>
+
+    <span class="c1"># for epoch in range(EPOCHS):</span>
+    <span class="c1"># train_loss = trainer.train(train_x_sample, train_t_ratio_sample)</span>
+        <span class="c1">#test loss</span>
+    <span class="n">valid_loss</span><span class="o">=</span><span class="n">trainer</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">valid_x_sample</span><span class="p">,</span> <span class="n">valid_t_ratio_sample</span><span class="p">)</span>
+
+        <span class="c1"># print(f&quot;{epoch} \t {train_loss} \t {valid_loss}&quot;)</span>
+        
+        <span class="c1"># if valid_loss&lt;best_loss:</span>
+        <span class="c1">#     best_loss=valid_loss</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     early_stopping_coutner+=1</span>
+        <span class="c1"># if early_stopping_coutner &gt; early_stopping_iter:</span>
+            <span class="c1"># break</span>
+            
+    <span class="c1"># return best_loss</span>
+    <span class="k">return</span> <span class="n">valid_loss</span>
+
+
+<span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="n">trial</span><span class="p">):</span>
+    <span class="n">CLUSTER</span><span class="o">=</span><span class="kc">False</span>
+    <span class="c1">#cluster has greater memory than my laptop, which allows higher max values in hyperparam. search space</span>
+    <span class="k">if</span> <span class="n">CLUSTER</span><span class="p">:</span>
+        <span class="n">nlayers_max</span><span class="p">,</span><span class="n">n_hidden_max</span><span class="p">,</span> <span class="n">batch_size_max</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mi">24</span><span class="p">),</span><span class="nb">int</span><span class="p">(</span><span class="mi">350</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mf">2e5</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">nlayers_max</span><span class="p">,</span><span class="n">n_hidden_max</span><span class="p">,</span> <span class="n">batch_size_max</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="nb">int</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mf">3e4</span><span class="p">)</span>
+
+    <span class="c1">#hyperparameter search space:</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="s2">&quot;nlayers&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;nlayers&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">nlayers_max</span><span class="p">),</span>      
+          <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_hidden_max</span><span class="p">),</span>
+          <span class="s2">&quot;dropout&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s2">&quot;dropout&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
+          <span class="s2">&quot;optimizer_name&quot;</span> <span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_categorical</span><span class="p">(</span><span class="s2">&quot;optimizer_name&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;RMSprop&quot;</span><span class="p">,</span> <span class="s2">&quot;SGD&quot;</span><span class="p">]),</span>
+          <span class="s2">&quot;momentum&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s2">&quot;momentum&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span><span class="mf">0.99</span><span class="p">),</span>
+          <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">),</span>
+          <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;batch_size&quot;</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">batch_size_max</span><span class="p">)</span>
+
+        <span class="p">}</span>
+    
+    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+
+        <span class="n">temp_loss</span> <span class="o">=</span> <span class="n">run_train</span><span class="p">(</span><span class="n">params</span><span class="p">,</span><span class="n">save_model</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">trial</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="n">temp_loss</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+        <span class="c1">#activate pruning (early stopping if the current step in the trial has unpromising results)</span>
+        <span class="c1">#instead of doing lots of iterations, do less iterations and more steps in each trial,  </span>
+        <span class="c1">#such that a trial is terminated if a step yields an unpromising loss.</span>
+        
+        <span class="k">if</span> <span class="n">trial</span><span class="o">.</span><span class="n">should_prune</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">optuna</span><span class="o">.</span><span class="n">TrialPruned</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">temp_loss</span>
+
+<span class="nd">@time_type_of_func</span><span class="p">(</span><span class="n">tuning_or_training</span><span class="o">=</span><span class="s1">&#39;tuning&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">tune_hyperparameters</span><span class="p">(</span><span class="n">save_best_params</span><span class="p">):</span>
+    
+
+    <span class="n">sampler</span><span class="o">=</span><span class="kc">False</span><span class="c1">#use different sampling technique than the defualt one if sampler=True.</span>
+    <span class="k">if</span> <span class="n">sampler</span><span class="p">:</span>
+        <span class="c1">#choose a different sampling strategy (https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.CmaEsSampler.html#optuna.samplers.CmaEsSampler)</span>
+        <span class="c1"># sampler=optuna.samplers.RandomSampler()</span>
+        <span class="n">study</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">create_study</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s1">&#39;minimize&#39;</span><span class="p">,</span>
+                                  <span class="n">pruner</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">pruners</span><span class="o">.</span><span class="n">MedianPruner</span><span class="p">(),</span> <span class="n">sampler</span><span class="o">=</span><span class="n">sampler</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1">#but the default sampler is usually better - no need to change it!</span>
+        <span class="n">study</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">create_study</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s1">&#39;minimize&#39;</span><span class="p">,</span>
+                                  <span class="n">pruner</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">pruners</span><span class="o">.</span><span class="n">HyperbandPruner</span><span class="p">())</span>
+    <span class="n">n_trials</span><span class="o">=</span><span class="mi">100</span>
+    <span class="n">study</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="n">n_trials</span><span class="p">)</span>
+    <span class="n">best_trial</span> <span class="o">=</span> <span class="n">study</span><span class="o">.</span><span class="n">best_trial</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;best model parameters&#39;</span><span class="p">,</span> <span class="n">best_trial</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="n">best_params</span><span class="o">=</span><span class="n">best_trial</span><span class="o">.</span><span class="n">params</span><span class="c1">#this is a dictionary</span>
+    <span class="c1">#save best hyperapameters in a pandas dataframe as a .csv</span>
+    <span class="k">if</span> <span class="n">save_best_params</span><span class="p">:</span>
+        <span class="n">tuned_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span><span class="s1">&#39;best_params&#39;</span><span class="p">)</span>
+        <span class="n">mkdir</span><span class="p">(</span><span class="n">tuned_dir</span><span class="p">)</span>
+        <span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tuned_dir</span><span class="p">,</span><span class="s1">&#39;best_params_mass_</span><span class="si">%s</span><span class="s1">_trials.csv&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">n_trials</span><span class="p">)))</span>
+        <span class="n">param_df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+                                <span class="s1">&#39;n_layers&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;nlayers&quot;</span><span class="p">],</span> 
+                                <span class="s1">&#39;hidden_size&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">],</span> 
+                                <span class="s1">&#39;dropout&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;dropout&quot;</span><span class="p">],</span>
+                                <span class="s1">&#39;optimizer_name&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;optimizer_name&quot;</span><span class="p">],</span>
+                                <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">],</span> 
+                                <span class="s1">&#39;batch_size&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">],</span>
+                                <span class="s1">&#39;momentum&#39;</span><span class="p">:</span><span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;momentum&quot;</span><span class="p">]},</span>
+                                        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">param_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>   
+    <span class="k">return</span> <span class="n">study</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">study</span><span class="o">=</span> <span class="n">tune_hyperparameters</span><span class="p">(</span><span class="n">save_best_params</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tuning IQN hyperparameters to estimate RecoDatam
+Getting best hyperparameters for target RecoDatam
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span> <span class="p">[</span><span class="mi">56</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">study</span><span class="o">=</span> <span class="n">tune_hyperparameters</span><span class="p">(</span><span class="n">save_best_params</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nn">Cell In [6], line 93,</span> in <span class="ni">time_type_of_func.&lt;locals&gt;.timer.&lt;locals&gt;.wrapper_timer</span><span class="nt">(*args, **kwargs)</span>
+<span class="g g-Whitespace">     </span><span class="mi">91</span>     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;tuning IQN hyperparameters to estimate </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">92</span> <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>    
+<span class="ne">---&gt; </span><span class="mi">93</span> <span class="n">value</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">94</span> <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>      
+<span class="g g-Whitespace">     </span><span class="mi">95</span> <span class="n">run_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>    
+
+<span class="nn">Cell In [55], line 138,</span> in <span class="ni">tune_hyperparameters</span><span class="nt">(save_best_params)</span>
+<span class="g g-Whitespace">    </span><span class="mi">135</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">136</span>     <span class="n">study</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">create_study</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="s1">&#39;minimize&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">137</span>                               <span class="n">pruner</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">pruners</span><span class="o">.</span><span class="n">HyperbandPruner</span><span class="p">())</span>
+<span class="ne">--&gt; </span><span class="mi">138</span> <span class="n">study</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">139</span> <span class="n">best_trial</span> <span class="o">=</span> <span class="n">study</span><span class="o">.</span><span class="n">best_trial</span>
+<span class="g g-Whitespace">    </span><span class="mi">140</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;best model parameters&#39;</span><span class="p">,</span> <span class="n">best_trial</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+
+<span class="nn">File ~/anaconda3/envs/new_torch/lib/python3.9/site-packages/optuna/study/study.py:419,</span> in <span class="ni">Study.optimize</span><span class="nt">(self, func, n_trials, timeout, n_jobs, catch, callbacks, gc_after_trial, show_progress_bar)</span>
+<span class="g g-Whitespace">    </span><span class="mi">315</span> <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">316</span>     <span class="bp">self</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">317</span>     <span class="n">func</span><span class="p">:</span> <span class="n">ObjectiveFuncType</span><span class="p">,</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">324</span>     <span class="n">show_progress_bar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">325</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">326</span>     <span class="sd">&quot;&quot;&quot;Optimize an objective function.</span>
+<span class="g g-Whitespace">    </span><span class="mi">327</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">328</span><span class="sd">     Optimization is done by choosing a suitable set of hyperparameter values from a given</span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">416</span><span class="sd">             If nested invocation of this method occurs.</span>
+<span class="g g-Whitespace">    </span><span class="mi">417</span><span class="sd">     &quot;&quot;&quot;</span>
+<span class="ne">--&gt; </span><span class="mi">419</span>     <span class="n">_optimize</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">420</span>         <span class="n">study</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">421</span>         <span class="n">func</span><span class="o">=</span><span class="n">func</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">422</span>         <span class="n">n_trials</span><span class="o">=</span><span class="n">n_trials</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">423</span>         <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">424</span>         <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">425</span>         <span class="n">catch</span><span class="o">=</span><span class="n">catch</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">426</span>         <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">427</span>         <span class="n">gc_after_trial</span><span class="o">=</span><span class="n">gc_after_trial</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">428</span>         <span class="n">show_progress_bar</span><span class="o">=</span><span class="n">show_progress_bar</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">429</span>     <span class="p">)</span>
+
+<span class="nn">File ~/anaconda3/envs/new_torch/lib/python3.9/site-packages/optuna/study/_optimize.py:66,</span> in <span class="ni">_optimize</span><span class="nt">(study, func, n_trials, timeout, n_jobs, catch, callbacks, gc_after_trial, show_progress_bar)</span>
+<span class="g g-Whitespace">     </span><span class="mi">64</span> <span class="k">try</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">65</span>     <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="ne">---&gt; </span><span class="mi">66</span>         <span class="n">_optimize_sequential</span><span class="p">(</span>
+<span class="g g-Whitespace">     </span><span class="mi">67</span>             <span class="n">study</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">68</span>             <span class="n">func</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">69</span>             <span class="n">n_trials</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">70</span>             <span class="n">timeout</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">71</span>             <span class="n">catch</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">72</span>             <span class="n">callbacks</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">73</span>             <span class="n">gc_after_trial</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">74</span>             <span class="n">reseed_sampler_rng</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">75</span>             <span class="n">time_start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">76</span>             <span class="n">progress_bar</span><span class="o">=</span><span class="n">progress_bar</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">77</span>         <span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">78</span>     <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">79</span>         <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+
+<span class="nn">File ~/anaconda3/envs/new_torch/lib/python3.9/site-packages/optuna/study/_optimize.py:160,</span> in <span class="ni">_optimize_sequential</span><span class="nt">(study, func, n_trials, timeout, catch, callbacks, gc_after_trial, reseed_sampler_rng, time_start, progress_bar)</span>
+<span class="g g-Whitespace">    </span><span class="mi">157</span>         <span class="k">break</span>
+<span class="g g-Whitespace">    </span><span class="mi">159</span> <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">160</span>     <span class="n">frozen_trial</span> <span class="o">=</span> <span class="n">_run_trial</span><span class="p">(</span><span class="n">study</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">catch</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">161</span> <span class="k">finally</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">162</span>     <span class="c1"># The following line mitigates memory problems that can be occurred in some</span>
+<span class="g g-Whitespace">    </span><span class="mi">163</span>     <span class="c1"># environments (e.g., services that use computing containers such as CircleCI).</span>
+<span class="g g-Whitespace">    </span><span class="mi">164</span>     <span class="c1"># Please refer to the following PR for further details:</span>
+<span class="g g-Whitespace">    </span><span class="mi">165</span>     <span class="c1"># https://github.com/optuna/optuna/pull/325.</span>
+<span class="g g-Whitespace">    </span><span class="mi">166</span>     <span class="k">if</span> <span class="n">gc_after_trial</span><span class="p">:</span>
+
+<span class="nn">File ~/anaconda3/envs/new_torch/lib/python3.9/site-packages/optuna/study/_optimize.py:234,</span> in <span class="ni">_run_trial</span><span class="nt">(study, func, catch)</span>
+<span class="g g-Whitespace">    </span><span class="mi">227</span>         <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Should not reach.&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">229</span> <span class="k">if</span> <span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">230</span>     <span class="n">frozen_trial</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">TrialState</span><span class="o">.</span><span class="n">FAIL</span>
+<span class="g g-Whitespace">    </span><span class="mi">231</span>     <span class="ow">and</span> <span class="n">func_err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+<span class="g g-Whitespace">    </span><span class="mi">232</span>     <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_err</span><span class="p">,</span> <span class="n">catch</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">233</span> <span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">234</span>     <span class="k">raise</span> <span class="n">func_err</span>
+<span class="g g-Whitespace">    </span><span class="mi">235</span> <span class="k">return</span> <span class="n">frozen_trial</span>
+
+<span class="nn">File ~/anaconda3/envs/new_torch/lib/python3.9/site-packages/optuna/study/_optimize.py:196,</span> in <span class="ni">_run_trial</span><span class="nt">(study, func, catch)</span>
+<span class="g g-Whitespace">    </span><span class="mi">194</span> <span class="k">with</span> <span class="n">get_heartbeat_thread</span><span class="p">(</span><span class="n">trial</span><span class="o">.</span><span class="n">_trial_id</span><span class="p">,</span> <span class="n">study</span><span class="o">.</span><span class="n">_storage</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">195</span>     <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">196</span>         <span class="n">value_or_values</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">trial</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">197</span>     <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">TrialPruned</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">198</span>         <span class="c1"># TODO(mamu): Handle multi-objective cases.</span>
+<span class="g g-Whitespace">    </span><span class="mi">199</span>         <span class="n">state</span> <span class="o">=</span> <span class="n">TrialState</span><span class="o">.</span><span class="n">PRUNED</span>
+
+<span class="nn">Cell In [55], line 117,</span> in <span class="ni">objective</span><span class="nt">(trial)</span>
+<span class="g g-Whitespace">    </span><span class="mi">104</span> <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+<span class="g g-Whitespace">    </span><span class="mi">105</span>       <span class="s2">&quot;nlayers&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;nlayers&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span>      
+<span class="g g-Whitespace">    </span><span class="mi">106</span>       <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">112</span> 
+<span class="g g-Whitespace">    </span><span class="mi">113</span>     <span class="p">}</span>
+<span class="g g-Whitespace">    </span><span class="mi">115</span> <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">117</span>     <span class="n">temp_loss</span> <span class="o">=</span> <span class="n">run_train</span><span class="p">(</span><span class="n">params</span><span class="p">,</span><span class="n">save_model</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">118</span>     <span class="n">trial</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="n">temp_loss</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">119</span>     <span class="c1">#activate pruning (early stopping)</span>
+
+<span class="nn">Cell In [55], line 87,</span> in <span class="ni">run_train</span><span class="nt">(params, save_model)</span>
+<span class="g g-Whitespace">     </span><span class="mi">82</span> <span class="n">early_stopping_coutner</span><span class="o">=</span><span class="mi">0</span>
+<span class="g g-Whitespace">     </span><span class="mi">84</span> <span class="c1"># for epoch in range(EPOCHS):</span>
+<span class="g g-Whitespace">     </span><span class="mi">85</span> <span class="c1"># train_loss = trainer.train(train_x_sample, train_t_ratio_sample)</span>
+<span class="g g-Whitespace">     </span><span class="mi">86</span>     <span class="c1">#test loss</span>
+<span class="ne">---&gt; </span><span class="mi">87</span> <span class="n">valid_loss</span><span class="o">=</span><span class="n">trainer</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">valid_x_sample</span><span class="p">,</span> <span class="n">valid_t_ratio_sample</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">89</span>     <span class="c1"># print(f&quot;{epoch} \t {train_loss} \t {valid_loss}&quot;)</span>
+<span class="g g-Whitespace">     </span><span class="mi">90</span>     
+<span class="g g-Whitespace">     </span><span class="mi">91</span>     <span class="c1"># if valid_loss&lt;best_loss:</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">97</span>         
+<span class="g g-Whitespace">     </span><span class="mi">98</span> <span class="c1"># return best_loss</span>
+<span class="g g-Whitespace">     </span><span class="mi">99</span> <span class="k">return</span> <span class="n">valid_loss</span>
+
+<span class="nn">Cell In [55], line 52,</span> in <span class="ni">HyperTrainer.evaluate</span><span class="nt">(self, x, t)</span>
+<span class="g g-Whitespace">     </span><span class="mi">50</span>     <span class="n">targets</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">batch_t</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">51</span>     <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">52</span>     <span class="n">loss</span> <span class="o">=</span><span class="n">average_quantile_loss</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">53</span>     <span class="n">final_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">54</span> <span class="k">return</span> <span class="n">final_loss</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span>
+
+<span class="nn">Cell In [38], line 28,</span> in <span class="ni">average_quantile_loss</span><span class="nt">(f, t, x)</span>
+<span class="g g-Whitespace">     </span><span class="mi">25</span> <span class="n">tau</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># last column is tau.</span>
+<span class="g g-Whitespace">     </span><span class="mi">26</span> <span class="c1">#Eq (2)</span>
+<span class="g g-Whitespace">     </span><span class="mi">27</span> <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="n">f</span><span class="p">,</span> 
+<span class="ne">---&gt; </span><span class="mi">28</span>                               <span class="n">tau</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="n">f</span><span class="p">),</span> 
+<span class="g g-Whitespace">     </span><span class="mi">29</span>                               <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">tau</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">f</span> <span class="o">-</span> <span class="n">t</span><span class="p">)))</span>
+
+<span class="ne">KeyboardInterrupt</span>: 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">optuna</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">plot_parallel_coordinate</span><span class="p">(</span><span class="n">study</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<hr class="docutils" />
+<hr class="docutils" />
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># BEST_PARAMS = {&#39;nlayers&#39;: 6, &#39;hidden_size&#39;: 2, &#39;dropout&#39;: 0.40716885971031636, &#39;optimizer_name&#39;: &#39;Adam&#39;, &#39;learning_rate&#39;: 0.005215585403055171, &#39;batch_size&#39;: 1983}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># def get_model_params_tuned()</span>
+
+<span class="n">tuned_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span><span class="s1">&#39;best_params&#39;</span><span class="p">)</span>
+<span class="n">tuned_filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tuned_dir</span><span class="p">,</span><span class="s1">&#39;best_params_mass.csv&#39;</span><span class="p">)</span>
+<span class="c1"># BEST_PARAMS = pd.read_csv(os.path.join(IQN_BASE, &#39;best_params&#39;,&#39;best_params_Test_Trials.csv&#39;))</span>
+<span class="n">BEST_PARAMS</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">tuned_filename</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">BEST_PARAMS</span><span class="p">)</span>
+
+<span class="n">n_layers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">BEST_PARAMS</span><span class="p">[</span><span class="s2">&quot;n_layers&quot;</span><span class="p">])</span> 
+<span class="n">hidden_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">BEST_PARAMS</span><span class="p">[</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">])</span>
+<span class="n">dropout</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">BEST_PARAMS</span><span class="p">[</span><span class="s2">&quot;dropout&quot;</span><span class="p">])</span>
+
+<span class="n">optimizer_name</span> <span class="o">=</span> <span class="n">BEST_PARAMS</span><span class="p">[</span><span class="s2">&quot;optimizer_name&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">optimizer_name</span><span class="p">))</span>
+<span class="n">optimizer_name</span> <span class="o">=</span> <span class="n">BEST_PARAMS</span><span class="p">[</span><span class="s2">&quot;optimizer_name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   Unnamed: 0  n_layers  hidden_size   dropout optimizer_name  learning_rate  \
+0           0         1            5  0.141347            SGD       0.003165   
+
+   batch_size  momentum  
+0        2948  0.369386  
+&lt;class &#39;pandas.core.series.Series&#39;&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#make sure you have plotly installed with jupyterlab support. For jupyterlab3.x:</span>
+<span class="c1"># conda install &quot;jupyterlab&gt;=3&quot; &quot;ipywidgets&gt;=7.6&quot;</span>
+
+<span class="c1"># for JupyterLab 2.x renderer support:</span>
+<span class="c1"># jupyter labextension install jupyterlab-plotly@5.11.0 @jupyter-widgets/jupyterlab-manager</span>
+<span class="c1">#conda install -c plotly plotly=5.11.0</span>
+<span class="kn">from</span> <span class="nn">optuna</span> <span class="kn">import</span> <span class="n">visualization</span>
+
+<span class="n">visualization</span><span class="o">.</span><span class="n">plot_param_importances</span><span class="p">(</span><span class="n">study</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="o">~/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.7</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">optuna</span><span class="o">/</span><span class="n">visualization</span><span class="o">/</span><span class="n">_plotly_imports</span><span class="o">.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="k">with</span> <span class="n">try_import</span><span class="p">()</span> <span class="k">as</span> <span class="n">_imports</span><span class="p">:</span>  <span class="c1"># NOQA</span>
+<span class="ne">----&gt; </span><span class="mi">7</span>     <span class="kn">import</span> <span class="nn">plotly</span>  <span class="c1"># NOQA</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="kn">from</span> <span class="nn">plotly</span> <span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">plotly_version</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;plotly&#39;
+
+<span class="n">The</span> <span class="n">above</span> <span class="n">exception</span> <span class="n">was</span> <span class="n">the</span> <span class="n">direct</span> <span class="n">cause</span> <span class="n">of</span> <span class="n">the</span> <span class="n">following</span> <span class="n">exception</span><span class="p">:</span>
+
+<span class="ne">ImportError</span><span class="g g-Whitespace">                               </span>Traceback (most recent call last)
+<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_797645</span><span class="o">/</span><span class="mf">859914537.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="kn">from</span> <span class="nn">optuna</span> <span class="kn">import</span> <span class="n">visualization</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span> 
+<span class="ne">----&gt; </span><span class="mi">9</span> <span class="n">visualization</span><span class="o">.</span><span class="n">plot_param_importances</span><span class="p">(</span><span class="n">study</span><span class="p">)</span>
+
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/optuna/visualization/_param_importances.py</span> in <span class="ni">plot_param_importances</span><span class="nt">(study, evaluator, params, target, target_name)</span>
+<span class="g g-Whitespace">     </span><span class="mi">93</span>     <span class="s2">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">     </span><span class="mi">94</span><span class="s2"> </span>
+<span class="ne">---&gt; </span><span class="mi">95</span><span class="s2">     _imports.check()</span>
+<span class="g g-Whitespace">     </span><span class="mi">96</span><span class="s2">     _check_plot_args(study, target, target_name)</span>
+<span class="g g-Whitespace">     </span><span class="mi">97</span><span class="s2"> </span>
+
+<span class="nn">~/anaconda3/lib/python3.7/site-packages/optuna/_imports.py</span> in <span class="ni">check</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">     </span><span class="mi">84</span><span class="s2">         if self._deferred is not None:</span>
+<span class="g g-Whitespace">     </span><span class="mi">85</span><span class="s2">             exc_value, message = self._deferred</span>
+<span class="ne">---&gt; </span><span class="mi">86</span><span class="s2">             raise ImportError(message) from exc_value</span>
+<span class="g g-Whitespace">     </span><span class="mi">87</span><span class="s2"> </span>
+<span class="g g-Whitespace">     </span><span class="mi">88</span><span class="s2"> </span>
+
+<span class="ne">ImportError</span>: Tried to import &#39;plotly&#39; but failed. Please make sure that the package is installed correctly to use this feature. Actual error: No module named &#39;plotly&#39;.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="3_Autoregressive_Evaluation.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">IQNx4: Chapter 3: Autoregressive Evaluation</p>
+        </div>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Ali Al Kadhim<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
