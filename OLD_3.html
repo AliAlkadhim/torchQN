@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>IQNx4: 2. Tune Hyperparameters of all IQNs &#8212; torchIQNx4</title>
     
@@ -34,7 +34,9 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
     <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
@@ -55,7 +57,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
+    <meta name="docsearch:language" content="en">
     
 
     <!-- Google Analytics -->
@@ -116,7 +118,7 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="2_Train_all_IQNs.html">
-   2.1 Imports and Configurations
+   IQNx4 Chapter 2: Train All Networks
   </a>
  </li>
  <li class="toctree-l1">
@@ -420,42 +422,42 @@ title="Print to PDF"
               <div>
                 
   <section class="tex2jax_ignore mathjax_ignore" id="iqnx4-2-tune-hyperparameters-of-all-iqns">
-<h1>IQNx4: 2. Tune Hyperparameters of all IQNs<a class="headerlink" href="#iqnx4-2-tune-hyperparameters-of-all-iqns" title="Permalink to this headline">#</a></h1>
+<h1>IQNx4: 2. Tune Hyperparameters of all IQNs<a class="headerlink" href="#iqnx4-2-tune-hyperparameters-of-all-iqns" title="Permalink to this heading">#</a></h1>
 <p>There is a live executable version of this notebook on binder, just click this link : <a class="reference external" href="https://mybinder.org/v2/gh/AliAlkadhim/torchQN/HEAD?labpath=JupyterBook"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a></p>
 <p>Note that the binder will take a while to build, and you’d have to navigate through the files yourself (not as easy or nice as just going to <a class="reference external" href="https://alialkadhim.github.io/torchQN/">https://alialkadhim.github.io/torchQN/</a>)</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="c1"># import scipy as sp; import scipy.stats as st</span>
-<span class="kn">import</span> <span class="nn">torch</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span><span class="p">;</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;using torch version </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="c1">#use numba&#39;s just-in-time compiler to speed things up</span>
-<span class="c1"># from numba import njit</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">;</span> <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mp</span><span class="p">;</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;matplotlib version= &#39;</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np; import pandas as pd
+# import scipy as sp; import scipy.stats as st
+import torch; import torch.nn as nn; print(f&quot;using torch version {torch.__version__}&quot;)
+#use numba&#39;s just-in-time compiler to speed things up
+# from numba import njit
+from sklearn.preprocessing import StandardScaler; from sklearn.model_selection import train_test_split
+import matplotlib as mp; print(&#39;matplotlib version= &#39;, mp.__version__)
 
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span><span class="p">;</span> 
-<span class="c1">#reset matplotlib stle/parameters</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-<span class="c1">#reset matplotlib parameters to their defaults</span>
-<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParamsDefault</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;seaborn-deep&#39;</span><span class="p">)</span>
-<span class="n">mp</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;agg.path.chunksize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10000</span>
-<span class="n">font_legend</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span> <span class="n">font_axes</span><span class="o">=</span><span class="mi">15</span>
-<span class="c1"># %matplotlib inline</span>
-<span class="kn">import</span> <span class="nn">sys</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">display</span>
-<span class="c1"># from importlib import import_module</span>
-<span class="kn">import</span> <span class="nn">plotly</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">optuna</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;using (optional) optuna version </span><span class="si">{</span><span class="n">optuna</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;optuna is only used for hyperparameter tuning, not critical!&#39;</span><span class="p">)</span>
-    <span class="k">pass</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="c1"># import sympy as sy</span>
-<span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="nn">wid</span><span class="p">;</span> 
+import matplotlib.pyplot as plt; 
+#reset matplotlib stle/parameters
+import matplotlib as mpl
+#reset matplotlib parameters to their defaults
+mpl.rcParams.update(mpl.rcParamsDefault)
+plt.style.use(&#39;seaborn-deep&#39;)
+mp.rcParams[&#39;agg.path.chunksize&#39;] = 10000
+font_legend = 15; font_axes=15
+# %matplotlib inline
+import sys; import os
+from IPython.display import Image, display
+# from importlib import import_module
+import plotly
+try:
+    import optuna
+    print(f&quot;using (optional) optuna version {optuna.__version__}&quot;)
+except Exception:
+    print(&#39;optuna is only used for hyperparameter tuning, not critical!&#39;)
+    pass
+import argparse
+import time
+# import sympy as sy
+import ipywidgets as wid; 
 </pre></div>
 </div>
 </div>
@@ -469,28 +471,28 @@ using (optional) optuna version 2.8.0
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># env = {}</span>
-<span class="c1"># env.update(os.environ)</span>
-<span class="c1"># env.update(source(os.environ[&quot;IQN_BASE&quot;])) </span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">IQN_BASE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;IQN_BASE&#39;</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;BASE directoy properly set = &#39;</span><span class="p">,</span> <span class="n">IQN_BASE</span><span class="p">)</span>
-    <span class="n">utils_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span> <span class="s1">&#39;utils/&#39;</span><span class="p">)</span>
-    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">utils_dir</span><span class="p">)</span>
-    <span class="kn">import</span> <span class="nn">utils</span>
-    <span class="c1">#usually its not recommended to import everything from a module, but we know</span>
-    <span class="c1">#whats in it so its fine</span>
-    <span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="o">*</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;DATA directory also properly set, in </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DATA_DIR&#39;</span><span class="p">])</span>
-<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-    <span class="c1"># IQN_BASE=os.getcwd()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\n</span><span class="s2">BASE directory not properly set. Read repo README.</span><span class="se">\</span>
-<span class="s2">    If you need a function from utils, use the decorator below, or add utils to sys.path</span><span class="se">\n</span><span class="s2"></span>
-<span class="s2">    You can also do </span>
-<span class="s2">    os.environ[&#39;IQN_BASE&#39;]=&lt;ABSOLUTE PATH FOR THE IQN REPO&gt;</span>
-<span class="s2">    or</span>
-<span class="s2">    os.environ[&#39;IQN_BASE&#39;]=os.getcwd()&quot;&quot;&quot;</span><span class="p">)</span>
-    <span class="k">pass</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># env = {}
+# env.update(os.environ)
+# env.update(source(os.environ[&quot;IQN_BASE&quot;])) 
+try:
+    IQN_BASE = os.environ[&#39;IQN_BASE&#39;]
+    print(&#39;BASE directoy properly set = &#39;, IQN_BASE)
+    utils_dir = os.path.join(IQN_BASE, &#39;utils/&#39;)
+    sys.path.append(utils_dir)
+    import utils
+    #usually its not recommended to import everything from a module, but we know
+    #whats in it so its fine
+    from utils import *
+    print(&#39;DATA directory also properly set, in %s&#39; % os.environ[&#39;DATA_DIR&#39;])
+except Exception:
+    # IQN_BASE=os.getcwd()
+    print(&quot;&quot;&quot;\nBASE directory not properly set. Read repo README.\
+    If you need a function from utils, use the decorator below, or add utils to sys.path\n
+    You can also do 
+    os.environ[&#39;IQN_BASE&#39;]=&lt;ABSOLUTE PATH FOR THE IQN REPO&gt;
+    or
+    os.environ[&#39;IQN_BASE&#39;]=os.getcwd()&quot;&quot;&quot;)
+    pass
 </pre></div>
 </div>
 </div>
@@ -503,23 +505,23 @@ DATA directory also properly set, in /home/ali/Desktop/Pulled_Github_Repositorie
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># update fonts</span>
-<span class="n">FONTSIZE</span> <span class="o">=</span> <span class="mi">14</span>
-<span class="n">font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;family&#39;</span> <span class="p">:</span> <span class="s1">&#39;serif&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;weight&#39;</span> <span class="p">:</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;size&#39;</span>   <span class="p">:</span> <span class="n">FONTSIZE</span><span class="p">}</span>
-<span class="n">mp</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">font</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># update fonts
+FONTSIZE = 14
+font = {&#39;family&#39; : &#39;serif&#39;,
+        &#39;weight&#39; : &#39;normal&#39;,
+        &#39;size&#39;   : FONTSIZE}
+mp.rc(&#39;font&#39;, **font)
 
-<span class="c1"># set usetex = False if LaTex is not </span>
-<span class="c1"># available on your system or if the </span>
-<span class="c1"># rendering is too slow</span>
-<span class="n">mp</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="n">usetex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+# set usetex = False if LaTex is not 
+# available on your system or if the 
+# rendering is too slow
+mp.rc(&#39;text&#39;, usetex=True)
 
-<span class="c1"># set a seed to ensure reproducibility</span>
-<span class="n">seed</span> <span class="o">=</span> <span class="mi">128</span>
-<span class="n">rnd</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
-<span class="c1">#sometimes jupyter doesnt initialize MathJax automatically for latex, so do this:</span>
-<span class="n">wid</span><span class="o">.</span><span class="n">HTMLMath</span><span class="p">(</span><span class="s1">&#39;$\LaTeX$&#39;</span><span class="p">)</span>
+# set a seed to ensure reproducibility
+seed = 128
+rnd  = np.random.RandomState(seed)
+#sometimes jupyter doesnt initialize MathJax automatically for latex, so do this:
+wid.HTMLMath(&#39;$\LaTeX$&#39;)
 </pre></div>
 </div>
 </div>
@@ -530,82 +532,82 @@ DATA directory also properly set, in /home/ali/Desktop/Pulled_Github_Repositorie
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">################################### CONFIGURATIONS ###################################</span>
-<span class="n">DATA_DIR</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DATA_DIR&#39;</span><span class="p">]</span>
-<span class="n">JUPYTER</span><span class="o">=</span><span class="kc">True</span>
-<span class="n">use_subsample</span><span class="o">=</span><span class="kc">False</span>
-<span class="k">if</span> <span class="n">use_subsample</span><span class="p">:</span>
-    <span class="n">SUBSAMPLE</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e5</span><span class="p">)</span><span class="c1">#subsample use for development - in production use whole dataset</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">SUBSAMPLE</span><span class="o">=</span><span class="kc">None</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>################################### CONFIGURATIONS ###################################
+DATA_DIR=os.environ[&#39;DATA_DIR&#39;]
+JUPYTER=True
+use_subsample=False
+if use_subsample:
+    SUBSAMPLE=int(1e5)#subsample use for development - in production use whole dataset
+else:
+    SUBSAMPLE=None
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">################################### SET DATA CONFIGURATIONS ###################################</span>
-<span class="n">X</span>       <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;genDatapT&#39;</span><span class="p">,</span> <span class="s1">&#39;genDataeta&#39;</span><span class="p">,</span> <span class="s1">&#39;genDataphi&#39;</span><span class="p">,</span> <span class="s1">&#39;genDatam&#39;</span><span class="p">,</span> <span class="s1">&#39;tau&#39;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>################################### SET DATA CONFIGURATIONS ###################################
+X       = [&#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;, &#39;tau&#39;]
 
-<span class="c1">#set order of training:</span>
-<span class="c1">#pT_first: pT-&gt;&gt;m-&gt;eta-&gt;phi</span>
-<span class="c1">#m_first: m-&gt;pT-&gt;eta-&gt;phi</span>
-
-
+#set order of training:
+#pT_first: pT-&gt;&gt;m-&gt;eta-&gt;phi
+#m_first: m-&gt;pT-&gt;eta-&gt;phi
 
 
-<span class="n">ORDER</span><span class="o">=</span><span class="s1">&#39;m_First&#39;</span>
 
-<span class="k">if</span> <span class="n">ORDER</span><span class="o">==</span><span class="s1">&#39;m_First&#39;</span><span class="p">:</span>
-    <span class="n">FIELDS</span>  <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;RecoDatam&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="n">X</span><span class="p">,</span> 
-                               <span class="s1">&#39;xlabel&#39;</span><span class="p">:</span>  <span class="sa">r</span><span class="s1">&#39;$m$ (GeV)&#39;</span><span class="p">,</span> 
-                              <span class="s1">&#39;ylabel&#39;</span><span class="p">:</span><span class="s1">&#39;$m^</span><span class="si">{reco}</span><span class="s1">$&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;xmin&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> 
-                               <span class="s1">&#39;xmax&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">},</span>
+
+ORDER=&#39;m_First&#39;
+
+if ORDER==&#39;m_First&#39;:
+    FIELDS  = {&#39;RecoDatam&#39; : {&#39;inputs&#39;: X, 
+                               &#39;xlabel&#39;:  r&#39;$m$ (GeV)&#39;, 
+                              &#39;ylabel&#39;:&#39;$m^{reco}$&#39;,
+                               &#39;xmin&#39;: 0, 
+                               &#39;xmax&#39;: 25},
                            
 
-               <span class="s1">&#39;RecoDatapT&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;RecoDatam&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">X</span><span class="p">,</span> 
-                               <span class="s1">&#39;xlabel&#39;</span><span class="p">:</span>  <span class="sa">r</span><span class="s1">&#39;$p_T$ (GeV)&#39;</span> <span class="p">,</span> 
-                              <span class="s1">&#39;ylabel&#39;</span><span class="p">:</span> <span class="s1">&#39;$p_T^</span><span class="si">{reco}</span><span class="s1">$&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;xmin&#39;</span>  <span class="p">:</span> <span class="mi">20</span><span class="p">,</span> 
-                               <span class="s1">&#39;xmax&#39;</span>  <span class="p">:</span>  <span class="mi">80</span><span class="p">},</span>
+               &#39;RecoDatapT&#39;: {&#39;inputs&#39;: [&#39;RecoDatam&#39;]+X, 
+                               &#39;xlabel&#39;:  r&#39;$p_T$ (GeV)&#39; , 
+                              &#39;ylabel&#39;: &#39;$p_T^{reco}$&#39;,
+                               &#39;xmin&#39;  : 20, 
+                               &#39;xmax&#39;  :  80},
 
-               <span class="s1">&#39;RecoDataeta&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;RecoDatam&#39;</span><span class="p">,</span><span class="s1">&#39;RecoDatapT&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">X</span><span class="p">,</span> 
-                               <span class="s1">&#39;xlabel&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\eta$&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;ylabel&#39;</span><span class="p">:</span><span class="s1">&#39;$\eta^</span><span class="si">{reco}</span><span class="s1">$&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;xmin&#39;</span>  <span class="p">:</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span>
-                               <span class="s1">&#39;xmax&#39;</span>  <span class="p">:</span>  <span class="mi">5</span><span class="p">},</span>
+               &#39;RecoDataeta&#39;: {&#39;inputs&#39;: [&#39;RecoDatam&#39;,&#39;RecoDatapT&#39;] + X, 
+                               &#39;xlabel&#39;: r&#39;$\eta$&#39;,
+                               &#39;ylabel&#39;:&#39;$\eta^{reco}$&#39;,
+                               &#39;xmin&#39;  : -5,
+                               &#39;xmax&#39;  :  5},
 
-               <span class="s1">&#39;RecoDataphi&#39;</span>  <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;RecoDatam&#39;</span><span class="p">,</span> <span class="s1">&#39;RecodatapT&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDataeta&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">X</span><span class="p">,</span>
-                               <span class="s1">&#39;xlabel&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\phi$&#39;</span> <span class="p">,</span>
-                                <span class="s1">&#39;ylabel&#39;</span> <span class="p">:</span><span class="s1">&#39;$\phi^</span><span class="si">{reco}</span><span class="s1">$&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;xmin&#39;</span>  <span class="p">:</span> <span class="o">-</span><span class="mf">3.2</span><span class="p">,</span> 
-                               <span class="s1">&#39;xmax&#39;</span>  <span class="p">:</span><span class="mf">3.2</span><span class="p">}</span>
-              <span class="p">}</span>
+               &#39;RecoDataphi&#39;  : {&#39;inputs&#39;: [&#39;RecoDatam&#39;, &#39;RecodatapT&#39;, &#39;RecoDataeta&#39;]+X,
+                               &#39;xlabel&#39;: r&#39;$\phi$&#39; ,
+                                &#39;ylabel&#39; :&#39;$\phi^{reco}$&#39;,
+                               &#39;xmin&#39;  : -3.2, 
+                               &#39;xmax&#39;  :3.2}
+              }
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_variable_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;genDatapT&#39;</span><span class="p">,</span> <span class="s1">&#39;genDataeta&#39;</span><span class="p">,</span> <span class="s1">&#39;genDataphi&#39;</span><span class="p">,</span> <span class="s1">&#39;genDatam&#39;</span><span class="p">,</span><span class="s1">&#39;RecoDatapT&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDataeta&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDataphi&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDatam&#39;</span><span class="p">]</span>
-<span class="n">all_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;genDatapT&#39;</span><span class="p">,</span> <span class="s1">&#39;genDataeta&#39;</span><span class="p">,</span> <span class="s1">&#39;genDataphi&#39;</span><span class="p">,</span> <span class="s1">&#39;genDatam&#39;</span><span class="p">,</span><span class="s1">&#39;RecoDatapT&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDataeta&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDataphi&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDatam&#39;</span><span class="p">,</span> <span class="s1">&#39;tau&#39;</span><span class="p">]</span>
-<span class="c1">################################### Load unscaled dataframes ###################################</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SUBSAMPLE = </span><span class="si">{</span><span class="n">SUBSAMPLE</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">raw_train_data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;train_data_10M_2.csv&#39;</span><span class="p">),</span>
-                      <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
-                      <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span>
-                      <span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>all_variable_cols=[&#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;,&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;]
+all_cols=[&#39;genDatapT&#39;, &#39;genDataeta&#39;, &#39;genDataphi&#39;, &#39;genDatam&#39;,&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;, &#39;tau&#39;]
+################################### Load unscaled dataframes ###################################
+print(f&#39;SUBSAMPLE = {SUBSAMPLE}&#39;)
+raw_train_data=pd.read_csv(os.path.join(DATA_DIR,&#39;train_data_10M_2.csv&#39;),
+                      usecols=all_cols,
+                      nrows=SUBSAMPLE
+                      )
 
-<span class="n">raw_test_data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;test_data_10M_2.csv&#39;</span><span class="p">),</span>
-                      <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
-                     <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span>
-                     <span class="p">)</span>
+raw_test_data=pd.read_csv(os.path.join(DATA_DIR,&#39;test_data_10M_2.csv&#39;),
+                      usecols=all_cols,
+                     nrows=SUBSAMPLE
+                     )
 
-<span class="n">raw_valid_data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;validation_data_10M_2.csv&#39;</span><span class="p">),</span>
-                      <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
-                      <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span>
-                      <span class="p">)</span>
+raw_valid_data=pd.read_csv(os.path.join(DATA_DIR,&#39;validation_data_10M_2.csv&#39;),
+                      usecols=all_cols,
+                      nrows=SUBSAMPLE
+                      )
 </pre></div>
 </div>
 </div>
@@ -617,7 +619,7 @@ DATA directory also properly set, in /home/ali/Desktop/Pulled_Github_Repositorie
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">explore_data</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">raw_train_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Unscaled Dataframe&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>explore_data(df=raw_train_data, title=&#39;Unscaled Dataframe&#39;)
 </pre></div>
 </div>
 </div>
@@ -633,20 +635,20 @@ Reco_var:  RecoDatam , 	 gen_var:  genDatam
 <img alt="_images/OLD_3_7_1.svg" src="_images/OLD_3_7_1.svg" /></div>
 </div>
 <section id="if-you-want-to-generate-the-scaled-data-frames-run-the-cell-below">
-<h2>If you want to generate the Scaled data frames, run the cell below<a class="headerlink" href="#if-you-want-to-generate-the-scaled-data-frames-run-the-cell-below" title="Permalink to this headline">#</a></h2>
+<h2>If you want to generate the Scaled data frames, run the cell below<a class="headerlink" href="#if-you-want-to-generate-the-scaled-data-frames-run-the-cell-below" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># scaled_train_data = L_scale_df(raw_train_data, title=&#39;scaled_train_data_10M_2.csv&#39;,</span>
-<span class="c1">#                              save=True)</span>
-<span class="c1"># print(&#39;\n\n&#39;)</span>
-<span class="c1"># scaled_test_data = L_scale_df(raw_test_data,  title=&#39;scaled_test_data_10M_2.csv&#39;,</span>
-<span class="c1">#                             save=True)</span>
-<span class="c1"># print(&#39;\n\n&#39;)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># scaled_train_data = L_scale_df(raw_train_data, title=&#39;scaled_train_data_10M_2.csv&#39;,
+#                              save=True)
+# print(&#39;\n\n&#39;)
+# scaled_test_data = L_scale_df(raw_test_data,  title=&#39;scaled_test_data_10M_2.csv&#39;,
+#                             save=True)
+# print(&#39;\n\n&#39;)
 
-<span class="c1"># scaled_valid_data = L_scale_df(raw_valid_data,  title=&#39;scaled_valid_data_10M_2.csv&#39;,</span>
-<span class="c1">#                             save=True)</span>
+# scaled_valid_data = L_scale_df(raw_valid_data,  title=&#39;scaled_valid_data_10M_2.csv&#39;,
+#                             save=True)
 
-<span class="c1"># explore_data(df=scaled_train_data, title=&#39;Braden Kronheim-L-scaled Dataframe&#39;, scaled=True)</span>
+# explore_data(df=scaled_train_data, title=&#39;Braden Kronheim-L-scaled Dataframe&#39;, scaled=True)
 </pre></div>
 </div>
 </div>
@@ -746,51 +748,53 @@ Reco_var:  RecoDatam , 	 gen_var:  genDatam
 </div>
 </section>
 <section id="if-you-want-to-load-the-previously-generated-scaled-dataframe-run-the-cell-below">
-<h2>If you want to load the previously generated scaled dataframe, run the cell below<a class="headerlink" href="#if-you-want-to-load-the-previously-generated-scaled-dataframe-run-the-cell-below" title="Permalink to this headline">#</a></h2>
+<h2>If you want to load the previously generated scaled dataframe, run the cell below<a class="headerlink" href="#if-you-want-to-load-the-previously-generated-scaled-dataframe-run-the-cell-below" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;USING NEW DATASET</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="c1">#UNSCALED</span>
-<span class="c1"># train_data_m=pd.read_csv(os.path.join(DATA_DIR,&#39;train_data_10M_2.csv&#39;),</span>
-<span class="c1">#                        usecols=features,</span>
-<span class="c1">#                        nrows=SUBSAMPLE)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
 
-<span class="c1"># print(&#39;TRAINING FEATURES\n&#39;, train_data.head())</span>
+print(&#39;USING NEW DATASET\n&#39;)
+#UNSCALED
+# train_data_m=pd.read_csv(os.path.join(DATA_DIR,&#39;train_data_10M_2.csv&#39;),
+#                        usecols=features,
+#                        nrows=SUBSAMPLE)
 
-<span class="c1"># test_data_m= pd.read_csv(os.path.join(DATA_DIR,&#39;test_data_10M_2.csv&#39;),</span>
-<span class="c1">#                        usecols=features,</span>
-<span class="c1">#                        nrows=SUBSAMPLE)</span>
-<span class="c1"># print(&#39;\nTESTING FEATURES\n&#39;, test_data.head())</span>
-<span class="c1"># valid_data= pd.read_csv(os.path.join(DATA_DIR,&#39;valid_data_10M_2.csv&#39;),</span>
-<span class="c1">#                        usecols=features,</span>
-<span class="c1">#                        nrows=SUBSAMPLE)</span>
+# print(&#39;TRAINING FEATURES\n&#39;, train_data.head())
+
+# test_data_m= pd.read_csv(os.path.join(DATA_DIR,&#39;test_data_10M_2.csv&#39;),
+#                        usecols=features,
+#                        nrows=SUBSAMPLE)
+# print(&#39;\nTESTING FEATURES\n&#39;, test_data.head())
+# valid_data= pd.read_csv(os.path.join(DATA_DIR,&#39;valid_data_10M_2.csv&#39;),
+#                        usecols=features,
+#                        nrows=SUBSAMPLE)
 
 
-<span class="c1"># SCALED</span>
-<span class="n">train_data_m</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;scaled_train_data_10M_2.csv&#39;</span><span class="p">),</span>
-                       <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
-                       <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span><span class="p">)</span>
+# SCALED
+train_data_m=pd.read_csv(os.path.join(DATA_DIR,&#39;scaled_train_data_10M_2.csv&#39;),
+                       usecols=all_cols,
+                       nrows=SUBSAMPLE)
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;TRAINING FEATURES</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">train_data_m</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+print(&#39;TRAINING FEATURES\n&#39;, train_data_m.head())
 
-<span class="n">test_data_m</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;scaled_test_data_10M_2.csv&#39;</span><span class="p">),</span>
-                       <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
-                       <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span><span class="p">)</span>
+test_data_m= pd.read_csv(os.path.join(DATA_DIR,&#39;scaled_test_data_10M_2.csv&#39;),
+                       usecols=all_cols,
+                       nrows=SUBSAMPLE)
 
-<span class="n">valid_data_m</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;scaled_valid_data_10M_2.csv&#39;</span><span class="p">),</span>
-                       <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
-                       <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">TESTING FEATURES</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">test_data_m</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+valid_data_m= pd.read_csv(os.path.join(DATA_DIR,&#39;scaled_valid_data_10M_2.csv&#39;),
+                       usecols=all_cols,
+                       nrows=SUBSAMPLE)
+print(&#39;\nTESTING FEATURES\n&#39;, test_data_m.head())
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">train set shape:&#39;</span><span class="p">,</span>  <span class="n">train_data_m</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">test set shape:  &#39;</span><span class="p">,</span> <span class="n">test_data_m</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="c1"># print(&#39;validation set shape:&#39;, valid_data.shape)</span>
+print(&#39;\ntrain set shape:&#39;,  train_data_m.shape)
+print(&#39;\ntest set shape:  &#39;, test_data_m.shape)
+# print(&#39;validation set shape:&#39;, valid_data.shape)
 
-<span class="n">scaled_train_data</span> <span class="o">=</span> <span class="n">train_data_m</span>
-<span class="n">scaled_test_data</span> <span class="o">=</span> <span class="n">test_data_m</span>
-<span class="n">scaled_valid_data</span> <span class="o">=</span> <span class="n">valid_data_m</span>
+scaled_train_data = train_data_m
+scaled_test_data = test_data_m
+scaled_valid_data = valid_data_m
 
-<span class="n">explore_data</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">scaled_train_data</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Braden Kronheim-L-scaled Dataframe&#39;</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+explore_data(df=scaled_train_data, title=&#39;Braden Kronheim-L-scaled Dataframe&#39;, scaled=True)
 </pre></div>
 </div>
 </div>
@@ -842,11 +846,11 @@ Reco_var:  RecoDatam , 	 gen_var:  genDatam
 </div>
 </section>
 <section id="closerclosercloserclosercloser">
-<h2>closerclosercloserclosercloser———<a class="headerlink" href="#closerclosercloserclosercloser" title="Permalink to this headline">#</a></h2>
+<h2>closerclosercloserclosercloser———<a class="headerlink" href="#closerclosercloserclosercloser" title="Permalink to this heading">#</a></h2>
 </section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="ml">
-<h1>ML<a class="headerlink" href="#ml" title="Permalink to this headline">#</a></h1>
+<h1>ML<a class="headerlink" href="#ml" title="Permalink to this heading">#</a></h1>
 <p>Note that this ideas is very powerful and has the potential to replace the use of Delphes/GEANT for most people. According to the <a class="reference external" href="https://arxiv.org/pdf/2111.11415.pdf">previous paper</a> this method already works for a single IQN, and we know it works reasonably well for autoregressive IQNx4, <a class="reference external" href="#Results_prior">as we said above</a> .</p>
 <p>It’s important to remember “the master formula” of all of machine learning:</p>
 <div class="math notranslate nohighlight">
@@ -889,85 +893,85 @@ R_{\text{IQN}x4} &amp;= \int L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathb
 \end{align}\end{split}\]</div>
 <p>where, again, each model <span class="math notranslate nohighlight">\(f_i\)</span> is also dependent on a set of parameters <span class="math notranslate nohighlight">\(\theta_i\)</span> (dropped for simplicity).</p>
 <section id="batches-validation-losses-and-plotting-of-losses-functions">
-<h2>Batches, validation, losses, and plotting of losses functions<a class="headerlink" href="#batches-validation-losses-and-plotting-of-losses-functions" title="Permalink to this headline">#</a></h2>
+<h2>Batches, validation, losses, and plotting of losses functions<a class="headerlink" href="#batches-validation-losses-and-plotting-of-losses-functions" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_batch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
-    <span class="c1"># the numpy function choice(length, number)</span>
-    <span class="c1"># selects at random &quot;batch_size&quot; integers from </span>
-    <span class="c1"># the range [0, length-1] corresponding to the</span>
-    <span class="c1"># row indices.</span>
-    <span class="n">rows</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">)</span>
-    <span class="n">batch_x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">rows</span><span class="p">]</span>
-    <span class="n">batch_t</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">rows</span><span class="p">]</span>
-    <span class="c1"># batch_x.T[-1] = np.random.uniform(0, 1, batch_size)</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_t</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def get_batch(x, t, batch_size):
+    # the numpy function choice(length, number)
+    # selects at random &quot;batch_size&quot; integers from 
+    # the range [0, length-1] corresponding to the
+    # row indices.
+    rows    = np.random.choice(len(x), batch_size)
+    batch_x = x[rows]
+    batch_t = t[rows]
+    # batch_x.T[-1] = np.random.uniform(0, 1, batch_size)
+    return (batch_x, batch_t)
 
-<span class="c1"># Note: there are several average loss functions available </span>
-<span class="c1"># in pytorch, but it&#39;s useful to know how to create your own.</span>
-<span class="k">def</span> <span class="nf">average_quadratic_loss</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-    <span class="c1"># f and t must be of the same shape</span>
-    <span class="k">return</span>  <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">f</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+# Note: there are several average loss functions available 
+# in pytorch, but it&#39;s useful to know how to create your own.
+def average_quadratic_loss(f, t, x):
+    # f and t must be of the same shape
+    return  torch.mean((f - t)**2)
 
-<span class="k">def</span> <span class="nf">average_cross_entropy_loss</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-    <span class="c1"># f and t must be of the same shape</span>
-    <span class="n">loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">f</span><span class="p">))</span>
-    <span class="k">return</span> <span class="o">-</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+def average_cross_entropy_loss(f, t, x):
+    # f and t must be of the same shape
+    loss = torch.where(t &gt; 0.5, torch.log(f), torch.log(1 - f))
+    return -torch.mean(loss)
 
-<span class="k">def</span> <span class="nf">average_quantile_loss</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-    <span class="c1"># f and t must be of the same shape</span>
-    <span class="n">tau</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># last column is tau.</span>
-    <span class="c1">#Eq (2)</span>
-    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="n">f</span><span class="p">,</span> 
-                                  <span class="n">tau</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="n">f</span><span class="p">),</span> 
-                                  <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">tau</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">f</span> <span class="o">-</span> <span class="n">t</span><span class="p">)))</span>
+def average_quantile_loss(f, t, x):
+    # f and t must be of the same shape
+    tau = x.T[-1] # last column is tau.
+    #Eq (2)
+    return torch.mean(torch.where(t &gt;= f, 
+                                  tau * (t - f), 
+                                  (1 - tau)*(f - t)))
 
-<span class="c1"># function to validate model during training.</span>
-<span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">avloss</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
-    <span class="c1"># make sure we set evaluation mode so that any training specific</span>
-    <span class="c1"># operations are disabled.</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span> <span class="c1"># evaluation mode</span>
+# function to validate model during training.
+def validate(model, avloss, inputs, targets):
+    # make sure we set evaluation mode so that any training specific
+    # operations are disabled.
+    model.eval() # evaluation mode
     
-    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span> <span class="c1"># no need to compute gradients wrt. x and t</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
-        <span class="c1"># remember to reshape!</span>
-        <span class="n">o</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">avloss</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    with torch.no_grad(): # no need to compute gradients wrt. x and t
+        x = torch.from_numpy(inputs).float()
+        t = torch.from_numpy(targets).float()
+        # remember to reshape!
+        o = model(x).reshape(t.shape)
+    return avloss(o, t, x)
 
 
-<span class="k">def</span> <span class="nf">plot_average_loss</span><span class="p">(</span><span class="n">traces</span><span class="p">,</span> <span class="n">ftsize</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span><span class="n">save_loss_plots</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_loss_plots</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+def plot_average_loss(traces, ftsize=18,save_loss_plots=False, show_loss_plots=True):
     
-    <span class="n">xx</span><span class="p">,</span> <span class="n">yy_t</span><span class="p">,</span> <span class="n">yy_v</span><span class="p">,</span> <span class="n">yy_v_avg</span> <span class="o">=</span> <span class="n">traces</span>
+    xx, yy_t, yy_v, yy_v_avg = traces
     
-    <span class="c1"># create an empty figure</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">))</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    # create an empty figure
+    fig = plt.figure(figsize=(6, 4.5))
+    fig.tight_layout()
     
-    <span class="c1"># add a subplot to it</span>
-    <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span>
-    <span class="n">ax</span>  <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">nrows</span><span class="p">,</span><span class="n">ncols</span><span class="p">,</span><span class="n">index</span><span class="p">)</span>
+    # add a subplot to it
+    nrows, ncols, index = 1,1,1
+    ax  = fig.add_subplot(nrows,ncols,index)
 
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Average loss&quot;</span><span class="p">)</span>
+    ax.set_title(&quot;Average loss&quot;)
     
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy_t</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Training&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy_v</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Validation&#39;</span><span class="p">)</span>
-    <span class="c1">#ax.plot(xx, yy_v_avg, &#39;g&#39;, lw=2, label=&#39;Running average&#39;)</span>
+    ax.plot(xx, yy_t, &#39;b&#39;, lw=2, label=&#39;Training&#39;)
+    ax.plot(xx, yy_v, &#39;r&#39;, lw=2, label=&#39;Validation&#39;)
+    #ax.plot(xx, yy_v_avg, &#39;g&#39;, lw=2, label=&#39;Running average&#39;)
 
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Iterations&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">ftsize</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;average loss&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">ftsize</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">save_loss_plots</span><span class="p">:</span>
-        <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;IQNx4_</span><span class="si">%s</span><span class="s1">_Loss.png&#39;</span> <span class="o">%</span> <span class="n">target</span> 
-        <span class="n">mkdir</span><span class="p">(</span><span class="s1">&#39;images/loss_plots&#39;</span><span class="p">)</span>
-        <span class="n">PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span> <span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="s1">&#39;loss_plots&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">PATH</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">loss curve saved in </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">PATH</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">show_loss_plots</span><span class="p">:</span>
-        <span class="n">show_plot</span><span class="p">()</span>
+    ax.set_xlabel(&#39;Iterations&#39;, fontsize=ftsize)
+    ax.set_ylabel(&#39;average loss&#39;, fontsize=ftsize)
+    ax.set_xscale(&#39;log&#39;)
+    ax.set_yscale(&#39;log&#39;)
+    ax.grid(True, which=&quot;both&quot;, linestyle=&#39;-&#39;)
+    ax.legend(loc=&#39;upper right&#39;)
+    if save_loss_plots:
+        filename=&#39;IQNx4_%s_Loss.png&#39; % target 
+        mkdir(&#39;images/loss_plots&#39;)
+        PATH = os.path.join(IQN_BASE, &#39;images&#39;, &#39;loss_plots&#39;, filename)
+        plt.savefig(PATH)
+        print(&#39;\nloss curve saved in %s&#39; % PATH)
+    if show_loss_plots:
+        show_plot()
 </pre></div>
 </div>
 </div>
@@ -975,30 +979,30 @@ R_{\text{IQN}x4} &amp;= \int L_\text{IQN} \left( f_m (\mathbf{x_m},\tau), \mathb
 </section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="get-training-and-testing-features-and-targets">
-<h1>Get training and testing features and targets<a class="headerlink" href="#get-training-and-testing-features-and-targets" title="Permalink to this headline">#</a></h1>
+<h1>Get training and testing features and targets<a class="headerlink" href="#get-training-and-testing-features-and-targets" title="Permalink to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">split_t_x</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Get teh target as the ratio, according to the T equation&quot;&quot;&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def split_t_x(df, target, input_features):
+    &quot;&quot;&quot; Get teh target as the ratio, according to the T equation&quot;&quot;&quot;
     
-    <span class="k">if</span> <span class="n">target</span><span class="o">==</span><span class="s1">&#39;RecoDatam&#39;</span><span class="p">:</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="n">scaled_df</span><span class="o">=</span><span class="n">train_data_m</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">target</span><span class="o">==</span><span class="s1">&#39;RecoDatapT&#39;</span><span class="p">:</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="s1">&#39;pT&#39;</span><span class="p">,</span> <span class="n">scaled_df</span><span class="o">=</span><span class="n">train_data_m</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">target</span><span class="o">==</span><span class="s1">&#39;RecoDataeta&#39;</span><span class="p">:</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="s1">&#39;eta&#39;</span><span class="p">,</span> <span class="n">scaled_df</span><span class="o">=</span><span class="n">train_data_m</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">target</span><span class="o">==</span><span class="s1">&#39;RecoDataphi&#39;</span><span class="p">:</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="n">scaled_df</span><span class="o">=</span><span class="n">train_data_m</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">input_features</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">x</span>
+    if target==&#39;RecoDatam&#39;:
+        t = T(&#39;m&#39;, scaled_df=train_data_m)
+    if target==&#39;RecoDatapT&#39;:
+        t = T(&#39;pT&#39;, scaled_df=train_data_m)
+    if target==&#39;RecoDataeta&#39;:
+        t = T(&#39;eta&#39;, scaled_df=train_data_m)
+    if target==&#39;RecoDataphi&#39;:
+        t = T(&#39;phi&#39;, scaled_df=train_data_m)
+    x = np.array(df[input_features])
+    return np.array(t), x
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Features = &#39;</span><span class="p">,</span> <span class="n">features</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Target = &#39;</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&#39;Features = &#39;, features)
+print(&#39;\nTarget = &#39;, target)
 </pre></div>
 </div>
 </div>
@@ -1012,18 +1016,18 @@ Target =  RecoDatam
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;spliting data for </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">train_t_ratio</span><span class="p">,</span> <span class="n">train_x</span> <span class="o">=</span> <span class="n">split_t_x</span><span class="p">(</span><span class="n">df</span><span class="o">=</span> <span class="n">train_data_m</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;train_t shape = &#39;</span><span class="p">,</span><span class="n">train_t_ratio</span><span class="o">.</span><span class="n">shape</span> <span class="p">,</span> <span class="s1">&#39;train_x shape = &#39;</span><span class="p">,</span> <span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> Training features:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">train_x</span><span class="p">)</span>
-<span class="n">valid_t_ratio</span><span class="p">,</span> <span class="n">valid_x</span> <span class="o">=</span> <span class="n">split_t_x</span><span class="p">(</span><span class="n">df</span><span class="o">=</span> <span class="n">valid_data_m</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;valid_t shape = &#39;</span><span class="p">,</span><span class="n">valid_t_ratio</span><span class="o">.</span><span class="n">shape</span> <span class="p">,</span> <span class="s1">&#39;valid_x shape = &#39;</span><span class="p">,</span> <span class="n">valid_x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(f&#39;spliting data for {target}&#39;)
+train_t_ratio, train_x = split_t_x(df= train_data_m, target = target, input_features=features)
+print(&#39;train_t shape = &#39;,train_t_ratio.shape , &#39;train_x shape = &#39;, train_x.shape)
+print(&#39;\n Training features:\n&#39;)
+print(train_x)
+valid_t_ratio, valid_x = split_t_x(df= valid_data_m, target = target, input_features=features)
+print(&#39;valid_t shape = &#39;,valid_t_ratio.shape , &#39;valid_x shape = &#39;, valid_x.shape)
 
-<span class="n">test_t_ratio</span><span class="p">,</span> <span class="n">test_x</span> <span class="o">=</span> <span class="n">split_t_x</span><span class="p">(</span><span class="n">df</span><span class="o">=</span> <span class="n">test_data_m</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;test_t shape = &#39;</span><span class="p">,</span><span class="n">test_t_ratio</span><span class="o">.</span><span class="n">shape</span> <span class="p">,</span> <span class="s1">&#39;test_x shape = &#39;</span><span class="p">,</span> <span class="n">test_x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+test_t_ratio, test_x = split_t_x(df= test_data_m, target = target, input_features=features)
+print(&#39;test_t shape = &#39;,test_t_ratio.shape , &#39;test_x shape = &#39;, test_x.shape)
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;no need to train_test_split since we already have the split dataframes&#39;</span><span class="p">)</span>
+print(&#39;no need to train_test_split since we already have the split dataframes&#39;)
 </pre></div>
 </div>
 </div>
@@ -1049,8 +1053,8 @@ no need to train_test_split since we already have the split dataframes
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">valid_x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">valid_x</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">train_x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">train_x</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(valid_x.mean(axis=0), valid_x.std(axis=0))
+print(train_x.mean(axis=0), train_x.std(axis=0))
 </pre></div>
 </div>
 </div>
@@ -1066,8 +1070,8 @@ no need to train_test_split since we already have the split dataframes
 <p>we expect the targets to have mean 0 and variance=1, since theyre the only things standarized</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">valid_t_ratio</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">valid_t_ratio</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">train_t_ratio</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">train_t_ratio</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(valid_t_ratio.mean(), valid_t_ratio.std())
+print(train_t_ratio.mean(), train_t_ratio.std())
 </pre></div>
 </div>
 </div>
@@ -1079,14 +1083,14 @@ no need to train_test_split since we already have the split dataframes
 </div>
 </div>
 <section id="aplly-final-z-to-the-train-and-test-set-features-but-run-it-only-once-generator">
-<h2>Aplly final <span class="math notranslate nohighlight">\(z\)</span> to the train and test set features, but run it only once! (generator)<a class="headerlink" href="#aplly-final-z-to-the-train-and-test-set-features-but-run-it-only-once-generator" title="Permalink to this headline">#</a></h2>
+<h2>Aplly final <span class="math notranslate nohighlight">\(z\)</span> to the train and test set features, but run it only once! (generator)<a class="headerlink" href="#aplly-final-z-to-the-train-and-test-set-features-but-run-it-only-once-generator" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># def z__scale_targets(train_t_ratio, valid_t_ratio):</span>
-<span class="c1">#     print(&#39;##########################################\n&#39;)</span>
-<span class="c1">#     print(&#39;BEFORE SCALING&#39;)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># def z__scale_targets(train_t_ratio, valid_t_ratio):
+#     print(&#39;##########################################\n&#39;)
+#     print(&#39;BEFORE SCALING&#39;)
     
-<span class="c1">#     #yield train_t_ratio, valid_t_ratio</span>
+#     #yield train_t_ratio, valid_t_ratio
     
 </pre></div>
 </div>
@@ -1094,27 +1098,27 @@ no need to train_test_split since we already have the split dataframes
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">NFEATURES</span><span class="o">=</span><span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>NFEATURES=train_x.shape[1]
 
-<span class="k">def</span> <span class="nf">apply_z_to_features</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;TO ensure this z scaling is only applied once to the training features, we use a generator &quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NFEATURES</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">train_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span><span class="n">train_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span>
-        <span class="n">test_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span><span class="n">test_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span>
-        <span class="n">valid_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">(</span><span class="n">valid_x</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span>
-    <span class="k">yield</span> <span class="n">train_x</span> 
-    <span class="k">yield</span> <span class="n">test_x</span> 
-    <span class="k">yield</span> <span class="n">valid_x</span>
+def apply_z_to_features():
+    &quot;&quot;&quot;TO ensure this z scaling is only applied once to the training features, we use a generator &quot;&quot;&quot;
+    for i in range(NFEATURES-1):
+        train_x[:,i] = z(train_x[:,i])
+        test_x[:,i] = z(test_x[:,i])
+        valid_x[:,i] = z(valid_x[:,i])
+    yield train_x 
+    yield test_x 
+    yield valid_x
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;RecoDatapT&#39;</span>
-<span class="n">source</span>  <span class="o">=</span> <span class="n">FIELDS</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
-<span class="n">features</span><span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span>
-<span class="c1">########</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>target = &#39;RecoDatapT&#39;
+source  = FIELDS[target]
+features= source[&#39;inputs&#39;]
+########
 </pre></div>
 </div>
 </div>
