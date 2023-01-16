@@ -5,7 +5,7 @@
 
 # ## 3.1: Imports and Configurations
 
-# In[11]:
+# In[1]:
 
 
 import numpy as np
@@ -91,7 +91,7 @@ except Exception:
     )
     pass
 
-# from IQNx4_utils import *
+
 IQN_BASE = os.environ["IQN_BASE"]
 print("BASE directoy properly set = ", IQN_BASE)
 utils_dir = os.path.join(IQN_BASE, "utils/")
@@ -116,7 +116,7 @@ if use_subsample:
 else:
     SUBSAMPLE = None
 
-# memory = Memory(DATA_DIR)
+memory = Memory(DATA_DIR)
 
 
 ###############################################################################################
@@ -204,10 +204,9 @@ all_cols = [
 ]
 
 
-
 # ## 3.2: Needed Functions
 
-# In[17]:
+# In[2]:
 
 
 target = "RecoDatam"
@@ -235,12 +234,12 @@ else:
 ########################################################################################
 
 
-# In[32]:
+# In[3]:
 
 
 ################################## Load unscaled dataframes ###################################
-# @memory.cache
-def load_raw_data(AUTOREGRESSIVE_DIST_NAME=None):
+@memory.cache
+def load_raw_data():
     """Dont use AUTOREGRESSIVE_DIST_NAME for training of any variable. 
     For mass evaluation: dont use AUTOREGRESSIVE_DIST_NAME. For pT evaluation use AUTOREGRESSIVE_DIST_NAME 
     as the distribution predicted by mass, etc.  """
@@ -259,25 +258,13 @@ def load_raw_data(AUTOREGRESSIVE_DIST_NAME=None):
         nrows=SUBSAMPLE,
     )
     
-    if AUTOREGRESSIVE_DIST_NAME:
-        print(f'Test (evaluation) Data is Autoregressive, loading {AUTOREGRESSIVE_DIST_NAME}')
-        eval_data = pd.read_csv(
-            os.path.join(
-                IQN_BASE,
-                "JupyterBook",
-                "Cluster",
-                "EVALUATE",
-                AUTOREGRESSIVE_DIST_NAME,
-            )
-        )
-        raw_test_data = eval_data
-    else:
+
     
-        raw_test_data = pd.read_csv(
-        os.path.join(DATA_DIR, "test_data_10M_2.csv"), 
-        usecols=all_cols, 
-        nrows=SUBSAMPLE
-        )
+    raw_test_data = pd.read_csv(
+    os.path.join(DATA_DIR, "test_data_10M_2.csv"), 
+    usecols=all_cols, 
+    nrows=SUBSAMPLE
+    )
 
     print("\n RAW TRAIN DATA\n")
     print(raw_train_data.shape)
@@ -541,7 +528,19 @@ def simple_eval(model, test_x_z_scaled):
     # print('predicted ratio shape: ', p.shape)
     return p
 
-
+def get_previous_autoregressive_dist(AUTOREGRESSIVE_DIST_NAME):
+        
+    print(f'Test (evaluation) Data is Autoregressive, loading {AUTOREGRESSIVE_DIST_NAME}')
+    eval_data = pd.read_csv(
+        os.path.join(
+            IQN_BASE,
+            "JupyterBook",
+            "Cluster",
+            "EVALUATE",
+            AUTOREGRESSIVE_DIST_NAME,
+        )
+    )
+    return eval_data
 
 
 # @memory.cache
@@ -589,7 +588,7 @@ def plot_one(
     )  # step real_count_pt
     ax1.step(
         real_edges,
-        predicted_label_counts_m / norm_IQN,
+        predicted_counts / norm_IQN,
         where="mid",
         color="#D7301F",
         linewidth=0.5,
@@ -640,7 +639,7 @@ def plot_one(
     )
     ax2.set_ylim((YLIM))
     ax2.set_xlim(range_)
-    ax2.set_yticklabels([])
+    ax2.set_yticklabels([0.8, 1.0, 1.2])
     if JUPYTER==True:
         plt.show()
     else:
@@ -663,19 +662,24 @@ def plot_one(
     # plt.gca().set_position([0, 0, 1, 1])
 
 
-# In[35]:
+# In[4]:
 
 
+#load data only once, and with caching!
 raw_train_data, raw_test_data, raw_valid_data = load_raw_data()
 
 # Load scaled data
-scaled_train_data, scaled_test_data, scaled_valid_data = load_scaled_dataframes()
+# scaled_train_data, scaled_test_data, scaled_valid_data = load_scaled_dataframes()
 
 
 # ## 3.3: Evaluate Mass
 
-# In[39]:
+# In[7]:
 
+
+# TODO: plot the loss curves (train and valid) of all 4 networks on the same plot,
+# and with the learning rate plotted on the same plot but on a different y axis 
+# (x axis being iteration, with marks indicating epochs)
 
 target = "RecoDatam"
 source = FIELDS[target]
@@ -765,16 +769,16 @@ print(train_t_z_scaled.mean(), train_t_z_scaled.std())
 ###########################################################
 # Get the  parameters for this model and training
 PARAMS_m = {
-"n_layers": int(8),
-"hidden_size": int(5),
+"n_layers": int(4),
+"hidden_size": int(6),
 "dropout_1": float(0.6),
 "dropout_2": float(0.1),
 "activation": "LeakyReLU",
-    'optimizer_name':'Adam',
-    'starting_learning_rate':float(1e-3),
+    'optimizer_name':'NAdam',
+    'starting_learning_rate':float(0.7),
     'momentum':float(0.6),
     'batch_size':int(1024),
-    'n_iterations': int(3e5),
+    'n_iterations': int(2e6),
 }
 
 optimizer_name = PARAMS_m["optimizer_name"]
@@ -792,9 +796,11 @@ print(
 
 # 'Trained_IQNx4_%s_TUNED.dict' % target
 filename_model = utils.get_model_filename(target, PARAMS_m)
-# OR, if you know a model filename directly, you can also specify it, but you have to make sure its parameters are the same
+# OR, if you know a model filename directly, you can also specify it, 
+# BUT, if you pull a trained model explicitly, you have to make sure its parameters in the PARAMS dictionary above match
 # Nominal one is 'Trained_IQNx4_RecoDatam_ 8_layer5_hiddenLeakyReLU_activation1024_batchsize300_Kiteration.dict', also in backup
-filename_model='Trained_IQNx4_RecoDatam_ 8_layer5_hiddenLeakyReLU_activation1024_batchsize300_Kiteration.dict'
+# filename_model='Trained_IQNx4_RecoDatam_ 8_layer5_hiddenLeakyReLU_activation1024_batchsize300_Kiteration.dict'
+# filename_model='Trained_IQNx4_RecoDatapT_10_layer6_hiddenLeakyReLU_activation512_batchsize300_Kiteration.dict'
 trained_models_dir = "trained_models"
 utils.mkdir(trained_models_dir)
 # on cluster, Im using another TRAIN directory
@@ -913,7 +919,14 @@ plot_one(
 
 # ## 3.4: Evaluate $p_T$
 
-# In[58]:
+# In[6]:
+
+
+eval_data_df = get_previous_autoregressive_dist(AUTOREGRESSIVE_DIST_NAME=PREVIOUS_AUTOREGRESSIVE_DIST_NAME)
+eval_data_df.head()
+
+
+# In[8]:
 
 
 target = "RecoDatapT"
@@ -928,23 +941,16 @@ print("USING NEW DATASET\n")
 USE_BRADEN_SCALING = False
 
 ########################################################################################
-raw_train_data, raw_test_data, raw_valid_data = load_raw_data(AUTOREGRESSIVE_DIST_NAME=PREVIOUS_AUTOREGRESSIVE_DIST_NAME)
+
+raw_train_data, raw_test_data, raw_valid_data = load_raw_data()
+
+
 # Load scaled data
 # scaled_train_data, scaled_test_data, scaled_valid_data = load_scaled_dataframes()
 
 
 ################################################## Load Evaluation Data
-    
-# eval_data = pd.read_csv(
-#     os.path.join(
-#         IQN_BASE,
-#         "JupyterBook",
-#         "Cluster",
-#         "EVALUATE",
-#         PREVIOUS_AUTOREGRESSIVE_DIST_NAME,
-#     )
-# )
-
+#eval_data=pd.read_csv(DATA_DIR+'/test_data_10M_2.csv')
 # Or test on actual test (evaluation) data for development
 # eval_data=pd.read_csv(DATA_DIR+'/test_data_10M_2.csv')
 
@@ -1007,8 +1013,14 @@ print(train_t.mean(), train_t.std())
 
 # Apply z scaling to features and targets
 # to features
-
+#####################################################################
 NFEATURES = train_x.shape[1]
+# GET EVALUATION DATASET
+# eval_data= get_previous_autoregressive_dist(AUTOREGRESSIVE_DIST_NAME=PREVIOUS_AUTOREGRESSIVE_DIST_NAME)
+# test_x = np.array(eval_data[features])
+
+
+
 TRAIN_SCALE_DICT = get_train_scale_dict(USE_BRADEN_SCALING)
 # to features
 apply_z_generator = apply_z_to_features(TRAIN_SCALE_DICT, train_x, test_x, valid_x)
@@ -1027,17 +1039,17 @@ print(train_t_z_scaled.mean(), train_t_z_scaled.std())
 
 ###########################################################
 # Get the  parameters for this model and training
-PARAMS_pT =  {
-"n_layers": int(15),
-"hidden_size": int(5),
+PARAMS_pT = {
+"n_layers": int(3),
+"hidden_size": int(16),
 "dropout_1": float(0.6),
 "dropout_2": float(0.1),
 "activation": "LeakyReLU",
-    'optimizer_name':'Adam',
-    'starting_learning_rate':float(1e-3),
+    'optimizer_name':'NAdam',
+    'starting_learning_rate':float(0.5),
     'momentum':float(0.6),
     'batch_size':int(1024),
-    'n_iterations': int(2e5),
+    'n_iterations': int(2e6),
 }
 
 optimizer_name = PARAMS_pT["optimizer_name"]
@@ -1055,7 +1067,8 @@ print(
 
 
 filename_model = utils.get_model_filename(target, PARAMS_pT)
-# filename_model = 'Trained_IQNx4_RecoDatapT_11_layer5_hiddenLeakyReLU_activation1024_batchsize200_Kiteration.dict'
+# filename_model = 'Trained_IQNx4_RecoDatapT_ 13_layer6_hiddenLeakyReLU_activation1024_batchsize200_Kiteration.dict'
+# filename_model = 'Trained_IQNx4_RecoDatapT_10_layer6_hiddenLeakyReLU_activation512_batchsize300_Kiteration.dict'
 trained_models_dir = "trained_models"
 utils.mkdir(trained_models_dir)
 # on cluster, Im using another TRAIN directory
@@ -1124,16 +1137,20 @@ real_label_counts_pT, predicted_label_counts_pT, label_edges_pT = get_hist_simpl
 
 # Get evaluation data as test data for development
 
-eval_data_df=pd.read_csv(DATA_DIR+'/test_data_10M_2.csv')[features]
+# eval_data_df=pd.read_csv(DATA_DIR+'/test_data_10M_2.csv')#[features]
 
 
-# save new distribution (m) in the eval data as autoregressive eval for next IQN
-# eval_data_df[target] = pT_pred
+eval_data_df = get_previous_autoregressive_dist(AUTOREGRESSIVE_DIST_NAME=PREVIOUS_AUTOREGRESSIVE_DIST_NAME)
 
+ev_features = features
+eval_data = eval_data_df[ev_features]
+# save new distribution (pT) in the eval data as autoregressive eval for next IQN
+eval_data_df[target] = pT_pred
+#change order of columns
 new_cols = ["RecoDatam", target] + X
 eval_data_df = eval_data_df.reindex(columns=new_cols)
 print("EVALUATION DATA NEW INDEX\n", eval_data_df.head())
-
+# save 
 eval_data_df.to_csv(
     os.path.join(
         IQN_BASE, "JupyterBook", "Cluster", "EVALUATE", AUTOREGRESSIVE_DIST_NAME
