@@ -1,0 +1,1404 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>train &#8212; torchIQNx4</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Chapter 4: Optional Supplementary Material" href="4_SupplementaryMaterials_OptunaTuning_Theory_ML_Background.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">torchIQNx4</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to the torchIQNx4
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="1_Setup_and_Preprocess.html">
+   IQNx4: Chapter 1. Setup and Preprocess
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2_Train_all_IQNs.html">
+   IQNx4 Chapter 2: Train All Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="3_Autoregressive_Evaluation.html">
+   IQNx4: Chapter 3: Autoregressive Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="4_SupplementaryMaterials_OptunaTuning_Theory_ML_Background.html">
+   Chapter 4: Optional Supplementary Material
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   train
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/AliAlkadhim/torchQN/HEAD?labpath=JupyterBook/v2/gh/AliAlkadhim/torchQN/master?urlpath=tree/JupyterBook/5_Normalizing_Flows.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/5_Normalizing_Flows.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   train
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#plot">
+   Plot
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#p-t">
+     <span class="math notranslate nohighlight">
+      \(p_T\)
+     </span>
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#eta">
+     <span class="math notranslate nohighlight">
+      \(\eta\)
+     </span>
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#phi">
+     <span class="math notranslate nohighlight">
+      \(\phi\)
+     </span>
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#m">
+     <span class="math notranslate nohighlight">
+      \(m\)
+     </span>
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>train</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   train
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#plot">
+   Plot
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#p-t">
+     <span class="math notranslate nohighlight">
+      \(p_T\)
+     </span>
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#eta">
+     <span class="math notranslate nohighlight">
+      \(\eta\)
+     </span>
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#phi">
+     <span class="math notranslate nohighlight">
+      \(\phi\)
+     </span>
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#m">
+     <span class="math notranslate nohighlight">
+      \(m\)
+     </span>
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="c1"># import scipy as sp; import scipy.stats as st</span>
+<span class="kn">import</span> <span class="nn">torch</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span><span class="p">;</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;using torch version </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">optim</span>
+
+<span class="c1">#use numba&#39;s just-in-time compiler to speed things up</span>
+<span class="c1"># from numba import njit</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">;</span> <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mp</span><span class="p">;</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;matplotlib version= &#39;</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span><span class="p">;</span> 
+<span class="c1">#reset matplotlib stle/parameters</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="c1">#reset matplotlib parameters to their defaults</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParamsDefault</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;seaborn-deep&#39;</span><span class="p">)</span>
+<span class="n">mp</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;agg.path.chunksize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">font_legend</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span> <span class="n">font_axes</span><span class="o">=</span><span class="mi">15</span>
+<span class="c1"># LATEX</span>
+<span class="n">mp</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;text.usetex&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+<span class="c1"># plt.rcParams[&#39;text.usetex&#39;] = True</span>
+<span class="n">mp</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;text.latex.preamble&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&quot;\usepackage</span><span class="si">{amsmath}</span><span class="s2">&quot;</span><span class="p">]</span>  <span class="c1"># for \text command</span>
+
+<span class="c1"># %matplotlib inline</span>
+<span class="kn">import</span> <span class="nn">sys</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">display</span>
+<span class="c1"># from importlib import import_module</span>
+<span class="kn">import</span> <span class="nn">plotly</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">optuna</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;using (optional) optuna version </span><span class="si">{</span><span class="n">optuna</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;optuna is only used for hyperparameter tuning, not critical!&#39;</span><span class="p">)</span>
+    <span class="k">pass</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="c1"># import sympy as sy</span>
+
+<span class="kn">from</span> <span class="nn">nflows.flows.base</span> <span class="kn">import</span> <span class="n">Flow</span>
+<span class="kn">from</span> <span class="nn">nflows.distributions.normal</span> <span class="kn">import</span> <span class="n">StandardNormal</span>
+<span class="kn">from</span> <span class="nn">nflows.transforms.base</span> <span class="kn">import</span> <span class="n">CompositeTransform</span>
+<span class="kn">from</span> <span class="nn">nflows.transforms.autoregressive</span> <span class="kn">import</span> <span class="n">MaskedAffineAutoregressiveTransform</span>
+<span class="kn">from</span> <span class="nn">nflows.transforms.permutations</span> <span class="kn">import</span> <span class="n">ReversePermutation</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>using torch version 1.11.0.post2
+matplotlib version=  3.5.3
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>using (optional) optuna version 3.0.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># env = {}</span>
+<span class="c1"># env.update(os.environ)</span>
+<span class="c1"># env.update(source(os.environ[&quot;IQN_BASE&quot;])) </span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">IQN_BASE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;IQN_BASE&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;BASE directoy properly set = &#39;</span><span class="p">,</span> <span class="n">IQN_BASE</span><span class="p">)</span>
+    <span class="n">utils_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span> <span class="s1">&#39;utils/&#39;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">utils_dir</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">utils</span>
+    <span class="c1">#usually its not recommended to import everything from a module, but we know</span>
+    <span class="c1">#whats in it so its fine</span>
+    <span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="o">*</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;DATA directory also properly set, in </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DATA_DIR&#39;</span><span class="p">])</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="c1"># IQN_BASE=os.getcwd()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\n</span><span class="s2">BASE directory not properly set. Read repo README.</span><span class="se">\</span>
+<span class="s2">    If you need a function from utils, use the decorator below, or add utils to sys.path</span><span class="se">\n</span><span class="s2"></span>
+<span class="s2">    You can also do </span>
+<span class="s2">    os.environ[&#39;IQN_BASE&#39;]=&lt;ABSOLUTE PATH FOR THE IQN REPO&gt;</span>
+<span class="s2">    or</span>
+<span class="s2">    os.environ[&#39;IQN_BASE&#39;]=os.getcwd()&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>BASE directoy properly set =  /home/ali/Desktop/Pulled_Github_Repositories/torchQN
+using torch version 1.11.0.post2
+matplotlib version=  3.5.3
+using (optional) optuna version 3.0.0
+BASE directoy properly set =  /home/ali/Desktop/Pulled_Github_Repositories/torchQN
+DATA directory also properly set, in /home/ali/Desktop/Pulled_Github_Repositories/IQN_HEP/Davidson/data
+DATA directory also properly set, in /home/ali/Desktop/Pulled_Github_Repositories/IQN_HEP/Davidson/data
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># update fonts</span>
+<span class="n">FONTSIZE</span> <span class="o">=</span> <span class="mi">14</span>
+<span class="n">font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;family&#39;</span> <span class="p">:</span> <span class="s1">&#39;serif&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;weight&#39;</span> <span class="p">:</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;size&#39;</span>   <span class="p">:</span> <span class="n">FONTSIZE</span><span class="p">}</span>
+<span class="n">mp</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">font</span><span class="p">)</span>
+
+<span class="c1"># set usetex = False if LaTex is not </span>
+<span class="c1"># available on your system or if the </span>
+<span class="c1"># rendering is too slow</span>
+<span class="n">mp</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="n">usetex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># set a seed to ensure reproducibility</span>
+<span class="n">seed</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">rnd</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+<span class="c1">#sometimes jupyter doesnt initialize MathJax automatically for latex, so do this:</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">################################### SET DATA CONFIGURATIONS ###################################</span>
+<span class="n">X</span>       <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;RecoDatapT&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDataeta&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDataphi&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDatam&#39;</span><span class="p">]</span>
+
+<span class="c1">#set order of training:</span>
+<span class="c1">#pT_first: pT-&gt;&gt;m-&gt;eta-&gt;phi</span>
+<span class="c1">#m_first: m-&gt;pT-&gt;eta-&gt;phi</span>
+
+
+
+<span class="c1">#we&#39;ll just go with m first since that&#39;s the order we discuss in the paper.</span>
+<span class="n">ORDER</span><span class="o">=</span><span class="s1">&#39;m_First&#39;</span>
+
+<span class="k">if</span> <span class="n">ORDER</span><span class="o">==</span><span class="s1">&#39;m_First&#39;</span><span class="p">:</span>
+    <span class="n">FIELDS</span>  <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;RecoDatam&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="n">X</span><span class="p">,</span> 
+                               <span class="s1">&#39;xlabel&#39;</span><span class="p">:</span>  <span class="sa">r</span><span class="s1">&#39;$m$ (GeV)&#39;</span><span class="p">,</span> 
+                              <span class="s1">&#39;ylabel&#39;</span><span class="p">:</span><span class="s1">&#39;$m^</span><span class="si">{reco}</span><span class="s1">$&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;xmin&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> 
+                               <span class="s1">&#39;xmax&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">},</span>
+                           
+
+               <span class="s1">&#39;RecoDatapT&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="n">X</span><span class="p">,</span> 
+                               <span class="s1">&#39;xlabel&#39;</span><span class="p">:</span>  <span class="sa">r</span><span class="s1">&#39;$p_T$ (GeV)&#39;</span> <span class="p">,</span> 
+                              <span class="s1">&#39;ylabel&#39;</span><span class="p">:</span> <span class="s1">&#39;$p_T^</span><span class="si">{reco}</span><span class="s1">$&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;xmin&#39;</span>  <span class="p">:</span> <span class="mi">20</span><span class="p">,</span> 
+                               <span class="s1">&#39;xmax&#39;</span>  <span class="p">:</span>  <span class="mi">100</span><span class="p">},</span>
+
+               <span class="s1">&#39;RecoDataeta&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="n">X</span><span class="p">,</span> 
+                               <span class="s1">&#39;xlabel&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\eta$&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;ylabel&#39;</span><span class="p">:</span><span class="s1">&#39;$\eta^</span><span class="si">{reco}</span><span class="s1">$&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;xmin&#39;</span>  <span class="p">:</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span>
+                               <span class="s1">&#39;xmax&#39;</span>  <span class="p">:</span>  <span class="mi">5</span><span class="p">},</span>
+
+               <span class="s1">&#39;RecoDataphi&#39;</span>  <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;inputs&#39;</span><span class="p">:</span> <span class="n">X</span><span class="p">,</span>
+                               <span class="s1">&#39;xlabel&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\phi$&#39;</span> <span class="p">,</span>
+                                <span class="s1">&#39;ylabel&#39;</span> <span class="p">:</span><span class="s1">&#39;$\phi^</span><span class="si">{reco}</span><span class="s1">$&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;xmin&#39;</span>  <span class="p">:</span> <span class="o">-</span><span class="mf">3.2</span><span class="p">,</span> 
+                               <span class="s1">&#39;xmax&#39;</span>  <span class="p">:</span><span class="mf">3.2</span><span class="p">}</span>
+              <span class="p">}</span>
+    
+<span class="n">PARAMS_m</span> <span class="o">=</span> <span class="p">{</span>
+<span class="s2">&quot;n_layers&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+<span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span>
+<span class="s2">&quot;dropout_1&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="mf">0.6</span><span class="p">),</span>
+<span class="s2">&quot;dropout_2&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="mf">0.1</span><span class="p">),</span>
+<span class="s2">&quot;activation&quot;</span><span class="p">:</span> <span class="s2">&quot;LeakyReLU&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;optimizer_name&#39;</span><span class="p">:</span><span class="s1">&#39;NAdam&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;starting_learning_rate&#39;</span><span class="p">:</span><span class="nb">float</span><span class="p">(</span><span class="mf">0.7</span><span class="p">),</span>
+    <span class="s1">&#39;momentum&#39;</span><span class="p">:</span><span class="nb">float</span><span class="p">(</span><span class="mf">0.6</span><span class="p">),</span>
+    <span class="s1">&#39;batch_size&#39;</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="mi">1024</span><span class="p">),</span>
+    <span class="s1">&#39;n_iterations&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="mf">2e6</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">all_variable_cols</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;genDatapT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;genDataeta&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;genDataphi&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;genDatam&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RecoDatapT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RecoDataeta&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RecoDataphi&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RecoDatam&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">all_cols</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;genDatapT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;genDataeta&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;genDataphi&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;genDatam&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RecoDatapT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RecoDataeta&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RecoDataphi&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RecoDatam&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tau&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span>  <span class="n">Memory</span>
+<span class="n">DATA_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DATA_DIR&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;using DATA_DIR=</span><span class="si">{</span><span class="n">DATA_DIR</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Define a directory on device to cache python functions. One of the best ways is using joblib&#39;s Memory module</span>
+<span class="c1"># with @Memory.cache decorator on top of a function. This saves a huge amount of time, especially in functions</span>
+<span class="c1"># that require a long time to execute, e.g. loading data.</span>
+<span class="n">memory</span> <span class="o">=</span> <span class="n">Memory</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;USING NEW DATASET</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1">######################################</span>
+<span class="n">USE_BRADEN_SCALING</span><span class="o">=</span><span class="kc">False</span>
+<span class="c1">#####################################</span>
+<span class="c1">################################### CONFIGURATIONS ###################################</span>
+<span class="nd">@memory</span><span class="o">.</span><span class="n">cache</span>
+<span class="k">def</span> <span class="nf">load_raw_data</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SUBSAMPLE = </span><span class="si">{</span><span class="n">SUBSAMPLE</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">raw_train_data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;train_data_10M_2.csv&#39;</span><span class="p">),</span>
+                        <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
+                        <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span>
+                        <span class="p">)</span>
+
+    <span class="n">raw_test_data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;test_data_10M_2.csv&#39;</span><span class="p">),</span>
+                        <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
+                        <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span>
+                        <span class="p">)</span>
+
+    <span class="n">raw_valid_data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIR</span><span class="p">,</span><span class="s1">&#39;validation_data_10M_2.csv&#39;</span><span class="p">),</span>
+                        <span class="n">usecols</span><span class="o">=</span><span class="n">all_cols</span><span class="p">,</span>
+                        <span class="n">nrows</span><span class="o">=</span><span class="n">SUBSAMPLE</span>
+                        <span class="p">)</span>
+
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> RAW TRAIN DATA SHAPE</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">raw_train_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> RAW TRAIN DATA</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">raw_train_data</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="c1">#unscaled</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> RAW TEST DATA\ SHAPEn&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">raw_test_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> RAW TEST DATA</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">raw_test_data</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="c1">#unscaled</span>
+
+    <span class="k">return</span> <span class="n">raw_train_data</span><span class="p">,</span> <span class="n">raw_test_data</span><span class="p">,</span> <span class="n">raw_valid_data</span>
+
+    
+<span class="n">JUPYTER</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">use_subsample</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="c1"># use_subsample = True</span>
+<span class="k">if</span> <span class="n">use_subsample</span><span class="p">:</span>
+    <span class="n">SUBSAMPLE</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+        <span class="mf">1e5</span>
+    <span class="p">)</span>  <span class="c1"># subsample use for development - in production use whole dataset</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">SUBSAMPLE</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+
+
+<span class="c1">########################################################################################</span>
+<span class="n">raw_train_data</span><span class="p">,</span> <span class="n">raw_test_data</span><span class="p">,</span> <span class="n">raw_valid_data</span> <span class="o">=</span><span class="n">load_raw_data</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>using DATA_DIR=/home/ali/Desktop/Pulled_Github_Repositories/IQN_HEP/Davidson/data
+USING NEW DATASET
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">raw_train_data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>genDatapT</th>
+      <th>genDataeta</th>
+      <th>genDataphi</th>
+      <th>genDatam</th>
+      <th>RecoDatapT</th>
+      <th>RecoDataeta</th>
+      <th>RecoDataphi</th>
+      <th>RecoDatam</th>
+      <th>tau</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>29.4452</td>
+      <td>0.828187</td>
+      <td>2.902130</td>
+      <td>2.85348</td>
+      <td>31.9132</td>
+      <td>0.817082</td>
+      <td>2.919510</td>
+      <td>2.59587</td>
+      <td>0.361310</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>24.3193</td>
+      <td>-1.163510</td>
+      <td>0.636469</td>
+      <td>5.83685</td>
+      <td>27.3513</td>
+      <td>-1.151020</td>
+      <td>0.652153</td>
+      <td>5.35538</td>
+      <td>0.126899</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>24.3193</td>
+      <td>-1.163510</td>
+      <td>0.636469</td>
+      <td>5.83685</td>
+      <td>27.3513</td>
+      <td>-1.151020</td>
+      <td>0.652153</td>
+      <td>5.35538</td>
+      <td>0.962307</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>24.3193</td>
+      <td>-1.163510</td>
+      <td>0.636469</td>
+      <td>5.83685</td>
+      <td>27.3513</td>
+      <td>-1.151020</td>
+      <td>0.652153</td>
+      <td>5.35538</td>
+      <td>0.457282</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>20.1703</td>
+      <td>1.844410</td>
+      <td>-0.186685</td>
+      <td>5.69090</td>
+      <td>24.2158</td>
+      <td>1.837910</td>
+      <td>-0.160621</td>
+      <td>4.59370</td>
+      <td>0.840862</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>99995</th>
+      <td>27.3537</td>
+      <td>-4.341310</td>
+      <td>2.264160</td>
+      <td>3.59567</td>
+      <td>30.2942</td>
+      <td>-4.349530</td>
+      <td>2.209270</td>
+      <td>3.42952</td>
+      <td>0.110503</td>
+    </tr>
+    <tr>
+      <th>99996</th>
+      <td>26.8630</td>
+      <td>4.460970</td>
+      <td>0.381944</td>
+      <td>6.05116</td>
+      <td>23.7580</td>
+      <td>4.521640</td>
+      <td>0.457971</td>
+      <td>4.20833</td>
+      <td>0.526119</td>
+    </tr>
+    <tr>
+      <th>99997</th>
+      <td>26.8630</td>
+      <td>4.460970</td>
+      <td>0.381944</td>
+      <td>6.05116</td>
+      <td>23.7580</td>
+      <td>4.521640</td>
+      <td>0.457971</td>
+      <td>4.20833</td>
+      <td>0.309711</td>
+    </tr>
+    <tr>
+      <th>99998</th>
+      <td>21.3142</td>
+      <td>4.150910</td>
+      <td>-2.812330</td>
+      <td>5.26289</td>
+      <td>21.9671</td>
+      <td>4.176750</td>
+      <td>-2.887050</td>
+      <td>4.14918</td>
+      <td>0.071362</td>
+    </tr>
+    <tr>
+      <th>99999</th>
+      <td>34.5862</td>
+      <td>2.102200</td>
+      <td>-0.435373</td>
+      <td>4.55711</td>
+      <td>44.5515</td>
+      <td>2.093800</td>
+      <td>-0.389151</td>
+      <td>6.66738</td>
+      <td>0.191490</td>
+    </tr>
+  </tbody>
+</table>
+<p>100000 rows × 9 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">normal_split_t_x</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;split dataframe into targets and feature arrays.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pandas.DataFrame): Dataframe of train, test or validation data.</span>
+<span class="sd">        target (str): Choice of &quot;RecoDatapT&quot;, &quot;RecoDataeta&quot;, &quot;RecoDataphi&quot;,&quot;RecoDatam&quot; as target.</span>
+<span class="sd">        input_features (list(str)): list of training features labels</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    list(numpy.array): list of numpy array of target and training features</span>
+<span class="sd"> &quot;&quot;&quot;</span>
+    <span class="c1"># change from pandas dataframe format to a numpy </span>
+    <span class="c1"># array of the specified types</span>
+    <span class="c1"># t = np.array(df[target])</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">input_features</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="s2">&quot;RecoDatapT&quot;</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">FIELDS</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
+<span class="n">features</span> <span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="s2">&quot;inputs&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training Features:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">features</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Target = &quot;</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;USING NEW DATASET</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training Features:
+ [&#39;RecoDatapT&#39;, &#39;RecoDataeta&#39;, &#39;RecoDataphi&#39;, &#39;RecoDatam&#39;]
+
+Target =  RecoDatapT
+USING NEW DATASET
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;spliting data for </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">train_t</span><span class="p">,</span> <span class="n">train_x</span> <span class="o">=</span> <span class="n">normal_split_t_x</span><span class="p">(</span>
+<span class="n">df</span><span class="o">=</span><span class="n">raw_train_data</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="o">=</span><span class="n">features</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;train_t shape = &quot;</span><span class="p">,</span> <span class="n">train_t</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;train_x shape = &quot;</span><span class="p">,</span> <span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Training features:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">train_x</span><span class="p">)</span>
+<span class="n">valid_t</span><span class="p">,</span> <span class="n">valid_x</span> <span class="o">=</span> <span class="n">normal_split_t_x</span><span class="p">(</span>
+<span class="n">df</span><span class="o">=</span><span class="n">raw_valid_data</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="o">=</span><span class="n">features</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;valid_t shape = &quot;</span><span class="p">,</span> <span class="n">valid_t</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;valid_x shape = &quot;</span><span class="p">,</span> <span class="n">valid_x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">test_t</span><span class="p">,</span> <span class="n">test_x</span> <span class="o">=</span> <span class="n">normal_split_t_x</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">raw_test_data</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;test_t shape = &quot;</span><span class="p">,</span> <span class="n">test_t</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;test_x shape = &quot;</span><span class="p">,</span> <span class="n">test_x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;no need to train_test_split since we already have the split dataframes&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">valid_x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">valid_x</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">train_x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">train_x</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">valid_t</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">valid_t</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">train_t</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">train_t</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
+<span class="n">NFEATURES</span> <span class="o">=</span> <span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="c1">######################################################</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>spliting data for RecoDatapT
+train_t shape =  (100000,) train_x shape =  (100000, 4)
+
+ Training features:
+
+[[31.9132    0.817082  2.91951   2.59587 ]
+ [27.3513   -1.15102   0.652153  5.35538 ]
+ [27.3513   -1.15102   0.652153  5.35538 ]
+ ...
+ [23.758     4.52164   0.457971  4.20833 ]
+ [21.9671    4.17675  -2.88705   4.14918 ]
+ [44.5515    2.0938   -0.389151  6.66738 ]]
+valid_t shape =  (100000,) valid_x shape =  (100000, 4)
+test_t shape =  (100000,) test_x shape =  (100000, 4)
+no need to train_test_split since we already have the split dataframes
+[ 3.28693884e+01 -1.94726970e-03 -1.08829962e-02  5.56171091e+00] [15.57324857  2.19476169  1.81196705  2.6282735 ]
+[3.29671688e+01 2.21612240e-03 7.27381886e-03 5.56540206e+00] [15.77965621  2.21042978  1.80959243  2.68547229]
+32.869388404 15.573248566394462
+32.967168834000006 15.77965621193832
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_batch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+    <span class="c1"># the numpy function choice(length, number)</span>
+    <span class="c1"># selects at random &quot;batch_size&quot; integers from</span>
+    <span class="c1"># the range [0, length-1] corresponding to the</span>
+    <span class="c1"># row indices.</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">)</span>
+    <span class="n">batch_x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">rows</span><span class="p">]</span>
+    <span class="n">batch_t</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">rows</span><span class="p">]</span>
+    <span class="c1"># batch_x.T[-1] = np.random.uniform(0, 1, batch_size)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_t</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="train">
+<h1>train<a class="headerlink" href="#train" title="Permalink to this headline">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_layers</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">N_FEATURES</span><span class="o">=</span><span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">base_dist</span> <span class="o">=</span> <span class="n">StandardNormal</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="n">N_FEATURES</span><span class="p">])</span>
+<span class="n">transforms</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_layers</span><span class="p">):</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ReversePermutation</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">N_FEATURES</span><span class="p">))</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">MaskedAffineAutoregressiveTransform</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">N_FEATURES</span><span class="p">,</span> 
+                                                          <span class="n">hidden_features</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+    
+<span class="n">transform</span> <span class="o">=</span> <span class="n">CompositeTransform</span><span class="p">(</span><span class="n">transforms</span><span class="p">)</span>
+
+<span class="n">flow</span> <span class="o">=</span> <span class="n">Flow</span><span class="p">(</span><span class="n">transform</span><span class="p">,</span> <span class="n">base_dist</span><span class="p">)</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">flow</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">train_flow</span><span class="p">(</span><span class="n">n_iterations</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iterations</span><span class="p">):</span>
+        <span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_t</span> <span class="o">=</span> <span class="n">get_batch</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_t</span><span class="p">,</span> <span class="mi">58</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">batch_x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">flow</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_flow</span><span class="p">(</span><span class="mi">5000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_x</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(100000, 4)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">evaluate_flow</span><span class="p">():</span>
+    <span class="n">test_X</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">test_x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">likelihood</span>  <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">test_X</span><span class="p">)</span><span class="o">.</span><span class="n">exp</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">likelihood</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">likelihood</span> <span class="o">=</span> <span class="n">evaluate_flow</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">likelihood</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>torch.Size([100000])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">samples</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">test_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="n">samples</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[25.142113  , -3.3062284 , -0.49941838,  6.0706935 ],
+       [54.25011   , -1.6250437 , -2.0517218 ,  8.605469  ],
+       [34.54987   , -1.2403871 ,  0.6491311 ,  6.8237805 ],
+       ...,
+       [33.811314  ,  2.12686   , -1.2807467 ,  6.374767  ],
+       [22.655596  ,  0.8908781 ,  2.1754103 ,  4.3618817 ],
+       [33.555767  , -0.35557398, -0.30414277,  2.9271367 ]],
+      dtype=float32)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="plot">
+<h1>Plot<a class="headerlink" href="#plot" title="Permalink to this headline">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_hist_simple</span><span class="p">(</span><span class="n">predicted_dist</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+    
+    <span class="n">range_</span> <span class="o">=</span> <span class="p">(</span><span class="n">FIELDS</span><span class="p">[</span><span class="n">target</span><span class="p">][</span><span class="s2">&quot;xmin&quot;</span><span class="p">],</span> <span class="n">FIELDS</span><span class="p">[</span><span class="n">target</span><span class="p">][</span><span class="s2">&quot;xmax&quot;</span><span class="p">])</span>
+    <span class="n">bins</span><span class="o">=</span><span class="mi">50</span>
+    <span class="n">predicted_label_counts</span><span class="p">,</span> <span class="n">label_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
+        <span class="n">predicted_dist</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="n">range_</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span>
+    <span class="p">)</span>
+    
+    <span class="n">REAL_DIST</span> <span class="o">=</span> <span class="n">raw_test_data</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
+    <span class="n">real_label_counts</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">REAL_DIST</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="n">range_</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
+    <span class="n">label_edges</span> <span class="o">=</span> <span class="n">label_edges</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">label_edges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">real_label_counts</span><span class="p">,</span> <span class="n">predicted_label_counts</span><span class="p">,</span> <span class="n">label_edges</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">raw_test_data</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0        44.3274
+1        44.3274
+2        27.4750
+3        33.8797
+4        23.3141
+          ...   
+99995    30.4103
+99996    30.1372
+99997    30.1372
+99998    21.2735
+99999    27.0770
+Name: RecoDatapT, Length: 100000, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_one</span><span class="p">(</span>
+    <span class="n">target</span><span class="p">,</span> <span class="n">real_edges</span><span class="p">,</span> <span class="n">real_counts</span><span class="p">,</span> <span class="n">predicted_counts</span><span class="p">,</span> <span class="n">save_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">PARAMS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">JUPYTER</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">):</span>
+    <span class="n">norm_data</span> <span class="o">=</span> <span class="n">raw_test_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">norm_predicted</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
+        <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">3.5</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">/</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.8</span><span class="p">),</span> <span class="n">gridspec_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;height_ratios&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]}</span>
+    <span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">step</span><span class="p">(</span>
+        <span class="n">real_edges</span><span class="p">,</span> <span class="n">real_counts</span> <span class="o">/</span> <span class="n">norm_data</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s2">&quot;mid&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span>
+    <span class="p">)</span>  <span class="c1"># step real_count_pt</span>
+    
+    <span class="n">ax1</span><span class="o">.</span><span class="n">step</span><span class="p">(</span>
+        <span class="n">real_edges</span><span class="p">,</span>
+        <span class="n">predicted_counts</span> <span class="o">/</span> <span class="n">norm_predicted</span><span class="p">,</span>
+        <span class="n">where</span><span class="o">=</span><span class="s2">&quot;mid&quot;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#D7301F&quot;</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="p">)</span>  <span class="c1"># step predicted_count_pt</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+        <span class="n">real_edges</span><span class="p">,</span>
+        <span class="n">real_counts</span> <span class="o">/</span> <span class="n">norm_data</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;reco&quot;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span>
+        <span class="n">facecolors</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span>
+        <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+        <span class="n">real_edges</span><span class="p">,</span>
+        <span class="n">predicted_counts</span> <span class="o">/</span> <span class="n">norm_predicted</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;flow&quot;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#D7301F&quot;</span><span class="p">,</span>
+        <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
+        <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">range_</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">predicted_counts</span> <span class="o">/</span> <span class="n">norm_predicted</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.1</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;counts&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+
+    <span class="n">ratio</span> <span class="o">=</span> <span class="p">(</span><span class="n">predicted_counts</span> <span class="o">/</span> <span class="n">norm_predicted</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">real_counts</span> <span class="o">/</span> <span class="n">norm_data</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+        <span class="n">real_edges</span><span class="p">,</span> <span class="n">ratio</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span>
+    <span class="p">)</span>  <span class="c1"># PREDICTED (IQN)/Reco (Data)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+        <span class="n">real_edges</span><span class="p">,</span>
+        <span class="n">ratio</span> <span class="o">/</span> <span class="n">ratio</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span>
+        <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span>
+        <span class="n">facecolors</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">range_</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">FIELDS</span><span class="p">[</span><span class="n">target</span><span class="p">][</span><span class="s2">&quot;xlabel&quot;</span><span class="p">])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span>
+        <span class="sa">r</span><span class="s2">&quot;$\frac{\textnormal</span><span class="si">{predicted}</span><span class="s2">}{\textnormal</span><span class="si">{reco}</span><span class="s2">}$&quot;</span>
+        <span class="c1">#    , fontsize=10</span>
+    <span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="n">YLIM</span><span class="p">))</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">range_</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">JUPYTER</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+    <span class="c1"># plt.gca().set_position([0, 0, 1, 1])</span>
+    <span class="k">if</span> <span class="n">save_plot</span><span class="p">:</span>
+        <span class="n">plot_filename</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_model_filename</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">PARAMS</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.dict&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.png&quot;</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span> <span class="s2">&quot;JupyterBook&quot;</span><span class="p">,</span> <span class="s2">&quot;Cluster&quot;</span><span class="p">,</span> <span class="s2">&quot;EVALUATE&quot;</span><span class="p">,</span> <span class="n">plot_filename</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    
+    <span class="c1"># fig.show()</span>
+    <span class="c1"># plt.show();</span>
+    <span class="c1"># plt.axis(&quot;off&quot;)</span>
+    <span class="c1"># plt.gca().set_position([0, 0, 1, 1])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="p-t">
+<h2><span class="math notranslate nohighlight">\(p_T\)</span><a class="headerlink" href="#p-t" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;RecoDatapT&#39;</span>
+<span class="n">range_</span> <span class="o">=</span> <span class="p">(</span><span class="n">FIELDS</span><span class="p">[</span><span class="n">target</span><span class="p">][</span><span class="s2">&quot;xmin&quot;</span><span class="p">],</span> <span class="n">FIELDS</span><span class="p">[</span><span class="n">target</span><span class="p">][</span><span class="s2">&quot;xmax&quot;</span><span class="p">])</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="mi">50</span>
+
+<span class="n">YLIM</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">)</span>
+
+<span class="n">real_label_counts_pT</span><span class="p">,</span> <span class="n">predicted_label_counts_pT</span><span class="p">,</span> <span class="n">label_edges_pT</span> <span class="o">=</span> <span class="n">get_hist_simple</span><span class="p">(</span>
+    <span class="n">predicted_dist</span><span class="o">=</span><span class="n">samples</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_one</span><span class="p">(</span>
+    <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
+    <span class="n">real_edges</span><span class="o">=</span><span class="n">label_edges_pT</span><span class="p">,</span>
+    <span class="n">real_counts</span><span class="o">=</span><span class="n">real_label_counts_pT</span><span class="p">,</span>
+    <span class="n">predicted_counts</span><span class="o">=</span><span class="n">predicted_label_counts_pT</span><span class="p">,</span>
+    <span class="n">save_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">PARAMS</span><span class="o">=</span><span class="n">PARAMS_m</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/5_Normalizing_Flows_25_1.png" src="_images/5_Normalizing_Flows_25_1.png" />
+</div>
+</div>
+</section>
+<section id="eta">
+<h2><span class="math notranslate nohighlight">\(\eta\)</span><a class="headerlink" href="#eta" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;RecoDataeta&#39;</span>
+<span class="n">range_</span> <span class="o">=</span> <span class="p">(</span><span class="n">FIELDS</span><span class="p">[</span><span class="n">target</span><span class="p">][</span><span class="s2">&quot;xmin&quot;</span><span class="p">],</span> <span class="n">FIELDS</span><span class="p">[</span><span class="n">target</span><span class="p">][</span><span class="s2">&quot;xmax&quot;</span><span class="p">])</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="mi">50</span>
+
+<span class="n">YLIM</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">)</span>
+
+<span class="n">real_label_counts_eta</span><span class="p">,</span> <span class="n">predicted_label_counts_eta</span><span class="p">,</span> <span class="n">label_edges_eta</span> <span class="o">=</span> <span class="n">get_hist_simple</span><span class="p">(</span>
+    <span class="n">predicted_dist</span><span class="o">=</span><span class="n">samples</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_one</span><span class="p">(</span>
+    <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
+    <span class="n">real_edges</span><span class="o">=</span><span class="n">label_edges_eta</span><span class="p">,</span>
+    <span class="n">real_counts</span><span class="o">=</span><span class="n">real_label_counts_eta</span><span class="p">,</span>
+    <span class="n">predicted_counts</span><span class="o">=</span><span class="n">predicted_label_counts_eta</span><span class="p">,</span>
+    <span class="n">save_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">PARAMS</span><span class="o">=</span><span class="n">PARAMS_m</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/5_Normalizing_Flows_28_1.png" src="_images/5_Normalizing_Flows_28_1.png" />
+</div>
+</div>
+</section>
+<section id="phi">
+<h2><span class="math notranslate nohighlight">\(\phi\)</span><a class="headerlink" href="#phi" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;RecoDataphi&#39;</span>
+<span class="n">range_</span> <span class="o">=</span> <span class="p">(</span><span class="n">FIELDS</span><span class="p">[</span><span class="n">target</span><span class="p">][</span><span class="s2">&quot;xmin&quot;</span><span class="p">],</span> <span class="n">FIELDS</span><span class="p">[</span><span class="n">target</span><span class="p">][</span><span class="s2">&quot;xmax&quot;</span><span class="p">])</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="mi">50</span>
+
+<span class="n">YLIM</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">)</span>
+
+<span class="n">real_label_counts_phi</span><span class="p">,</span> <span class="n">predicted_label_counts_phi</span><span class="p">,</span> <span class="n">label_edges_phi</span> <span class="o">=</span> <span class="n">get_hist_simple</span><span class="p">(</span>
+    <span class="n">predicted_dist</span><span class="o">=</span><span class="n">samples</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_one</span><span class="p">(</span>
+    <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
+    <span class="n">real_edges</span><span class="o">=</span><span class="n">label_edges_phi</span><span class="p">,</span>
+    <span class="n">real_counts</span><span class="o">=</span><span class="n">real_label_counts_phi</span><span class="p">,</span>
+    <span class="n">predicted_counts</span><span class="o">=</span><span class="n">predicted_label_counts_phi</span><span class="p">,</span>
+    <span class="n">save_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">PARAMS</span><span class="o">=</span><span class="n">PARAMS_m</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/5_Normalizing_Flows_31_1.png" src="_images/5_Normalizing_Flows_31_1.png" />
+</div>
+</div>
+</section>
+<section id="m">
+<h2><span class="math notranslate nohighlight">\(m\)</span><a class="headerlink" href="#m" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;RecoDatam&#39;</span>
+<span class="n">range_</span> <span class="o">=</span> <span class="p">(</span><span class="n">FIELDS</span><span class="p">[</span><span class="n">target</span><span class="p">][</span><span class="s2">&quot;xmin&quot;</span><span class="p">],</span> <span class="n">FIELDS</span><span class="p">[</span><span class="n">target</span><span class="p">][</span><span class="s2">&quot;xmax&quot;</span><span class="p">])</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="mi">50</span>
+
+<span class="n">YLIM</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">)</span>
+
+<span class="n">real_label_counts_m</span><span class="p">,</span> <span class="n">predicted_label_counts_m</span><span class="p">,</span> <span class="n">label_edges_m</span> <span class="o">=</span> <span class="n">get_hist_simple</span><span class="p">(</span>
+    <span class="n">predicted_dist</span><span class="o">=</span><span class="n">samples</span><span class="p">[:,</span><span class="mi">3</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_one</span><span class="p">(</span>
+    <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
+    <span class="n">real_edges</span><span class="o">=</span><span class="n">label_edges_m</span><span class="p">,</span>
+    <span class="n">real_counts</span><span class="o">=</span><span class="n">real_label_counts_m</span><span class="p">,</span>
+    <span class="n">predicted_counts</span><span class="o">=</span><span class="n">predicted_label_counts_m</span><span class="p">,</span>
+    <span class="n">save_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">PARAMS</span><span class="o">=</span><span class="n">PARAMS_m</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/5_Normalizing_Flows_34_1.png" src="_images/5_Normalizing_Flows_34_1.png" />
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="4_SupplementaryMaterials_OptunaTuning_Theory_ML_Background.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Chapter 4: Optional Supplementary Material</p>
+        </div>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Ali Al Kadhim<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
