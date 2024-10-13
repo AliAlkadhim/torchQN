@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# # Chapter 5 - Normalizing Flows
+
+# In[63]:
 
 
 import numpy as np; import pandas as pd
@@ -25,13 +27,13 @@ font_legend = 15; font_axes=15
 # LATEX
 mp.rcParams.update({"text.usetex": True})
 # plt.rcParams['text.usetex'] = True
-mp.rcParams["text.latex.preamble"] = [r"\usepackage{amsmath}"]  # for \text command
+# mp.rcParams["text.latex.preamble"] = [r"\usepackage{amsmath}"]  # for \text command
 
 # %matplotlib inline
 import sys; import os
 from IPython.display import Image, display
 # from importlib import import_module
-import plotly
+
 try:
     import optuna
     print(f"using (optional) optuna version {optuna.__version__}")
@@ -176,7 +178,7 @@ all_cols = [
 ]
 
 
-# In[5]:
+# In[60]:
 
 
 from joblib import  Memory
@@ -420,7 +422,7 @@ def get_hist_simple(predicted_dist, target):
 raw_test_data[target]
 
 
-# In[22]:
+# In[69]:
 
 
 def plot_one(
@@ -489,31 +491,35 @@ def plot_one(
     ax2.set_ylim((YLIM))
     ax2.set_xlim(range_)
     ax2.set_yticklabels([0.8, 1.0, 1.2])
-    if JUPYTER==True:
-        plt.show()
-    else:
-        plt.tight_layout()
-        fig.subplots_adjust(wspace=0.5, hspace=0.2)
-        fig.subplots_adjust(wspace=0.0, hspace=0.1)
-        plt.axis('off')
+#     if JUPYTER==True:
+#         plt.show()
+#     else:
+        
+#         plt.tight_layout()
+#         fig.subplots_adjust(wspace=0.5, hspace=0.2)
+#         fig.subplots_adjust(wspace=0.0, hspace=0.1)
+#         plt.axis('off')
 
-    # plt.gca().set_position([0, 0, 1, 1])
-    if save_plot:
-        plot_filename = utils.get_model_filename(target, PARAMS).split(".dict")[0] + ".png"
-        plt.savefig(
-            os.path.join(IQN_BASE, "JupyterBook", "Cluster", "EVALUATE", plot_filename)
-        )
 
     
-    # fig.show()
-    # plt.show();
+    if save_plot:
+        # plot_filename = utils.get_model_filename(target, PARAMS).split(".dict")[0] + ".png"
+        plot_filename = 'NF_' + target + '.pdf'
+        plt.savefig(
+            os.path.join(IQN_BASE, "JupyterBook", 
+                         "images", "NF", plot_filename),
+        )
+
+    fig.show()
+    plt.show();
     # plt.axis("off")
     # plt.gca().set_position([0, 0, 1, 1])
 
 
+
 # ## $p_T$
 
-# In[23]:
+# In[80]:
 
 
 target = 'RecoDatapT'
@@ -527,7 +533,7 @@ real_label_counts_pT, predicted_label_counts_pT, label_edges_pT = get_hist_simpl
 )
 
 
-# In[24]:
+# In[81]:
 
 
 plot_one(
@@ -535,14 +541,14 @@ plot_one(
     real_edges=label_edges_pT,
     real_counts=real_label_counts_pT,
     predicted_counts=predicted_label_counts_pT,
-    save_plot=False,
+    save_plot=True,
     PARAMS=PARAMS_m
 )
 
 
 # ## $\eta$
 
-# In[26]:
+# In[74]:
 
 
 target = 'RecoDataeta'
@@ -556,7 +562,7 @@ real_label_counts_eta, predicted_label_counts_eta, label_edges_eta = get_hist_si
 )
 
 
-# In[27]:
+# In[75]:
 
 
 plot_one(
@@ -564,14 +570,14 @@ plot_one(
     real_edges=label_edges_eta,
     real_counts=real_label_counts_eta,
     predicted_counts=predicted_label_counts_eta,
-    save_plot=False,
+    save_plot=True,
     PARAMS=PARAMS_m
 )
 
 
 # ## $\phi$
 
-# In[28]:
+# In[76]:
 
 
 target = 'RecoDataphi'
@@ -585,7 +591,7 @@ real_label_counts_phi, predicted_label_counts_phi, label_edges_phi = get_hist_si
 )
 
 
-# In[29]:
+# In[77]:
 
 
 plot_one(
@@ -593,14 +599,14 @@ plot_one(
     real_edges=label_edges_phi,
     real_counts=real_label_counts_phi,
     predicted_counts=predicted_label_counts_phi,
-    save_plot=False,
+    save_plot=True,
     PARAMS=PARAMS_m
 )
 
 
 # ## $m$
 
-# In[30]:
+# In[78]:
 
 
 target = 'RecoDatam'
@@ -614,7 +620,7 @@ real_label_counts_m, predicted_label_counts_m, label_edges_m = get_hist_simple(
 )
 
 
-# In[31]:
+# In[79]:
 
 
 plot_one(
@@ -622,7 +628,7 @@ plot_one(
     real_edges=label_edges_m,
     real_counts=real_label_counts_m,
     predicted_counts=predicted_label_counts_m,
-    save_plot=False,
+    save_plot=True,
     PARAMS=PARAMS_m
 )
 

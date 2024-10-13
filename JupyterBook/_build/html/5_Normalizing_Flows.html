@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>train &#8212; torchIQNx4</title>
+    <title>Chapter 5 - Normalizing Flows &#8212; torchIQNx4</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -132,7 +132,7 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   train
+   Chapter 5 - Normalizing Flows
   </a>
  </li>
 </ul>
@@ -298,8 +298,15 @@ title="Print to PDF"
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h1 nav-item toc-entry">
   <a class="reference internal nav-link" href="#">
-   train
+   Chapter 5 - Normalizing Flows
   </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#train">
+     train
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h1 nav-item toc-entry">
   <a class="reference internal nav-link" href="#plot">
@@ -345,7 +352,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>train</h1>
+                <h1>Chapter 5 - Normalizing Flows</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -357,8 +364,15 @@ title="Print to PDF"
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h1 nav-item toc-entry">
   <a class="reference internal nav-link" href="#">
-   train
+   Chapter 5 - Normalizing Flows
   </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#train">
+     train
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h1 nav-item toc-entry">
   <a class="reference internal nav-link" href="#plot">
@@ -405,7 +419,9 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="cell docutils container">
+  <section class="tex2jax_ignore mathjax_ignore" id="chapter-5-normalizing-flows">
+<h1>Chapter 5 - Normalizing Flows<a class="headerlink" href="#chapter-5-normalizing-flows" title="Permalink to this headline">#</a></h1>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="c1"># import scipy as sp; import scipy.stats as st</span>
@@ -428,13 +444,13 @@ title="Print to PDF"
 <span class="c1"># LATEX</span>
 <span class="n">mp</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;text.usetex&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
 <span class="c1"># plt.rcParams[&#39;text.usetex&#39;] = True</span>
-<span class="n">mp</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;text.latex.preamble&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&quot;\usepackage</span><span class="si">{amsmath}</span><span class="s2">&quot;</span><span class="p">]</span>  <span class="c1"># for \text command</span>
+<span class="c1"># mp.rcParams[&quot;text.latex.preamble&quot;] = [r&quot;\usepackage{amsmath}&quot;]  # for \text command</span>
 
 <span class="c1"># %matplotlib inline</span>
 <span class="kn">import</span> <span class="nn">sys</span><span class="p">;</span> <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">display</span>
 <span class="c1"># from importlib import import_module</span>
-<span class="kn">import</span> <span class="nn">plotly</span>
+
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">optuna</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;using (optional) optuna version </span><span class="si">{</span><span class="n">optuna</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -456,9 +472,7 @@ title="Print to PDF"
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>using torch version 1.11.0.post2
 matplotlib version=  3.5.3
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>using (optional) optuna version 3.0.0
+using (optional) optuna version 3.0.0
 </pre></div>
 </div>
 </div>
@@ -962,7 +976,7 @@ no need to train_test_split since we already have the split dataframes
 </div>
 </div>
 <section id="train">
-<h1>train<a class="headerlink" href="#train" title="Permalink to this headline">#</a></h1>
+<h2>train<a class="headerlink" href="#train" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_layers</span> <span class="o">=</span> <span class="mi">10</span>
@@ -1064,6 +1078,7 @@ no need to train_test_split since we already have the split dataframes
 </div>
 </div>
 </div>
+</section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="plot">
 <h1>Plot<a class="headerlink" href="#plot" title="Permalink to this headline">#</a></h1>
@@ -1176,24 +1191,27 @@ Name: RecoDatapT, Length: 100000, dtype: float64
     <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="n">YLIM</span><span class="p">))</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">range_</span><span class="p">)</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">])</span>
-    <span class="k">if</span> <span class="n">JUPYTER</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="c1">#     if JUPYTER==True:</span>
+<span class="c1">#         plt.show()</span>
+<span class="c1">#     else:</span>
+        
+<span class="c1">#         plt.tight_layout()</span>
+<span class="c1">#         fig.subplots_adjust(wspace=0.5, hspace=0.2)</span>
+<span class="c1">#         fig.subplots_adjust(wspace=0.0, hspace=0.1)</span>
+<span class="c1">#         plt.axis(&#39;off&#39;)</span>
 
-    <span class="c1"># plt.gca().set_position([0, 0, 1, 1])</span>
-    <span class="k">if</span> <span class="n">save_plot</span><span class="p">:</span>
-        <span class="n">plot_filename</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_model_filename</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">PARAMS</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.dict&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.png&quot;</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span> <span class="s2">&quot;JupyterBook&quot;</span><span class="p">,</span> <span class="s2">&quot;Cluster&quot;</span><span class="p">,</span> <span class="s2">&quot;EVALUATE&quot;</span><span class="p">,</span> <span class="n">plot_filename</span><span class="p">)</span>
-        <span class="p">)</span>
 
     
-    <span class="c1"># fig.show()</span>
-    <span class="c1"># plt.show();</span>
+    <span class="k">if</span> <span class="n">save_plot</span><span class="p">:</span>
+        <span class="c1"># plot_filename = utils.get_model_filename(target, PARAMS).split(&quot;.dict&quot;)[0] + &quot;.png&quot;</span>
+        <span class="n">plot_filename</span> <span class="o">=</span> <span class="s1">&#39;NF_&#39;</span> <span class="o">+</span> <span class="n">target</span> <span class="o">+</span> <span class="s1">&#39;.pdf&#39;</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span> <span class="s2">&quot;JupyterBook&quot;</span><span class="p">,</span> 
+                         <span class="s2">&quot;images&quot;</span><span class="p">,</span> <span class="s2">&quot;NF&quot;</span><span class="p">,</span> <span class="n">plot_filename</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
     <span class="c1"># plt.axis(&quot;off&quot;)</span>
     <span class="c1"># plt.gca().set_position([0, 0, 1, 1])</span>
 </pre></div>
@@ -1224,14 +1242,14 @@ Name: RecoDatapT, Length: 100000, dtype: float64
     <span class="n">real_edges</span><span class="o">=</span><span class="n">label_edges_pT</span><span class="p">,</span>
     <span class="n">real_counts</span><span class="o">=</span><span class="n">real_label_counts_pT</span><span class="p">,</span>
     <span class="n">predicted_counts</span><span class="o">=</span><span class="n">predicted_label_counts_pT</span><span class="p">,</span>
-    <span class="n">save_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">save_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">PARAMS</span><span class="o">=</span><span class="n">PARAMS_m</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/5_Normalizing_Flows_25_1.png" src="_images/5_Normalizing_Flows_25_1.png" />
+<img alt="_images/5_Normalizing_Flows_26_1.png" src="_images/5_Normalizing_Flows_26_1.png" />
 </div>
 </div>
 </section>
@@ -1259,14 +1277,14 @@ Name: RecoDatapT, Length: 100000, dtype: float64
     <span class="n">real_edges</span><span class="o">=</span><span class="n">label_edges_eta</span><span class="p">,</span>
     <span class="n">real_counts</span><span class="o">=</span><span class="n">real_label_counts_eta</span><span class="p">,</span>
     <span class="n">predicted_counts</span><span class="o">=</span><span class="n">predicted_label_counts_eta</span><span class="p">,</span>
-    <span class="n">save_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">save_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">PARAMS</span><span class="o">=</span><span class="n">PARAMS_m</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/5_Normalizing_Flows_28_1.png" src="_images/5_Normalizing_Flows_28_1.png" />
+<img alt="_images/5_Normalizing_Flows_29_1.png" src="_images/5_Normalizing_Flows_29_1.png" />
 </div>
 </div>
 </section>
@@ -1294,14 +1312,14 @@ Name: RecoDatapT, Length: 100000, dtype: float64
     <span class="n">real_edges</span><span class="o">=</span><span class="n">label_edges_phi</span><span class="p">,</span>
     <span class="n">real_counts</span><span class="o">=</span><span class="n">real_label_counts_phi</span><span class="p">,</span>
     <span class="n">predicted_counts</span><span class="o">=</span><span class="n">predicted_label_counts_phi</span><span class="p">,</span>
-    <span class="n">save_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">save_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">PARAMS</span><span class="o">=</span><span class="n">PARAMS_m</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/5_Normalizing_Flows_31_1.png" src="_images/5_Normalizing_Flows_31_1.png" />
+<img alt="_images/5_Normalizing_Flows_32_1.png" src="_images/5_Normalizing_Flows_32_1.png" />
 </div>
 </div>
 </section>
@@ -1329,14 +1347,14 @@ Name: RecoDatapT, Length: 100000, dtype: float64
     <span class="n">real_edges</span><span class="o">=</span><span class="n">label_edges_m</span><span class="p">,</span>
     <span class="n">real_counts</span><span class="o">=</span><span class="n">real_label_counts_m</span><span class="p">,</span>
     <span class="n">predicted_counts</span><span class="o">=</span><span class="n">predicted_label_counts_m</span><span class="p">,</span>
-    <span class="n">save_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">save_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">PARAMS</span><span class="o">=</span><span class="n">PARAMS_m</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/5_Normalizing_Flows_34_1.png" src="_images/5_Normalizing_Flows_34_1.png" />
+<img alt="_images/5_Normalizing_Flows_35_1.png" src="_images/5_Normalizing_Flows_35_1.png" />
 </div>
 </div>
 </section>
