@@ -204,6 +204,7 @@ all_cols = [
 ]
 
 
+
 # ## 3.2: Needed Functions
 
 # In[2]:
@@ -674,7 +675,7 @@ raw_train_data, raw_test_data, raw_valid_data = load_raw_data()
 
 # ## 3.3: Evaluate Mass
 
-# In[7]:
+# In[5]:
 
 
 # TODO: plot the loss curves (train and valid) of all 4 networks on the same plot,
@@ -769,13 +770,13 @@ print(train_t_z_scaled.mean(), train_t_z_scaled.std())
 ###########################################################
 # Get the  parameters for this model and training
 PARAMS_m = {
-"n_layers": int(4),
+"n_layers": int(5),
 "hidden_size": int(6),
 "dropout_1": float(0.6),
 "dropout_2": float(0.1),
 "activation": "LeakyReLU",
     'optimizer_name':'NAdam',
-    'starting_learning_rate':float(0.7),
+    'starting_learning_rate':float(0.5),
     'momentum':float(0.6),
     'batch_size':int(1024),
     'n_iterations': int(2e6),

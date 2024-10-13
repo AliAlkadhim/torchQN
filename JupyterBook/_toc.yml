@@ -7,3 +7,4 @@ chapters:
 - file: 2_Train_all_IQNs.ipynb
 - file: 3_Autoregressive_Evaluation.ipynb
 - file: 4_SupplementaryMaterials_OptunaTuning_Theory_ML_Background.ipynb
+- file: 5_Normalizing_Flows.ipynb

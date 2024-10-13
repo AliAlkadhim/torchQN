@@ -246,10 +246,10 @@ all_cols = [
 
 
 
+
 # # 2.2: Load Required Functions
 
 # In[2]:
-
 
 
 class LR_Cooler:
@@ -279,7 +279,6 @@ plt.plot(np.arange(1e6), LR);plt.show()
 # In[3]:
 
 
-################################### Load unscaled dataframes ###################################
 ################################### Load unscaled dataframes ###################################
 @memory.cache
 def load_raw_data():
@@ -739,7 +738,7 @@ def train(
         # x.grad.zero_()
         
         #add noise to training data
-        batch_x = add_noise(batch_x)
+        # batch_x = add_noise(batch_x)
         # batch_t = add_noise(batch_t)
         
         # Try torch scheduler
@@ -926,7 +925,7 @@ def load_trained_model(PATH, PARAMS):
 
 # #### Configurations
 
-# In[4]:
+# In[12]:
 
 
 ######################################
@@ -943,7 +942,8 @@ else:
     SUBSAMPLE = None
 
 
-# In[5]:
+
+# In[13]:
 
 
 ########################################################################################
@@ -953,7 +953,33 @@ raw_train_data, raw_test_data, raw_valid_data =load_raw_data()
 # scaled_train_data, scaled_test_data, scaled_valid_data = load_scaled_dataframes()
 
 
+# ## Oversample regions with $11 < m < 25$ GeV. 
+
 # In[6]:
+
+
+def oversample_mass(df, mass_min, mass_max):
+  """df could be raw_test_data """
+  first_mask = df.RecoDatam < 25 #I think this condition might not make sense (we want to define just a min)
+  second_mask = df.RecoDatam > 10
+  df_resampled =df[second_mask]#[first_mask]
+  frames = [df, df_resampled]
+  df_combined = pd.concat(frames)
+  return df_combined
+
+
+# In[11]:
+
+
+# raw_test_data_ =oversample_mass(df=raw_test_data, mass_min=10, mass_max=25)
+# raw_valid_data_ =oversample_mass(df=raw_valid_data, mass_min=10, mass_max=25)
+# raw_train_data_ =oversample_mass(df=raw_train_data, mass_min=10, mass_max=25)
+
+# raw_test_data, raw_valid_data, raw_train_data=raw_test_data_, raw_valid_data_, raw_train_data_
+# raw_test_data_.describe()
+
+
+# In[14]:
 
 
 #######################################
@@ -1049,21 +1075,21 @@ print(train_t_z_scaled.mean(), train_t_z_scaled.std())
 
 # # Define Mass Model Parameters
 
-# In[9]:
+# In[15]:
 
 
 ###########################################################
 # Decide on parameters for this model and training
 PARAMS_m = {
-"n_layers": int(4),
+"n_layers": int(6),
 "hidden_size": int(6),
 "dropout_1": float(0.6),
 "dropout_2": float(0.1),
 "activation": "LeakyReLU",
     'optimizer_name':'NAdam',
-    'starting_learning_rate':float(0.7),
+    'starting_learning_rate':float(0.5),
     'momentum':float(0.6),
-    'batch_size':int(1024),
+    'batch_size':int(512),
     'n_iterations': int(2e6),
 }
 
@@ -1072,7 +1098,7 @@ PARAMS_m = {
 # 
 # ### The model that needs the longest time in training is mass. Click here to scroll down to train $p_T$.
 
-# In[11]:
+# In[ ]:
 
 
 optimizer_name=PARAMS_m['optimizer_name']
@@ -1109,7 +1135,7 @@ untrained_model = load_untrained_model(PARAMS_m)
 # trained_model =load_trained_model(PATH=PATH_model, PARAMS=PARAMS_m)
 
 IQN_trace = ([], [], [], [])
-traces_step = int(20)
+traces_step = int(200)
 traces_window = traces_step
 IQN = run(
     target=target,

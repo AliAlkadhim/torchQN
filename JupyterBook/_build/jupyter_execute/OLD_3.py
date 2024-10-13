@@ -64,7 +64,8 @@ try:
     print('DATA directory also properly set, in %s' % os.environ['DATA_DIR'])
 except Exception:
     # IQN_BASE=os.getcwd()
-    print("""\nBASE directory not properly set. Read repo README.    If you need a function from utils, use the decorator below, or add utils to sys.path\n
+    print("""\nBASE directory not properly set. Read repo README.\
+    If you need a function from utils, use the decorator below, or add utils to sys.path\n
     You can also do 
     os.environ['IQN_BASE']=<ABSOLUTE PATH FOR THE IQN REPO>
     or
@@ -200,8 +201,6 @@ explore_data(df=raw_train_data, title='Unscaled Dataframe')
 # ## If you want to load the previously generated scaled dataframe, run the cell below
 
 # In[36]:
-
-
 
 
 print('USING NEW DATASET\n')

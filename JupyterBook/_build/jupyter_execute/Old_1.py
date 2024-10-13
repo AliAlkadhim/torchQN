@@ -142,7 +142,8 @@ try:
     print('DATA directory also properly set, in %s' % os.environ['DATA_DIR'])
 except Exception:
     # IQN_BASE=os.getcwd()
-    print("""\nBASE directory not properly set. Read repo README.    If you need a function from utils, use the decorator below, or add utils to sys.path\n
+    print("""\nBASE directory not properly set. Read repo README.\
+    If you need a function from utils, use the decorator below, or add utils to sys.path\n
     You can also do 
     os.environ['IQN_BASE']=<ABSOLUTE PATH FOR THE IQN REPO>
     or
@@ -789,7 +790,12 @@ all_cols=['genDatapT', 'genDataeta', 'genDataphi', 'genDatam','RecoDatapT', 'Rec
 
     
 def get_model_filename(target, PARAMS):
-    filename_model=f"""Trained_IQNx4_{target}_        {PARAMS['n_layers']}_layer        {PARAMS['hidden_size']}_hidden            {PARAMS['activation']}_activation                {PARAMS['batch_size']}_batchsize                    {PARAMS['n_iterations']}_iteration.dict""" 
+    filename_model=f"""Trained_IQNx4_{target}_\
+        {PARAMS['n_layers']}_layer\
+        {PARAMS['hidden_size']}_hidden\
+            {PARAMS['activation']}_activation\
+                {PARAMS['batch_size']}_batchsize\
+                    {PARAMS['n_iterations']}_iteration.dict""" 
                     
     return filename_model
 
@@ -2047,7 +2053,6 @@ scaled_valid_data = valid_data_m
 # In[36]:
 
 
-
 labels = ['pT', 'eta','phi','m']
 fig, ax=plt.subplots(1,1)
 for label in labels:
@@ -2594,7 +2599,8 @@ def train(model, optimizer, avloss, getbatch,
     n = len(valid_x)
     
     print('Iteration vs average loss')
-    print("%10s\t%10s\t%10s" %           ('iteration', 'train-set', 'test-set'))
+    print("%10s\t%10s\t%10s" % \
+          ('iteration', 'train-set', 'test-set'))
     
     for ii in range(n_iterations):
 
@@ -2658,11 +2664,13 @@ def train(model, optimizer, avloss, getbatch,
                         
             if len(xx) < 1:
                 xx.append(0)
-                print("%10d\t%10.6f\t%10.6f" %                       (xx[-1], yy_t[-1], yy_v[-1]))
+                print("%10d\t%10.6f\t%10.6f" % \
+                      (xx[-1], yy_t[-1], yy_v[-1]))
             else:
                 xx.append(xx[-1] + step)
                     
-                print("\r%10d\t%10.6f\t%10.6f\t%10.6f" %                           (xx[-1], yy_t[-1], yy_v[-1], yy_v_avg[-1]), 
+                print("\r%10d\t%10.6f\t%10.6f\t%10.6f" % \
+                          (xx[-1], yy_t[-1], yy_v[-1], yy_v_avg[-1]), 
                       end='')
             
     print()      
@@ -2741,7 +2749,6 @@ def run(model,
 # In[188]:
 
 
-
 IQN_trace=([], [], [], [])
 traces_step = 800
 traces_window=traces_step
@@ -2750,6 +2757,7 @@ IQN = run(model=model,train_x=train_x, train_t=train_t_ratio,
         valid_x=test_x, valid_t=test_t_ratio, traces=IQN_trace, n_batch=BATCHSIZE, 
         n_iterations=n_iterations, traces_step=traces_step, traces_window=traces_window,
         save_model=False)
+
 
 
 # ## Save trained model (if its good, and if you haven't saved above) and load trained model (if you saved it)
@@ -3181,6 +3189,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 # # Plot predicted vs real reco (in our paper's format)
