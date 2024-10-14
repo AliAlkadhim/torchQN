@@ -3,7 +3,7 @@
 
 # # Chapter 5 - Normalizing Flows
 
-# In[63]:
+# In[1]:
 
 
 import numpy as np; import pandas as pd
@@ -49,6 +49,7 @@ from nflows.distributions.normal import StandardNormal
 from nflows.transforms.base import CompositeTransform
 from nflows.transforms.autoregressive import MaskedAffineAutoregressiveTransform
 from nflows.transforms.permutations import ReversePermutation
+from nflows.distributions.normal import ConditionalDiagonalNormal
 
 
 # In[2]:
@@ -105,7 +106,7 @@ rnd  = np.random.RandomState(seed)
 
 ################################### SET DATA CONFIGURATIONS ###################################
 X       = ['RecoDatapT', 'RecoDataeta', 'RecoDataphi', 'RecoDatam']
-
+COND = ['genDatapT', 'genDataeta', 'genDataphi', 'genDatam']
 #set order of training:
 #pT_first: pT->>m->eta->phi
 #m_first: m->pT->eta->phi
@@ -178,7 +179,7 @@ all_cols = [
 ]
 
 
-# In[60]:
+# In[5]:
 
 
 from joblib import  Memory
@@ -251,6 +252,12 @@ raw_train_data
 # In[7]:
 
 
+raw_train_data.describe()
+
+
+# In[8]:
+
+
 def normal_split_t_x(df, target, input_features):
     """split dataframe into targets and feature arrays.
 
@@ -270,7 +277,7 @@ def normal_split_t_x(df, target, input_features):
     return t, x
 
 
-# In[8]:
+# In[9]:
 
 
 target = "RecoDatapT"
@@ -282,7 +289,7 @@ print("\nTarget = ", target)
 print("USING NEW DATASET\n")
 
 
-# In[9]:
+# In[10]:
 
 
 print(f"spliting data for {target}")
@@ -309,7 +316,28 @@ NFEATURES = train_x.shape[1]
 ######################################################
 
 
-# In[10]:
+# In[11]:
+
+
+print(f"spliting data for {target}")
+train_t, train_x_cond = normal_split_t_x(
+df=raw_train_data, target=target, input_features=COND
+)
+print("\n Training features:\n")
+print(train_x_cond)
+test_t, test_x_cond = normal_split_t_x(df=raw_test_data, target=target, input_features=COND)
+print("test_t shape = ", test_t.shape, "test_x shape = ", test_x.shape)
+
+
+print("no need to train_test_split since we already have the split dataframes")
+print("test_x_cond shape = ", test_x_cond.shape)
+
+print(train_x_cond.mean(axis=0), train_x_cond.std(axis=0))
+print(valid_t.mean(), valid_t.std())
+print(train_t.mean(), train_t.std())
+
+
+# In[12]:
 
 
 def get_batch(x, t, batch_size):
@@ -326,50 +354,59 @@ def get_batch(x, t, batch_size):
 
 # ## train
 
-# In[11]:
+# In[13]:
 
 
-num_layers = 10
+num_layers = 5
 N_FEATURES=train_x.shape[1]
 base_dist = StandardNormal(shape=[N_FEATURES])
+# base_dist = ConditionalDiagonalNormal(shape=[N_FEATURES], 
+                                      # context_encoder=nn.Linear(N_FEATURES, 4)
+                                     # )
 transforms = []
 for _ in range(num_layers):
     transforms.append(ReversePermutation(features=N_FEATURES))
     transforms.append(MaskedAffineAutoregressiveTransform(features=N_FEATURES, 
-                                                          hidden_features=4))
+                                                          hidden_features=4,
+                                                         context_features=4))
     
 transform = CompositeTransform(transforms)
 
 flow = Flow(transform, base_dist)
-optimizer = optim.Adam(flow.parameters())
-
-
-# In[12]:
-
-
-def train_flow(n_iterations):
-    for i in range(n_iterations):
-        batch_x, batch_t = get_batch(train_x, train_t, 58)
-        x = torch.tensor(batch_x, dtype=torch.float32)
-        optimizer.zero_grad()
-        loss = -flow.log_prob(inputs = x).mean()
-        loss.backward()
-        optimizer.step()
-
-
-# In[13]:
-
-
-train_flow(5000)
+optimizer = optim.Adam(flow.parameters(), lr = 1E-3)
 
 
 # In[14]:
 
 
-test_x.shape
+def train_flow(n_iterations):
+    for i in range(n_iterations):
+        # get data (reco jets)
+        batch_x, batch_t = get_batch(train_x, train_t, 58)
+        x = torch.tensor(batch_x, dtype=torch.float32)
+        # get conditioning variables (gen jets)
+        batch_x_cond, batch_t = get_batch(train_x_cond, train_t, 58)
+        x_cond = torch.tensor(batch_x_cond, dtype=torch.float32)
+        
+        optimizer.zero_grad()
+        loss = -flow.log_prob(inputs = x, context = x_cond).mean()
+        loss.backward()
+        optimizer.step()
 
 
 # In[15]:
+
+
+train_flow(5000)
+
+
+# In[16]:
+
+
+test_x.shape
+
+
+# In[17]:
 
 
 def evaluate_flow():
@@ -378,28 +415,102 @@ def evaluate_flow():
     return likelihood
 
 
-# In[16]:
+# In[18]:
 
 
 likelihood = evaluate_flow()
 
 
-# In[17]:
+# In[19]:
 
 
 likelihood.shape
 
 
-# In[19]:
+# In[36]:
 
 
-samples = flow.sample(test_x.shape[0]).detach().numpy()
+SUBSAMPLE=1000
+rows = np.random.choice(len(test_x_cond), SUBSAMPLE)
+
+
+# In[37]:
+
+
+test_x_cond_context = test_x_cond[rows]
+test_x_cond_context
+
+
+# In[38]:
+
+
+plt.hist(test_x_cond_context[:,0])
+
+
+# In[39]:
+
+
+context = torch.tensor(test_x_cond_context,dtype=torch.float32)
+context
+
+
+# In[ ]:
+
+
+samples = flow.sample(
+    # test_x.shape[0],
+    2000,
+    context = context
+    
+).detach().numpy()
 samples
 
 
+# In[30]:
+
+
+samples.shape
+
+
+# In[31]:
+
+
+samples[:, :, 0]
+
+
+# In[34]:
+
+
+ind = 0
+samples[ind, :, ind].min(), samples[ind, :, ind].max(), samples[ind, :, ind].mean()
+
+
+# In[35]:
+
+
+plt.hist(samples[0, :, 0].flatten());
+
+
+# ## Shape of samples
+# 
+# 
+# `samples` Shape: (1000, 100, 4)
+# 
+# - Dimension 0 (size 1000): Corresponds to each conditioning variable in context. So, for each of the 1000 conditioning variables, you have generated samples.
+# 
+# - Dimension 1 (size 100): Represents the number of samples generated per conditioning variable.
+# 
+# - Dimension 2 (size 4): Represents the features (dimensions) of each generated sample.
+# 
+# Therefore, `samples[i, j, k]` gives you:
+# 
+# - i (0 ≤ i < 1000): The index of the conditioning variable (context index).
+# - j (0 ≤ j < 100): The index of the sample generated for that conditioning variable.
+# - k (0 ≤ k < 4): The index of the feature in the generated sample.
+
 # # Plot
 
-# In[20]:
+# In[49]:
 
 
 def get_hist_simple(predicted_dist, target):
@@ -416,13 +527,7 @@ def get_hist_simple(predicted_dist, target):
     return real_label_counts, predicted_label_counts, label_edges
 
 
-# In[21]:
-
-
-raw_test_data[target]
-
-
-# In[69]:
+# In[50]:
 
 
 def plot_one(
@@ -457,7 +562,7 @@ def plot_one(
     ax1.scatter(
         real_edges,
         predicted_counts / norm_predicted,
-        label="flow",
+        label="NF",
         color="#D7301F",
         marker="x",
         s=5,
@@ -501,25 +606,25 @@ def plot_one(
 #         plt.axis('off')
 
 
-    
     if save_plot:
         # plot_filename = utils.get_model_filename(target, PARAMS).split(".dict")[0] + ".png"
         plot_filename = 'NF_' + target + '.pdf'
         plt.savefig(
             os.path.join(IQN_BASE, "JupyterBook", 
                          "images", "NF", plot_filename),
+            bbox_inches='tight'
         )
+
 
     fig.show()
     plt.show();
-    # plt.axis("off")
     # plt.gca().set_position([0, 0, 1, 1])
 
 
 
 # ## $p_T$
 
-# In[80]:
+# In[51]:
 
 
 target = 'RecoDatapT'
@@ -533,7 +638,7 @@ real_label_counts_pT, predicted_label_counts_pT, label_edges_pT = get_hist_simpl
 )
 
 
-# In[81]:
+# In[52]:
 
 
 plot_one(
@@ -548,7 +653,7 @@ plot_one(
 
 # ## $\eta$
 
-# In[74]:
+# In[182]:
 
 
 target = 'RecoDataeta'
@@ -562,7 +667,7 @@ real_label_counts_eta, predicted_label_counts_eta, label_edges_eta = get_hist_si
 )
 
 
-# In[75]:
+# In[183]:
 
 
 plot_one(
@@ -577,7 +682,7 @@ plot_one(
 
 # ## $\phi$
 
-# In[76]:
+# In[184]:
 
 
 target = 'RecoDataphi'
@@ -591,7 +696,7 @@ real_label_counts_phi, predicted_label_counts_phi, label_edges_phi = get_hist_si
 )
 
 
-# In[77]:
+# In[185]:
 
 
 plot_one(
@@ -606,7 +711,7 @@ plot_one(
 
 # ## $m$
 
-# In[78]:
+# In[186]:
 
 
 target = 'RecoDatam'
@@ -620,7 +725,7 @@ real_label_counts_m, predicted_label_counts_m, label_edges_m = get_hist_simple(
 )
 
 
-# In[79]:
+# In[187]:
 
 
 plot_one(

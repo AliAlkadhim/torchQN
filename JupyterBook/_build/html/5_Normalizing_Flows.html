@@ -306,6 +306,11 @@ title="Print to PDF"
      train
     </a>
    </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#shape-of-samples">
+     Shape of samples
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toc-h1 nav-item toc-entry">
@@ -370,6 +375,11 @@ title="Print to PDF"
    <li class="toc-h2 nav-item toc-entry">
     <a class="reference internal nav-link" href="#train">
      train
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#shape-of-samples">
+     Shape of samples
     </a>
    </li>
   </ul>
@@ -466,6 +476,7 @@ title="Print to PDF"
 <span class="kn">from</span> <span class="nn">nflows.transforms.base</span> <span class="kn">import</span> <span class="n">CompositeTransform</span>
 <span class="kn">from</span> <span class="nn">nflows.transforms.autoregressive</span> <span class="kn">import</span> <span class="n">MaskedAffineAutoregressiveTransform</span>
 <span class="kn">from</span> <span class="nn">nflows.transforms.permutations</span> <span class="kn">import</span> <span class="n">ReversePermutation</span>
+<span class="kn">from</span> <span class="nn">nflows.distributions.normal</span> <span class="kn">import</span> <span class="n">ConditionalDiagonalNormal</span>
 </pre></div>
 </div>
 </div>
@@ -543,7 +554,7 @@ DATA directory also properly set, in /home/ali/Desktop/Pulled_Github_Repositorie
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">################################### SET DATA CONFIGURATIONS ###################################</span>
 <span class="n">X</span>       <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;RecoDatapT&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDataeta&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDataphi&#39;</span><span class="p">,</span> <span class="s1">&#39;RecoDatam&#39;</span><span class="p">]</span>
-
+<span class="n">COND</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;genDatapT&#39;</span><span class="p">,</span> <span class="s1">&#39;genDataeta&#39;</span><span class="p">,</span> <span class="s1">&#39;genDataphi&#39;</span><span class="p">,</span> <span class="s1">&#39;genDatam&#39;</span><span class="p">]</span>
 <span class="c1">#set order of training:</span>
 <span class="c1">#pT_first: pT-&gt;&gt;m-&gt;eta-&gt;phi</span>
 <span class="c1">#m_first: m-&gt;pT-&gt;eta-&gt;phi</span>
@@ -865,6 +876,143 @@ USING NEW DATASET
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">raw_train_data</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>genDatapT</th>
+      <th>genDataeta</th>
+      <th>genDataphi</th>
+      <th>genDatam</th>
+      <th>RecoDatapT</th>
+      <th>RecoDataeta</th>
+      <th>RecoDataphi</th>
+      <th>RecoDatam</th>
+      <th>tau</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>100000.000000</td>
+      <td>100000.000000</td>
+      <td>100000.000000</td>
+      <td>100000.000000</td>
+      <td>100000.000000</td>
+      <td>100000.000000</td>
+      <td>100000.000000</td>
+      <td>100000.000000</td>
+      <td>100000.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>32.839817</td>
+      <td>0.002209</td>
+      <td>0.007407</td>
+      <td>6.989531</td>
+      <td>32.967169</td>
+      <td>0.002216</td>
+      <td>0.007274</td>
+      <td>5.565402</td>
+      <td>0.500433</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>14.903975</td>
+      <td>2.216944</td>
+      <td>1.808915</td>
+      <td>2.789053</td>
+      <td>15.779735</td>
+      <td>2.210441</td>
+      <td>1.809601</td>
+      <td>2.685486</td>
+      <td>0.288280</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>20.000100</td>
+      <td>-5.123860</td>
+      <td>-3.141590</td>
+      <td>-0.000008</td>
+      <td>11.488700</td>
+      <td>-4.997590</td>
+      <td>-3.401475</td>
+      <td>-0.000031</td>
+      <td>0.000004</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>23.799875</td>
+      <td>-1.664598</td>
+      <td>-1.556332</td>
+      <td>5.131500</td>
+      <td>23.487200</td>
+      <td>-1.663780</td>
+      <td>-1.556070</td>
+      <td>3.796510</td>
+      <td>0.250173</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>28.525150</td>
+      <td>0.012869</td>
+      <td>0.014945</td>
+      <td>6.555895</td>
+      <td>29.070900</td>
+      <td>0.010939</td>
+      <td>0.017256</td>
+      <td>5.123870</td>
+      <td>0.501250</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>36.476800</td>
+      <td>1.669738</td>
+      <td>1.568370</td>
+      <td>8.309520</td>
+      <td>37.664450</td>
+      <td>1.668075</td>
+      <td>1.564928</td>
+      <td>6.781140</td>
+      <td>0.749984</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>367.110000</td>
+      <td>5.118850</td>
+      <td>3.141550</td>
+      <td>41.075900</td>
+      <td>397.992000</td>
+      <td>4.998390</td>
+      <td>3.428875</td>
+      <td>40.567400</td>
+      <td>0.999995</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">normal_split_t_x</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;split dataframe into targets and feature arrays.</span>
 
@@ -961,6 +1109,49 @@ no need to train_test_split since we already have the split dataframes
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;spliting data for </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">train_t</span><span class="p">,</span> <span class="n">train_x_cond</span> <span class="o">=</span> <span class="n">normal_split_t_x</span><span class="p">(</span>
+<span class="n">df</span><span class="o">=</span><span class="n">raw_train_data</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="o">=</span><span class="n">COND</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Training features:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">train_x_cond</span><span class="p">)</span>
+<span class="n">test_t</span><span class="p">,</span> <span class="n">test_x_cond</span> <span class="o">=</span> <span class="n">normal_split_t_x</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">raw_test_data</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">input_features</span><span class="o">=</span><span class="n">COND</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;test_t shape = &quot;</span><span class="p">,</span> <span class="n">test_t</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;test_x shape = &quot;</span><span class="p">,</span> <span class="n">test_x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;no need to train_test_split since we already have the split dataframes&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;test_x_cond shape = &quot;</span><span class="p">,</span> <span class="n">test_x_cond</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">train_x_cond</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">train_x_cond</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">valid_t</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">valid_t</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">train_t</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">train_t</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>spliting data for RecoDatapT
+
+ Training features:
+
+[[29.4452    0.828187  2.90213   2.85348 ]
+ [24.3193   -1.16351   0.636469  5.83685 ]
+ [24.3193   -1.16351   0.636469  5.83685 ]
+ ...
+ [26.863     4.46097   0.381944  6.05116 ]
+ [21.3142    4.15091  -2.81233   5.26289 ]
+ [34.5862    2.1022   -0.435373  4.55711 ]]
+test_t shape =  (100000,) test_x shape =  (100000, 4)
+no need to train_test_split since we already have the split dataframes
+test_x_cond shape =  (100000, 4)
+[3.28398167e+01 2.20884209e-03 7.40700042e-03 6.98953116e+00] [14.90390069  2.21693324  1.80890606  2.78903949]
+32.869388404 15.573248566394462
+32.967168834000006 15.77965621193832
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_batch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
     <span class="c1"># the numpy function choice(length, number)</span>
     <span class="c1"># selects at random &quot;batch_size&quot; integers from</span>
@@ -979,19 +1170,23 @@ no need to train_test_split since we already have the split dataframes
 <h2>train<a class="headerlink" href="#train" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_layers</span> <span class="o">=</span> <span class="mi">10</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_layers</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">N_FEATURES</span><span class="o">=</span><span class="n">train_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">base_dist</span> <span class="o">=</span> <span class="n">StandardNormal</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="n">N_FEATURES</span><span class="p">])</span>
+<span class="c1"># base_dist = ConditionalDiagonalNormal(shape=[N_FEATURES], </span>
+                                      <span class="c1"># context_encoder=nn.Linear(N_FEATURES, 4)</span>
+                                     <span class="c1"># )</span>
 <span class="n">transforms</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_layers</span><span class="p">):</span>
     <span class="n">transforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ReversePermutation</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">N_FEATURES</span><span class="p">))</span>
     <span class="n">transforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">MaskedAffineAutoregressiveTransform</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">N_FEATURES</span><span class="p">,</span> 
-                                                          <span class="n">hidden_features</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+                                                          <span class="n">hidden_features</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                                                         <span class="n">context_features</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
     
 <span class="n">transform</span> <span class="o">=</span> <span class="n">CompositeTransform</span><span class="p">(</span><span class="n">transforms</span><span class="p">)</span>
 
 <span class="n">flow</span> <span class="o">=</span> <span class="n">Flow</span><span class="p">(</span><span class="n">transform</span><span class="p">,</span> <span class="n">base_dist</span><span class="p">)</span>
-<span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">flow</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">flow</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span> <span class="o">=</span> <span class="mf">1E-3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1000,10 +1195,15 @@ no need to train_test_split since we already have the split dataframes
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">train_flow</span><span class="p">(</span><span class="n">n_iterations</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iterations</span><span class="p">):</span>
+        <span class="c1"># get data (reco jets)</span>
         <span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_t</span> <span class="o">=</span> <span class="n">get_batch</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_t</span><span class="p">,</span> <span class="mi">58</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">batch_x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="c1"># get conditioning variables (gen jets)</span>
+        <span class="n">batch_x_cond</span><span class="p">,</span> <span class="n">batch_t</span> <span class="o">=</span> <span class="n">get_batch</span><span class="p">(</span><span class="n">train_x_cond</span><span class="p">,</span> <span class="n">train_t</span><span class="p">,</span> <span class="mi">58</span><span class="p">)</span>
+        <span class="n">x_cond</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">batch_x_cond</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        
         <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
-        <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">flow</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">flow</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="n">x_cond</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
         <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
         <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
 </pre></div>
@@ -1060,24 +1260,142 @@ no need to train_test_split since we already have the split dataframes
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">samples</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">test_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
-<span class="n">samples</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SUBSAMPLE</span><span class="o">=</span><span class="mi">1000</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test_x_cond</span><span class="p">),</span> <span class="n">SUBSAMPLE</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_x_cond_context</span> <span class="o">=</span> <span class="n">test_x_cond</span><span class="p">[</span><span class="n">rows</span><span class="p">]</span>
+<span class="n">test_x_cond_context</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[25.142113  , -3.3062284 , -0.49941838,  6.0706935 ],
-       [54.25011   , -1.6250437 , -2.0517218 ,  8.605469  ],
-       [34.54987   , -1.2403871 ,  0.6491311 ,  6.8237805 ],
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[28.84    , -1.2665  ,  2.29766 , 12.1307  ],
+       [24.1136  , -4.27195 ,  1.43597 ,  7.71134 ],
+       [23.3072  ,  4.6496  , -0.951818,  5.17797 ],
        ...,
-       [33.811314  ,  2.12686   , -1.2807467 ,  6.374767  ],
-       [22.655596  ,  0.8908781 ,  2.1754103 ,  4.3618817 ],
-       [33.555767  , -0.35557398, -0.30414277,  2.9271367 ]],
-      dtype=float32)
+       [20.1731  , -0.552215,  1.33108 ,  5.76411 ],
+       [52.433   ,  0.806837,  0.189618, 10.6374  ],
+       [37.1635  ,  2.75244 ,  1.79586 ,  7.63404 ]])
 </pre></div>
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">test_x_cond_context</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(array([732., 187.,  53.,  16.,   4.,   2.,   2.,   2.,   0.,   2.]),
+ array([ 20.0305 ,  35.83615,  51.6418 ,  67.44745,  83.2531 ,  99.05875,
+        114.8644 , 130.67005, 146.4757 , 162.28135, 178.087  ]),
+ &lt;BarContainer object of 10 artists&gt;)
+</pre></div>
+</div>
+<img alt="_images/5_Normalizing_Flows_23_1.png" src="_images/5_Normalizing_Flows_23_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">context</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">test_x_cond_context</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">context</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor([[28.8400, -1.2665,  2.2977, 12.1307],
+        [24.1136, -4.2719,  1.4360,  7.7113],
+        [23.3072,  4.6496, -0.9518,  5.1780],
+        ...,
+        [20.1731, -0.5522,  1.3311,  5.7641],
+        [52.4330,  0.8068,  0.1896, 10.6374],
+        [37.1635,  2.7524,  1.7959,  7.6340]])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">samples</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+    <span class="c1"># test_x.shape[0],</span>
+    <span class="mi">2000</span><span class="p">,</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="n">context</span>
+    
+<span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="n">samples</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">samples</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1, 200000, 4)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">samples</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[41.57598 , 54.761528, 29.230541, ..., 73.444275, 15.749493,
+        40.730896]], dtype=float32)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ind</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">samples</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="p">:,</span> <span class="n">ind</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">samples</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="p">:,</span> <span class="n">ind</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">samples</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="p">:,</span> <span class="n">ind</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-34.551365, 1954.3479, 38.714733)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">());</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/5_Normalizing_Flows_29_0.png" src="_images/5_Normalizing_Flows_29_0.png" />
+</div>
+</div>
+</section>
+<section id="shape-of-samples">
+<h2>Shape of samples<a class="headerlink" href="#shape-of-samples" title="Permalink to this headline">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">samples</span></code> Shape: (1000, 100, 4)</p>
+<ul class="simple">
+<li><p>Dimension 0 (size 1000): Corresponds to each conditioning variable in context. So, for each of the 1000 conditioning variables, you have generated samples.</p></li>
+<li><p>Dimension 1 (size 100): Represents the number of samples generated per conditioning variable.</p></li>
+<li><p>Dimension 2 (size 4): Represents the features (dimensions) of each generated sample.</p></li>
+</ul>
+<p>Therefore, <code class="docutils literal notranslate"><span class="pre">samples[i,</span> <span class="pre">j,</span> <span class="pre">k]</span></code> gives you:</p>
+<ul class="simple">
+<li><p>i (0 ≤ i &lt; 1000): The index of the conditioning variable (context index).</p></li>
+<li><p>j (0 ≤ j &lt; 100): The index of the sample generated for that conditioning variable.</p></li>
+<li><p>k (0 ≤ k &lt; 4): The index of the feature in the generated sample.</p></li>
+</ul>
 </section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="plot">
@@ -1096,29 +1414,6 @@ no need to train_test_split since we already have the split dataframes
     <span class="n">real_label_counts</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">REAL_DIST</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="n">range_</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
     <span class="n">label_edges</span> <span class="o">=</span> <span class="n">label_edges</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">label_edges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
     <span class="k">return</span> <span class="n">real_label_counts</span><span class="p">,</span> <span class="n">predicted_label_counts</span><span class="p">,</span> <span class="n">label_edges</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">raw_test_data</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0        44.3274
-1        44.3274
-2        27.4750
-3        33.8797
-4        23.3141
-          ...   
-99995    30.4103
-99996    30.1372
-99997    30.1372
-99998    21.2735
-99999    27.0770
-Name: RecoDatapT, Length: 100000, dtype: float64
 </pre></div>
 </div>
 </div>
@@ -1157,7 +1452,7 @@ Name: RecoDatapT, Length: 100000, dtype: float64
     <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
         <span class="n">real_edges</span><span class="p">,</span>
         <span class="n">predicted_counts</span> <span class="o">/</span> <span class="n">norm_predicted</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;flow&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;NF&quot;</span><span class="p">,</span>
         <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#D7301F&quot;</span><span class="p">,</span>
         <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
         <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
@@ -1201,18 +1496,18 @@ Name: RecoDatapT, Length: 100000, dtype: float64
 <span class="c1">#         plt.axis(&#39;off&#39;)</span>
 
 
-    
     <span class="k">if</span> <span class="n">save_plot</span><span class="p">:</span>
         <span class="c1"># plot_filename = utils.get_model_filename(target, PARAMS).split(&quot;.dict&quot;)[0] + &quot;.png&quot;</span>
         <span class="n">plot_filename</span> <span class="o">=</span> <span class="s1">&#39;NF_&#39;</span> <span class="o">+</span> <span class="n">target</span> <span class="o">+</span> <span class="s1">&#39;.pdf&#39;</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">IQN_BASE</span><span class="p">,</span> <span class="s2">&quot;JupyterBook&quot;</span><span class="p">,</span> 
                          <span class="s2">&quot;images&quot;</span><span class="p">,</span> <span class="s2">&quot;NF&quot;</span><span class="p">,</span> <span class="n">plot_filename</span><span class="p">),</span>
+            <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span>
         <span class="p">)</span>
+
 
     <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
-    <span class="c1"># plt.axis(&quot;off&quot;)</span>
     <span class="c1"># plt.gca().set_position([0, 0, 1, 1])</span>
 </pre></div>
 </div>
@@ -1249,7 +1544,7 @@ Name: RecoDatapT, Length: 100000, dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/5_Normalizing_Flows_26_1.png" src="_images/5_Normalizing_Flows_26_1.png" />
+<img alt="_images/5_Normalizing_Flows_36_1.png" src="_images/5_Normalizing_Flows_36_1.png" />
 </div>
 </div>
 </section>
@@ -1284,7 +1579,7 @@ Name: RecoDatapT, Length: 100000, dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/5_Normalizing_Flows_29_1.png" src="_images/5_Normalizing_Flows_29_1.png" />
+<img alt="_images/5_Normalizing_Flows_39_1.png" src="_images/5_Normalizing_Flows_39_1.png" />
 </div>
 </div>
 </section>
@@ -1319,7 +1614,7 @@ Name: RecoDatapT, Length: 100000, dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/5_Normalizing_Flows_32_1.png" src="_images/5_Normalizing_Flows_32_1.png" />
+<img alt="_images/5_Normalizing_Flows_42_1.png" src="_images/5_Normalizing_Flows_42_1.png" />
 </div>
 </div>
 </section>
@@ -1354,7 +1649,7 @@ Name: RecoDatapT, Length: 100000, dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/5_Normalizing_Flows_35_1.png" src="_images/5_Normalizing_Flows_35_1.png" />
+<img alt="_images/5_Normalizing_Flows_45_1.png" src="_images/5_Normalizing_Flows_45_1.png" />
 </div>
 </div>
 </section>
